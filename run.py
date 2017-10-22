@@ -1,3 +1,4 @@
 #!flask/bin/python
 from app import app
-app.run(debug=True)
+if __name__ == '_main_':
+    app.run(debug=True)
