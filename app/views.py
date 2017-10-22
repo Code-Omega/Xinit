@@ -324,9 +324,8 @@ def xibot():
         while True:
             response = """
             <h1>Hello from heroku</h1>
-            <p>It is currently {time}.</p>
             <img src="http://loremflickr.com/600/400" />
-            """.format(time=datetime.now().strftime("%A, %d %b %Y %l:%M %p"))
+            """
 
             slack_client.api_call("chat.postMessage", channel='xinit',
                               text=response, as_user=True)
