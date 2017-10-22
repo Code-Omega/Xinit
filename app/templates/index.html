@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-8">
+          <h1>{{ source.length }} pieces of news from {{ source.name }}</h1>
+          {% for post in posts %}
+            <div class="card mb-3">
+              <div class="card-header">
+                {{ post.keywords }} || condensed to {{ post.condense_rate }}
+              </div>
+              <div class="card-block" style="padding: 2rem;">
+                <h4 class="card-title">{{ post.title }}</h4>
+                <p class="card-text">
+                  {% autoescape false %}
+                  {{ post.content }}
+                  {% endautoescape %}
+                </p>
+              </div>
+              <div class="card-footer text-muted text-center">
+                <a href={{ post.link }} class="btn btn-primary"> Go to source </a>
+              </div>
+            </div>
+          {% endfor %}
+          <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+          <script>
+          $(document).on('click', '.card-header', function() {
+            $(this).parent().find('.card-text').toggle();
+          });
+          </script>
+        </div>
+        <div class="col-4">
+          <div class="sidebar">
+            <div style="width: 100%; height: 68vh;">
+              <iframe scrolling="no" allowtransparency="true" frameborder="0" width="100%" height="100%" src={{ iframe_src.tv }} style="box-sizing: border-box; padding-bottom: 18px;">
+              </iframe>
+            </div>
+            <div class="card text-white bg-success mb-3">
+              <div class="card-header">
+                <b>Today's keywords</b>
+              </div>
+              <div class="card-body">
+                <p class="card-text">
+                  {{source.keywords}}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
