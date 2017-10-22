@@ -9,10 +9,13 @@ import urllib
 from bs4 import BeautifulSoup
 import json
 
-feed_url = 'https://www.cnbc.com/id/10000664/device/rss/rss.html'
-d = feedparser.parse(feed_url)
+CNBC_feed_url = 'https://www.cnbc.com/id/10000664/device/rss/rss.html'
+dCNBC = feedparser.parse(feed_url)
 
-def get_text(url):
+SA_feed_url = 'https://seekingalpha.com/feed.xml'
+dSA = feedparser.parse(feed_url)
+
+def get_CNBC_text(url):
     """
     return the title and the text of the article
     at the specified url
@@ -42,10 +45,33 @@ def get_text(url):
     #return soup.title.text, text
     return text
 
+def get_SA_text(url):
+    """
+    return the title and the text of the article
+    at the specified url
+    """
+    request = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+    page = urllib.request.urlopen(request)
+    page = page.read().decode('utf8')
+    soup = BeautifulSoup(page,"lxml")
+    # for seekingalpha only
+    header_content = soup.find('article').find("header")
+    body_content = soup.find("div", {"id": "a-body"})
+    text = [body_content.text]
+    #return soup.title.text, text
+    return text
+
+articles_per_source = 10
+
 corpus = []
-for post in d.entries:
+for post in dCNBC.entries[:articles_per_source]:
     #print (post.title + ": " + post.link + "\n")
-    content = get_text(post.link)
+    content = get_CNBC_text(post.link)
+    corpus.append(" ".join(content))
+
+for post in dSA.entries[:articles_per_source]:
+    #print (post.title + ": " + post.link + "\n")
+    content = get_SA_text(post.link)
     corpus.append(" ".join(content))
 
 vectorizer = TfidfVectorizer(input = 'content',
@@ -108,11 +134,11 @@ iframe_dict = {
       {
          "symbols":[
             {
-               "s":"BITTREX:BTCUSD",
+               "s":"COINBASE:BTCUSD",
                "d":"Bitcoin / Dollar"
             },
             {
-               "s":"BITTREX:ETHCUSD",
+               "s":"COINBASE:ETHUSD",
                "d":"Ethereum / Dollar"
             },
             {
@@ -124,7 +150,7 @@ iframe_dict = {
                "d":"Ripple / Dollar"
             },
             {
-               "s":"BITTREX:LTCUSD",
+               "s":"COINBASE:LTCUSD",
                "d":"Litcoin / Dollar"
             },
             {
