@@ -64,10 +64,12 @@ def get_SA_text(url):
 articles_per_source = 10
 
 corpus = []
+header = []
 for post in dCNBC.entries[:articles_per_source]:
     #print (post.title + ": " + post.link + "\n")
     content = get_CNBC_text(post.link)
     corpus.append(" ".join(content))
+    header.append([post.title,post.link])
 
 for post in dSA.entries[:articles_per_source]:
     #print (post.title + ": " + post.link + "\n")
@@ -284,11 +286,11 @@ def index():
 	source = {'name': 'CNBC '+d['feed']['title'],
 			  'length': len(corpus),
 			  'keywords': "; ".join([x[0] for x in t_keywords])}
-	posts = [{'title': d.entries[i].title,
+	posts = [{'title': header[i][0],
 			  'content': "<br /><br />".join([x[0].replace('\n',' ') for x in summaries[i]]),
 			  'keywords': "; ".join([x[0] for x in keywords[i]]),
 			  'condense_rate': "{:.3%}".format(sum([len(x[0]) for x in summaries[i]])/len(corpus[i])),
-			  'link': d['entries'][i]['link']} for i in range(len(corpus))]
+			  'link': header[i][1]} for i in range(len(corpus))]
 	iframe_src = {'tv' : "https://s.tradingview.com/marketoverviewwidgetembed/#"+urllib.parse.quote(str(json.dumps(iframe_dict)))}
 	return render_template("index.html",
     					   title='Home',
