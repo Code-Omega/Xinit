@@ -7,3 +7,4 @@ nltk
 scipy
 sklearn
 feedparser
+lxml
