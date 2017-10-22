@@ -6,5 +6,4 @@ numpy
 nltk
 sklearn
 feedparser
-urllib
 json
