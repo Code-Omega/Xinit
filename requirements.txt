@@ -1,2 +1,10 @@
 Flask
 gunicorn
+beautifulsoup4
+Flask-Cors
+bumpy
+nltk
+sklearn
+feedparser
+urllib
+json
