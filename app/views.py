@@ -332,7 +332,7 @@ def xibot():
             time.sleep(WEBSOCKET_DELAY)
 
 t = threading.Thread(target=xibot)
-t.start()
+#t.start()
 
 #---------------------------------------------------------------------------------------------------
 #                   Web
