@@ -10,10 +10,10 @@ from bs4 import BeautifulSoup
 import json
 
 CNBC_feed_url = 'https://www.cnbc.com/id/10000664/device/rss/rss.html'
-dCNBC = feedparser.parse(feed_url)
+dCNBC = feedparser.parse(CNBC_feed_url)
 
 SA_feed_url = 'https://seekingalpha.com/feed.xml'
-dSA = feedparser.parse(feed_url)
+dSA = feedparser.parse(SA_feed_url)
 
 def get_CNBC_text(url):
     """
