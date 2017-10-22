@@ -2,7 +2,7 @@ Flask
 gunicorn
 beautifulsoup4
 Flask-Cors
-bumpy
+numpy
 nltk
 sklearn
 feedparser
