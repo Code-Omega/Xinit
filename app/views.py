@@ -283,7 +283,7 @@ iframe_dict = {
 @app.route('/')
 @app.route('/index')
 def index():
-	source = {'name': 'CNBC '+d['feed']['title'],
+	source = {'name': 'CNBC and seekingalpha',
 			  'length': len(corpus),
 			  'keywords': "; ".join([x[0] for x in t_keywords])}
 	posts = [{'title': header[i][0],
