@@ -304,6 +304,38 @@ iframe_dict = {
 #print("https://s.tradingview.com/marketoverviewwidgetembed/#"+urllib.parse.quote(str(json.dumps(iframe_dict))))
 
 #---------------------------------------------------------------------------------------------------
+#                   refreshing & threading
+#---------------------------------------------------------------------------------------------------
+
+import threading
+
+import time
+import datetime
+from slackclient import SlackClient
+
+BOT_NAME = 'xibot'
+BOT_ID = 'U7MC33TL1'
+WEBSOCKET_DELAY = 10
+slack_client = SlackClient("xoxb-259411129681-GdhoO4YDGsTolR9zSTVR8ndP")
+
+def xibot():
+    if slack_client.rtm_connect():
+        print("StarterBot connected and running!")
+        while True:
+            response = """
+            <h1>Hello from heroku</h1>
+            <p>It is currently {time}.</p>
+            <img src="http://loremflickr.com/600/400" />
+            """.format(time=datetime.now().strftime("%A, %d %b %Y %l:%M %p"))
+
+            slack_client.api_call("chat.postMessage", channel='xinit',
+                              text=response, as_user=True)
+            time.sleep(WEBSOCKET_DELAY)
+
+t = threading.Thread(target=worker)
+t.start()
+
+#---------------------------------------------------------------------------------------------------
 #                   Web
 #---------------------------------------------------------------------------------------------------
 
