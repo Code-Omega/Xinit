@@ -4,5 +4,6 @@ beautifulsoup4
 Flask-Cors
 numpy
 nltk
+scipy
 sklearn
 feedparser
