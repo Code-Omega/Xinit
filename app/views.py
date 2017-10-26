@@ -98,6 +98,7 @@ for post in dSA.entries[:articles_per_source]:
 vectorizer = TfidfVectorizer(input = 'content',
                              norm = 'l2',
                              min_df = 1,
+                             max_df = 0.8,
                              stop_words = 'english',
                              ngram_range = (1, 3),
                              smooth_idf = False,
