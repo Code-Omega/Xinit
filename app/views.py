@@ -98,21 +98,14 @@ for post in dSA.entries[:articles_per_source]:
 #                   Summarizing                                 begins
 #---------------------------------------------------------------------------------------------------
 
-class StemmedTfidfVectorizer(TfidfVectorizer):
-    def build_analyzer(self):
-        stemmer = nltk.stem.SnowballStemmer('english')
-        analyzer = super(TfidfVectorizer, self).build_analyzer()
-        return lambda doc: (stemmer.stem(w) for w in analyzer(doc))
-
-vectorizer = StemmedTfidfVectorizer(input = 'content',
-                                    norm = 'l2',
-                                    min_df = 1,
-                                    max_df = 0.25,
-                                    stop_words = 'english',
-                                    ngram_range = (1, 3),
-                                    smooth_idf = False,
-                                    sublinear_tf = True)
-                                    
+vectorizer = TfidfVectorizer(input = 'content',
+                             norm = 'l2',
+                             min_df = 1,
+                             max_df = 0.25,
+                             stop_words = 'english',
+                             ngram_range = (1, 3),
+                             smooth_idf = False,
+                             sublinear_tf = True)
 doc_model = vectorizer.fit_transform(corpus)
 
 doc_score = doc_model.sum(axis=1).ravel().tolist()[0]
