@@ -76,17 +76,20 @@ articles_per_source = 10
 
 corpus = []
 header = []
+source = []
 for post in dCNBC.entries[:articles_per_source]:
     #print (post.title + ": " + post.link + "\n")
     content = get_CNBC_text(post.link)
     corpus.append(" ".join(content))
     header.append([post.title,post.link])
+    source.append("CNBC")
 
 for post in dSA.entries[:articles_per_source]:
     #print (post.title + ": " + post.link + "\n")
     content = get_SA_text(post.link)
     corpus.append(" ".join(content))
     header.append([post.title,post.link])
+    source.append("Seeking Alpha")
 
 #---------------------------------------------------------------------------------------------------
 #                   Scraping                                    ends
@@ -98,12 +101,15 @@ for post in dSA.entries[:articles_per_source]:
 vectorizer = TfidfVectorizer(input = 'content',
                              norm = 'l2',
                              min_df = 1,
-                             max_df = 0.2,
+                             max_df = 0.25,
                              stop_words = 'english',
                              ngram_range = (1, 3),
                              smooth_idf = False,
                              sublinear_tf = True)
 doc_model = vectorizer.fit_transform(corpus)
+
+doc_score = doc_model.sum(axis=1).ravel().tolist()[0]
+doc_rank = sorted(range(len(doc_score)), key=lambda k: doc_score[k], reverse=True)
 
 topNum = 3
 summaries = []
@@ -342,14 +348,16 @@ t = threading.Thread(target=xibot)
 @app.route('/')
 @app.route('/index')
 def index():
-	source = {'name': 'CNBC and seekingalpha',
+	sources = {'name': 'CNBC and Seeking Alpha',
 			  'length': len(corpus),
 			  'keywords': "; ".join([x[0] for x in t_keywords])}
 	posts = [{'title': header[i][0],
 			  'content': "<br /><br />".join([x[0].replace('\n',' ') for x in summaries[i]]),
 			  'keywords': "; ".join([x[0] for x in keywords[i]]),
 			  'condense_rate': "{:.3%}".format(sum([len(x[0]) for x in summaries[i]])/len(corpus[i])),
-			  'link': header[i][1]} for i in range(len(corpus))]
+              'source': source[i],
+              'score': doc_score[i],
+			  'link': header[i][1]} for i in doc_rank]
 	iframe_src = {'tv' : "https://s.tradingview.com/marketoverviewwidgetembed/#"+urllib.parse.quote(str(json.dumps(iframe_dict)))}
 	return render_template("index.html",
     					   title='Home',

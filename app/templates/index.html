@@ -3,11 +3,11 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-6 col-md-7">
-          <h1>{{ source.length }} pieces of news from {{ source.name }}</h1>
+          <h1>{{ sources.length }} pieces of news from {{ sources.name }}</h1>
           {% for post in posts %}
             <div class="card mb-3">
               <div class="card-header">
-                {{ post.keywords }} || condensed to {{ post.condense_rate }}
+                {{ post.score }} || {{ post.keywords }} || condensed to {{ post.condense_rate }}
               </div>
               <div class="card-block" style="padding: 2rem;">
                 <h4 class="card-title">{{ post.title }}</h4>
@@ -18,7 +18,7 @@
                 </p>
               </div>
               <div class="card-footer text-muted text-center">
-                <a href={{ post.link }} class="btn btn-primary"> Go to source </a>
+                <a href={{ post.link }} class="btn btn-primary"> Go to source ({{ post.source }}) </a>
               </div>
             </div>
           {% endfor %}
