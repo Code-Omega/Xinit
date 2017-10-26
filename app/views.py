@@ -361,6 +361,6 @@ def index():
 	iframe_src = {'tv' : "https://s.tradingview.com/marketoverviewwidgetembed/#"+urllib.parse.quote(str(json.dumps(iframe_dict)))}
 	return render_template("index.html",
     					   title='Home',
-                           source=source,
+                           sources=sources,
                            posts=posts,
                            iframe_src=iframe_src)
