@@ -188,7 +188,7 @@ iframe_dict = {
                "d":"Bitcoin / Dollar"
             },
             {
-               "s":"OTC:​GBTC",
+               "s":"OTC:GBTC",
                "d":"BITCOIN INVT TR"
             },
             {
