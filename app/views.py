@@ -395,7 +395,7 @@ t = threading.Thread(target=xibot)
 @app.route('/')
 @app.route('/index')
 def index():
-	sources = {'name': 'CNBC and Seeking Alpha',
+	sources = {'name': 'CNBC, Bloomberg View, and Seeking Alpha',
 			  'length': len(corpus),
 			  'keywords': "; ".join([x[0] for x in t_keywords])}
 	posts = [{'title': header[i][0],
