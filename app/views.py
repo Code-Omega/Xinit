@@ -19,6 +19,9 @@ dCNBC = feedparser.parse(CNBC_feed_url)
 SA_feed_url = 'https://seekingalpha.com/feed.xml'
 dSA = feedparser.parse(SA_feed_url)
 
+BVML_feed_url = 'https://www.bloomberg.com/view/rss/contributors/matt-levine.rss'
+dBVML = feedparser.parse(BVML_feed_url)
+
 #---------------------------------------------------------------------------------------------------
 #                   Source                                      ends
 #---------------------------------------------------------------------------------------------------
@@ -72,6 +75,21 @@ def get_SA_text(url):
     #return soup.title.text, text
     return text
 
+def get_BV_text(url):
+    """
+    return the title and the text of the article
+    at the specified url
+    """
+    request = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+    page = urllib.request.urlopen(request)
+    page = page.read().decode('utf8')
+    soup = BeautifulSoup(page,"lxml")
+    # for Bloomberg View only
+    body_content = soup.find("section", {"class": "main-column"})
+    text = body_content.findAll(text=True)
+    #return soup.title.text, text
+    return text
+
 articles_per_source = 10
 
 corpus = []
@@ -90,6 +108,13 @@ for post in dSA.entries[:articles_per_source]:
     corpus.append(" ".join(content))
     header.append([post.title,post.link])
     source.append("Seeking Alpha")
+    
+for post in dBVML.entries[:articles_per_source]:
+    #print (post.title + ": " + post.link + "\n")
+    content = get_BV_text(post.link)
+    corpus.append(" ".join(content))
+    header.append([post.title,post.link])
+    source.append("Bloomberg View")
 
 #---------------------------------------------------------------------------------------------------
 #                   Scraping                                    ends
