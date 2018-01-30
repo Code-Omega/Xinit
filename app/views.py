@@ -1,6 +1,6 @@
 from flask import render_template
 from app import app
-import fetcher
+from app import fetcher
 
 # scrape
 corpus,header,source = fetcher.scrape()
