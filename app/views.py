@@ -6,7 +6,7 @@ from app import fetcher
 corpus,header,source = fetcher.scrape()
 
 # summarize
-_,_,doc_score,doc_rank,summaries,keywords,t_keywords = fetcher.summarize()
+_,_,doc_score,doc_rank,summaries,keywords,t_keywords = fetcher.summarize(corpus)
 
 # setup iframe
 iframe_dict = {
