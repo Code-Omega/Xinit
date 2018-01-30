@@ -2,6 +2,9 @@ from flask import render_template
 from app import app
 from app import fetcher
 
+import urllib
+import json
+
 # scrape
 corpus,header,source = fetcher.scrape()
 
