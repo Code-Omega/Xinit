@@ -31,6 +31,19 @@ def retrieve(table_name, query="*"):
 
 def update():
     conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+
+    # scrape
+    # corpus,header,source = fetcher.scrape()
+    time,title,source,content = fetcher.scrape()
+
+    c.execute("select * from "+TABLE_NAME+" ;")
+    c.execute("insert into articles (time, title, source, content) "+
+        "values ("++");")
+
+    # scrape
+    corpus,header,source = fetcher.scrape()
+
     df = pd.read_sql_query("select * from "+TABLE_NAME+" ;", conn)
     df = df.apply(update_band,axis=1)
     #XXX somehow index gets duplicated and causes trouble
@@ -41,5 +54,3 @@ def update():
     conn.close()
 
 if __name__ == '__main__':
-    # scrape
-    corpus,header,source = fetcher.scrape()
