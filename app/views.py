@@ -102,13 +102,13 @@ for post in dCNBC.entries[:articles_per_source]:
     header.append([post.title,post.link])
     source.append("CNBC")
 
-for post in dSA.entries[:articles_per_source]:
-    #print (post.title + ": " + post.link + "\n")
-    content = get_SA_text(post.link)
-    corpus.append(" ".join(content))
-    header.append([post.title,post.link])
-    source.append("Seeking Alpha")
-    
+# for post in dSA.entries[:articles_per_source]:
+#     #print (post.title + ": " + post.link + "\n")
+#     content = get_SA_text(post.link)
+#     corpus.append(" ".join(content))
+#     header.append([post.title,post.link])
+#     source.append("Seeking Alpha")
+
 for post in dBVML.entries[:articles_per_source]:
     #print (post.title + ": " + post.link + "\n")
     content = get_BV_text(post.link)
