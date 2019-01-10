@@ -16,7 +16,7 @@ import json
 CNBC_feed_url = 'https://www.cnbc.com/id/10000664/device/rss/rss.html'
 dCNBC = feedparser.parse(CNBC_feed_url)
 
-SA_feed_url = 'https://seekingalpha.com/feed.xml'
+SA_feed_url = 'https://seekingalpha.com/market_currents.xml' #'https://seekingalpha.com/feed.xml'
 dSA = feedparser.parse(SA_feed_url)
 
 BVML_feed_url = 'https://www.bloomberg.com/view/rss/contributors/matt-levine.rss'
@@ -395,7 +395,7 @@ t = threading.Thread(target=xibot)
 @app.route('/')
 @app.route('/index')
 def index():
-	sources = {'name': 'CNBC, Bloomberg View, and Seeking Alpha',
+	sources = {'name': 'CNBC, Bloomberg View,', # and Seeking Alpha',
 			  'length': len(corpus),
 			  'keywords': "; ".join([x[0] for x in t_keywords])}
 	posts = [{'title': header[i][0],
