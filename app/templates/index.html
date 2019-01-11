@@ -10,7 +10,7 @@
                 {{ post.score }} || {{ post.keywords }} || condensed to {{ post.condense_rate }}
               </div>
               <div class="card-block" style="padding: 2rem;">
-                <h4 class="card-title">{{ post.title }}</h4>
+                <h4 class="card-title">{{ post.title |safe }}</h4>
                 <p class="card-text">
                   {% autoescape false %}
                   {{ post.content }}

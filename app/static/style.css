@@ -1,4 +1,4 @@
-body{
+/* body{
 	background: #000;
 }
 
@@ -9,4 +9,28 @@ div{
 #graph{
 	background: blue;
 	top: 1000px;
+}
+
+#key_entity{
+	color: green;
+} */
+
+body{
+		background: #eee;
+}
+
+.navbar{
+		position: -webkit-sticky;
+		position: sticky;
+		top: 0;
+		z-index: 3;
+}
+.sidebar{
+		position: -webkit-fixed;
+		position: fixed;
+		top: 30px;
+		margin-right: 20px;
+}
+.key_entity{
+	color: green;
 }

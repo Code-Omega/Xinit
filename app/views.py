@@ -202,19 +202,37 @@ def find_ticker(r, entry):
 company_list = pickle.load(open('app/data/company_list.pkl','rb'))
 
 nlp = spacy.load('en_core_web_sm')
-doc = nlp(' '.join(corpus))
-orgs = set([x.text.lower() for x in list(filter(lambda x: x.label_=='ORG', doc.ents))])
+#print([x[0][0] for x in summaries])
+#doc = nlp(' '.join([x[0][0] for x in summaries])) # doc = nlp(' '.join(corpus))
+#shown_content
+orgs = set()
+for h in header:
+    doc = nlp(h[0])
+    curr_orgs = [[x.text.lower(), x.start, x.end] for x in list(filter(lambda x: x.label_ in {'ORG','PERSON'}, doc.ents))]
+    new_h = [x.text for x in doc]
+    for x in reversed(curr_orgs):
+        new_h.insert(x[2],'</span>')
+        new_h.insert(x[1],'<span class = "key_entity">')
+        #new_h.insert(x[1],'<span style = "color: green;">')
+    h[0] = ' '.join(new_h)
+    curr_orgs = set([x[0] for x in curr_orgs])
+    orgs |= curr_orgs
 simple_orgs = []
 org_stopwords = ['the', 'a', 'an', 'at', "'s", ',', '.']
 for entry in orgs:
     simple_orgs.append(' '.join([x for x in nltk.word_tokenize(entry) if x.isalnum() and x not in org_stopwords]))
 
+simple_orgs = [x for x in simple_orgs if x is not '']
+
+print(simple_orgs)
+
 news_symbols = []
 for org in simple_orgs:
     pattern = ".*" + org + ".*"
     r = re.compile(pattern)
-    news_symbols.extend([x[0] for x in list(filter(lambda x: find_ticker(r,x), company_list))])
-#print(news_symbols[:10])
+    #news_symbols.extend([x[0] for x in list(filter(lambda x: find_ticker(r,x), company_list))])
+    news_symbols.extend([x[0] for x in list(filter(lambda x: find_ticker(r,x), company_list))][:1])
+print(news_symbols)
 
 key_assets = news_symbols
 
