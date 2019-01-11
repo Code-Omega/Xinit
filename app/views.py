@@ -8,6 +8,9 @@ import feedparser
 import urllib
 from bs4 import BeautifulSoup
 import json
+import spacy
+import pickle
+import re
 
 #---------------------------------------------------------------------------------------------------
 #                   Source                                      begins
@@ -109,12 +112,12 @@ for post in dCNBC.entries[:articles_per_source]:
 #     header.append([post.title,post.link])
 #     source.append("Seeking Alpha")
 
-for post in dBVML.entries[:articles_per_source]:
-    #print (post.title + ": " + post.link + "\n")
-    content = get_BV_text(post.link)
-    corpus.append(" ".join(content))
-    header.append([post.title,post.link])
-    source.append("Bloomberg View")
+# for post in dBVML.entries[:articles_per_source]:
+#     #print (post.title + ": " + post.link + "\n")
+#     content = get_BV_text(post.link)
+#     corpus.append(" ".join(content))
+#     header.append([post.title,post.link])
+#     source.append("Bloomberg View")
 
 #---------------------------------------------------------------------------------------------------
 #                   Scraping                                    ends
@@ -192,6 +195,34 @@ t_keywords = get_keywords(vectorizer,doc_model,10)
 #                   Summarizing                                 ends
 #---------------------------------------------------------------------------------------------------
 
+def find_ticker(r, entry):
+    # entry is ['exchange:ticker','name']
+    return r.match(entry[1].lower())
+
+company_list = pickle.load(open('app/data/company_list.pkl','rb'))
+
+nlp = spacy.load('en_core_web_sm')
+doc = nlp(' '.join(corpus))
+orgs = set([x.text.lower() for x in list(filter(lambda x: x.label_=='ORG', doc.ents))])
+simple_orgs = []
+org_stopwords = ['the', 'a', 'an', 'at', "'s", ',', '.']
+for entry in orgs:
+    simple_orgs.append(' '.join([x for x in nltk.word_tokenize(entry) if x.isalnum() and x not in org_stopwords]))
+
+news_symbols = []
+for org in simple_orgs:
+    pattern = ".*" + org + ".*"
+    r = re.compile(pattern)
+    news_symbols.extend([x[0] for x in list(filter(lambda x: find_ticker(r,x), company_list))])
+#print(news_symbols[:10])
+
+key_assets = news_symbols
+
+num_asset_to_plot = 10
+
+iframe_news_symbols = [{"s":x} for x in news_symbols[:num_asset_to_plot]]
+#print(iframe_news_symbols)
+
 # setup iframe
 iframe_dict = {
    "showChart":True,
@@ -207,36 +238,7 @@ iframe_dict = {
    "symbolActiveColor":"#F2FAFE",
    "tabs":[
       {
-         "symbols":[
-            {
-               "s":"COINBASE:BTCUSD",
-               "d":"Bitcoin / Dollar"
-            },
-            {
-               "s":"OTC:GBTC",
-               "d":"BITCOIN INVT TR"
-            },
-            {
-               "s":"COINBASE:ETHUSD",
-               "d":"Ethereum / Dollar"
-            },
-            {
-               "s":"KRAKEN:BCHUSD",
-               "d":"BCH / Dollar"
-            },
-            {
-               "s":"BITTREX:XRPUSD",
-               "d":"Ripple / Dollar"
-            },
-            {
-               "s":"COINBASE:LTCUSD",
-               "d":"Litcoin / Dollar"
-            },
-            {
-               "s":"POLONIEX:USDTUSD",
-               "d":"TETHER USD / DOLLAR"
-            }
-         ],
+         "symbols":iframe_news_symbols,
          "title":"News"
       },
       {
@@ -395,9 +397,10 @@ t = threading.Thread(target=xibot)
 @app.route('/')
 @app.route('/index')
 def index():
-	sources = {'name': 'CNBC, Bloomberg View,', # and Seeking Alpha',
+	sources = {'name': 'news pieces', # 'CNBC, Bloomberg View, and Seeking Alpha',
 			  'length': len(corpus),
-			  'keywords': "; ".join([x[0] for x in t_keywords])}
+			  'keywords': "; ".join([x[0] for x in t_keywords]),
+              'key_assets': "; ".join([x for x in key_assets])}
 	posts = [{'title': header[i][0],
 			  'content': "<br /><br />".join([x[0].replace('\n',' ') for x in summaries[i]]),
 			  'keywords': "; ".join([x[0] for x in keywords[i]]),

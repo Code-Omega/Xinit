@@ -3,7 +3,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-6 col-md-7">
-          <h2>{{ sources.length }} pieces of news from {{ sources.name }}</h2>
+          <h2>{{ sources.length }} pieces of {{ sources.name }}</h2>
           {% for post in posts %}
             <div class="card mb-3">
               <div class="card-header">
@@ -42,6 +42,16 @@
               <div class="card-body">
                 <p class="card-text">
                   {{sources.keywords}}
+                </p>
+              </div>
+            </div>
+            <div class="card text-white bg-success mb-3">
+              <div class="card-header">
+                <b>Today's key assets</b>
+              </div>
+              <div class="card-body">
+                <p class="card-text">
+                  {{sources.key_assets}}
                 </p>
               </div>
             </div>
