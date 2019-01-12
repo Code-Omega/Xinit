@@ -1,22 +1,21 @@
-/* body{
-	background: #000;
+html {
+    font-size: 12px;
 }
-
-div{
-  background: blue;
-}
-
-#graph{
-	background: blue;
-	top: 1000px;
-}
-
-#key_entity{
-	color: green;
-} */
 
 body{
 		background: #eee;
+}
+
+p {
+    margin: 0;
+    padding: 0;
+}
+
+hr {
+	  margin-top: 1rem;
+	  margin-bottom: 1rem;
+	  border: 0;
+	  border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .navbar{
@@ -25,12 +24,67 @@ body{
 		top: 0;
 		z-index: 3;
 }
+
+.main {
+    padding-right: 0px;
+    padding-left: 15px;
+}
+
 .sidebar{
-		position: -webkit-fixed;
-		position: fixed;
-		top: 30px;
-		margin-right: 20px;
+		width = 400px;
+		height: 100hv;
 }
+
+.sidebar_content{
+		/* position: -webkit-sticky;
+		position: sticky; */
+		margin-top: 1px;
+}
+
+.sidebar_chart{
+		position: -webkit-sticky;
+		position: sticky;
+		top: 42px;
+		width: 360px;
+		height: 400px;
+}
+
+.sidebar_card{
+		width: 360px;
+}
+
+.sidebar_card_body{
+		max-height: 120px;
+		overflow-y: auto;
+}
+
+.post-assets,
 .key_entity{
-	color: green;
+		color: #5CBC99;
+		font-weight: bold;
 }
+
+.frame {
+	  transform-origin: 0 0;
+		box-sizing: border-box;
+		padding-bottom: 1rem;
+		-ms-transform: scale(0.8);
+		-moz-transform: scale(0.8);
+		-o-transform: scale(0.8);
+		-webkit-transform: scale(0.8);
+		transform: scale(0.8);
+}
+
+.scrollbar-cus::-webkit-scrollbar-track {
+-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+background-color: #75BA9B;
+border-radius: 3px; }
+
+.scrollbar-cus::-webkit-scrollbar {
+width: 6px;
+background-color: #52A345; }
+
+.scrollbar-cus::-webkit-scrollbar-thumb {
+border-radius: 3px;
+-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+background-color: #52A345; }

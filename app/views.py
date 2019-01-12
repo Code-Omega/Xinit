@@ -13,6 +13,15 @@ import pickle
 import re
 
 #---------------------------------------------------------------------------------------------------
+#                   Settings                                    begins
+#---------------------------------------------------------------------------------------------------
+articles_per_source = 10
+topNum = 3
+#---------------------------------------------------------------------------------------------------
+#                   Settings                                    ends
+#---------------------------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------------------------------
 #                   Source                                      begins
 #---------------------------------------------------------------------------------------------------
 
@@ -93,31 +102,25 @@ def get_BV_text(url):
     #return soup.title.text, text
     return text
 
-articles_per_source = 10
-
-corpus = []
-header = []
-source = []
+corpus = [] # bodies for each article
+header = [] # title + link + source
 for post in dCNBC.entries[:articles_per_source]:
     #print (post.title + ": " + post.link + "\n")
     content = get_CNBC_text(post.link)
     corpus.append(" ".join(content))
-    header.append([post.title,post.link])
-    source.append("CNBC")
+    header.append([post.title,post.link,"CNBC"])
 
 # for post in dSA.entries[:articles_per_source]:
 #     #print (post.title + ": " + post.link + "\n")
 #     content = get_SA_text(post.link)
 #     corpus.append(" ".join(content))
-#     header.append([post.title,post.link])
-#     source.append("Seeking Alpha")
+#     header.append([post.title,post.link,"Seeking Alpha"])
 
 # for post in dBVML.entries[:articles_per_source]:
 #     #print (post.title + ": " + post.link + "\n")
 #     content = get_BV_text(post.link)
 #     corpus.append(" ".join(content))
-#     header.append([post.title,post.link])
-#     source.append("Bloomberg View")
+#     header.append([post.title,post.link,"Bloomberg View"])
 
 #---------------------------------------------------------------------------------------------------
 #                   Scraping                                    ends
@@ -137,27 +140,25 @@ vectorizer = TfidfVectorizer(input = 'content',
 doc_model = vectorizer.fit_transform(corpus)
 
 """     This takes too long... need to try a different stemmer.
-class StemmedTfidfVectorizer(TfidfVectorizer):
-    def build_analyzer(self):
-        stemmer = nltk.stem.SnowballStemmer('english')
-        analyzer = super(TfidfVectorizer, self).build_analyzer()
-        return lambda doc: (stemmer.stem(w) for w in analyzer(doc))
+    class StemmedTfidfVectorizer(TfidfVectorizer):
+        def build_analyzer(self):
+            stemmer = nltk.stem.SnowballStemmer('english')
+            analyzer = super(TfidfVectorizer, self).build_analyzer()
+            return lambda doc: (stemmer.stem(w) for w in analyzer(doc))
 
-vectorizer = StemmedTfidfVectorizer(input = 'content',
-                                    norm = 'l2',
-                                    min_df = 1,
-                                    max_df = 0.25,
-                                    stop_words = 'english',
-                                    ngram_range = (1, 3),
-                                    smooth_idf = False,
-                                    sublinear_tf = True)
-
+    vectorizer = StemmedTfidfVectorizer(input = 'content',
+                                        norm = 'l2',
+                                        min_df = 1,
+                                        max_df = 0.25,
+                                        stop_words = 'english',
+                                        ngram_range = (1, 3),
+                                        smooth_idf = False,
+                                        sublinear_tf = True)
 """
 
 doc_score = doc_model.sum(axis=1).ravel().tolist()[0]
 doc_rank = sorted(range(len(doc_score)), key=lambda k: doc_score[k], reverse=True)
 
-topNum = 3
 summaries = []
 keywords = []
 
@@ -201,24 +202,27 @@ def find_ticker(r, entry):
 
 company_list = pickle.load(open('app/data/company_list.pkl','rb'))
 
+org_stopwords = ['the', 'a', 'an', 'at', "'s", ',', '.']
+
 nlp = spacy.load('en_core_web_sm')
 #print([x[0][0] for x in summaries])
 #doc = nlp(' '.join([x[0][0] for x in summaries])) # doc = nlp(' '.join(corpus))
 #shown_content
-orgs = set()
-for h in header:
-    doc = nlp(h[0])
-    curr_orgs = [[x.text.lower(), x.start, x.end] for x in list(filter(lambda x: x.label_ in {'ORG','PERSON'}, doc.ents))]
-    new_h = [x.text for x in doc]
-    for x in reversed(curr_orgs):
-        new_h.insert(x[2],'</span>')
-        new_h.insert(x[1],'<span class = "key_entity">')
-        #new_h.insert(x[1],'<span style = "color: green;">')
-    h[0] = ' '.join(new_h)
-    curr_orgs = set([x[0] for x in curr_orgs])
-    orgs |= curr_orgs
+
+#all_title = ' '.join([h[0] for h in header])
+#all_corpus = ' '.join([' '.join([x[0].replace('\n',' ') for x in thread]) for thread in summaries])
+
+posts_content = [' '.join([header[i][0],
+                 ' '.join([x[0].replace('\n',' ') for x in summaries[i]])]) for i in range(len(header))]
+
+shown_content = ' '.join(posts_content)
+#print(shown_content)
+
+doc = nlp(shown_content)
+orgs = set([x.text.lower() for x in list(filter(lambda x: x.label_ in {'ORG','PERSON'}, doc.ents))])
+
 simple_orgs = []
-org_stopwords = ['the', 'a', 'an', 'at', "'s", ',', '.']
+
 for entry in orgs:
     simple_orgs.append(' '.join([x for x in nltk.word_tokenize(entry) if x.isalnum() and x not in org_stopwords]))
 
@@ -226,17 +230,29 @@ simple_orgs = [x for x in simple_orgs if x is not '']
 
 print(simple_orgs)
 
+key_assets = []
 news_symbols = []
 for org in simple_orgs:
     pattern = ".*" + org + ".*"
     r = re.compile(pattern)
-    #news_symbols.extend([x[0] for x in list(filter(lambda x: find_ticker(r,x), company_list))])
-    news_symbols.extend([x[0] for x in list(filter(lambda x: find_ticker(r,x), company_list))][:1])
+    matched_tickers = [x[0] for x in list(filter(lambda x: find_ticker(r,x), company_list))]
+    if matched_tickers != []:
+        news_symbols.append(matched_tickers[0])
+        key_assets.append(org)
+
 print(news_symbols)
+print(key_assets)
 
-key_assets = news_symbols
+#---------------------------------------------------------------------------------------------------
 
-num_asset_to_plot = 10
+post_key_assets = []
+
+for post in posts_content:
+    doc = nlp(post)
+    curr_post_assets = list(set([x.text for x in list(filter(lambda x: x.text.lower() in key_assets, doc.ents))]))
+    post_key_assets.append(curr_post_assets)
+
+num_asset_to_plot = 20
 
 iframe_news_symbols = [{"s":x} for x in news_symbols[:num_asset_to_plot]]
 #print(iframe_news_symbols)
@@ -417,16 +433,18 @@ t = threading.Thread(target=xibot)
 def index():
 	sources = {'name': 'news pieces', # 'CNBC, Bloomberg View, and Seeking Alpha',
 			  'length': len(corpus),
-			  'keywords': "; ".join([x[0] for x in t_keywords]),
-              'key_assets': "; ".join([x for x in key_assets])}
+			  'keywords': " || ".join([x[0] for x in t_keywords]),
+              'key_assets': " || ".join([x for x in key_assets])}
 	posts = [{'title': header[i][0],
 			  'content': "<br /><br />".join([x[0].replace('\n',' ') for x in summaries[i]]),
-			  'keywords': "; ".join([x[0] for x in keywords[i]]),
+			  'keywords': " || ".join([x[0] for x in keywords[i]]),
+              'key_assets': " || ".join([x for x in post_key_assets[i]]),
 			  'condense_rate': "{:.3%}".format(sum([len(x[0]) for x in summaries[i]])/len(corpus[i])),
-              'source': source[i],
-              'score': doc_score[i],
+              'source': header[i][2],
+              'score': "{:.3f}".format(doc_score[i]),
 			  'link': header[i][1]} for i in doc_rank]
-	iframe_src = {'tv' : "https://s.tradingview.com/marketoverviewwidgetembed/#"+urllib.parse.quote(str(json.dumps(iframe_dict)))}
+	iframe_src = {'tv' : "https://s.tradingview.com/marketoverviewwidgetembed/#"
+                         +urllib.parse.quote(str(json.dumps(iframe_dict)))}
 	return render_template("index.html",
     					   title='Home',
                            sources=sources,

@@ -1,62 +1,82 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-6 col-md-7">
-          <h2>{{ sources.length }} pieces of {{ sources.name }}</h2>
-          {% for post in posts %}
-            <div class="card mb-3">
-              <div class="card-header">
-                {{ post.score }} || {{ post.keywords }} || condensed to {{ post.condense_rate }}
+  <div class="row">
+    <div class="main col">
+      {% for post in posts %}
+        <div class="card mb-3">
+          <div class="card-block">
+            <div class="row no-gutters">
+              <div class="col-sm-6 card-header card-control text-white bg-dark" style="padding: 1.5rem;">
+                <div class="row no-gutters">
+                  <h4 class="card-title">{{ post.title |safe }}</h4>
+                </div>
+                <hr>
+                <div class="row no-gutters">
+                  <p style="padding: 0rem;">
+                    Importance Score: {{ post.score }} </br>
+                    Keywords: {{ post.keywords }} </br>
+                    Condensed to {{ post.condense_rate }}
+                  </p>
+                </div>
+                <hr>
+                <div class="row no-gutters">
+                  <p class="post-assets">
+                    {{ post.key_assets }}
+                  </p>
+                </div>
               </div>
-              <div class="card-block" style="padding: 2rem;">
-                <h4 class="card-title">{{ post.title |safe }}</h4>
+              <div class="col-sm-6" style="padding: 1.5rem;">
                 <p class="card-text">
                   {% autoescape false %}
                   {{ post.content }}
                   {% endautoescape %}
                 </p>
-              </div>
-              <div class="card-footer text-muted text-center">
-                <a href={{ post.link }} class="btn btn-primary"> Go to source ({{ post.source }}) </a>
-              </div>
-            </div>
-          {% endfor %}
-          <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-          <script>
-          $(document).on('click', '.card-header', function() {
-            $(this).parent().find('.card-text').toggle();
-          });
-          </script>
-        </div>
-        <div class="col-6 col-md-5">
-          <div class="sidebar">
-            <div style="width: 100%; height: 68vh;">
-              <iframe scrolling="no" allowtransparency="true" frameborder="0" width="100%" height="100%" src={{ iframe_src.tv }} style="box-sizing: border-box; padding-bottom: 18px;">
-              </iframe>
-            </div>
-            <div class="card text-white bg-success mb-3">
-              <div class="card-header">
-                <b>Today's keywords</b>
-              </div>
-              <div class="card-body">
-                <p class="card-text">
-                  {{sources.keywords}}
-                </p>
-              </div>
-            </div>
-            <div class="card text-white bg-success mb-3">
-              <div class="card-header">
-                <b>Today's key assets</b>
-              </div>
-              <div class="card-body">
-                <p class="card-text">
-                  {{sources.key_assets}}
+                <p class="row no-gutters post-assets" style="display: none;">
+                  {{ post.key_assets }}
                 </p>
               </div>
             </div>
           </div>
+            <a href={{ post.link }} class="btn btn-dark card-footer bg-dark font-weight-bold"> Read more on {{ post.source }} </a>
         </div>
+      {% endfor %}
+      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+      <script>
+      $(document).on('click', '.card-control', function() {
+        $(this).parent().parent().find('.card-text').toggle('fast');
+        $(this).parent().parent().find('.post-assets').toggle('fast');
+      });
+      </script>
     </div>
+    <div class="sidebar col-sm-auto">
+      <div class="sidebar_content">
+        <div class="card sidebar_card text-white bg-success mb-3">
+          <div class="card-header sidebar_card_header">
+            <b>Today's keywords</b>
+          </div>
+          <div class="card-body sidebar_card_body">
+            <p class="card-text">
+              {{sources.keywords}}
+            </p>
+          </div>
+        </div>
+        <div class="card sidebar_card text-white bg-success mb-3">
+          <div class="card-header sidebar_card_header">
+            <b>Today's key assets</b>
+          </div>
+          <div class="card-body sidebar_card_body scrollbar-cus">
+            <p class="card-text">
+              {{sources.key_assets}}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="sidebar_chart">
+        <iframe scrolling="no" allowtransparency="true" frameborder="0" width="125%" height="125%" src={{ iframe_src.tv }} class="frame">
+        </iframe>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
