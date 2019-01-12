@@ -1,9 +1,11 @@
 html {
     font-size: 12px;
+		overflow-x: hidden;
 }
 
 body{
 		background: #eee;
+		overflow-x: hidden;
 }
 
 p {

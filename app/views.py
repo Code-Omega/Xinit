@@ -240,8 +240,8 @@ for org in simple_orgs:
         news_symbols.append(matched_tickers[0])
         key_assets.append(org)
 
-print(news_symbols)
-print(key_assets)
+#print(news_symbols)
+#print(key_assets)
 
 #---------------------------------------------------------------------------------------------------
 
