@@ -1,4 +1,8 @@
 Flask
+Flask-PyMongo
+Flask-WTF
+pymongo
+bcrypt
 gunicorn
 beautifulsoup4
 Flask-Cors

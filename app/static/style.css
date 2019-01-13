@@ -1,5 +1,5 @@
 html {
-    font-size: 12px;
+		font-size: 12px;
 		overflow-x: hidden;
 }
 
@@ -9,15 +9,19 @@ body{
 }
 
 p {
-    margin: 0;
-    padding: 0;
+		margin: 0;
+		padding: 0;
 }
 
 hr {
-	  margin-top: 1rem;
-	  margin-bottom: 1rem;
-	  border: 0;
-	  border-top: 1px solid rgba(255, 255, 255, 0.2);
+		margin-top: 1rem;
+		margin-bottom: 1rem;
+		border: 0;
+		border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+hr.inv-clr{
+		border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .navbar{
@@ -28,8 +32,8 @@ hr {
 }
 
 .main {
-    padding-right: 0px;
-    padding-left: 15px;
+		padding-right: 0px;
+		padding-left: 15px;
 }
 
 .sidebar{
@@ -66,8 +70,8 @@ hr {
 		font-weight: bold;
 }
 
-.frame {
-	  transform-origin: 0 0;
+.frame{
+		transform-origin: 0 0;
 		box-sizing: border-box;
 		padding-bottom: 1rem;
 		-ms-transform: scale(0.8);
@@ -77,16 +81,23 @@ hr {
 		transform: scale(0.8);
 }
 
-.scrollbar-cus::-webkit-scrollbar-track {
--webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
-background-color: #75BA9B;
-border-radius: 3px; }
+.scrollbar-cus::-webkit-scrollbar-track{
+		-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+		background-color: #75BA9B;
+		border-radius: 3px;
+}
 
-.scrollbar-cus::-webkit-scrollbar {
-width: 6px;
-background-color: #52A345; }
+.scrollbar-cus::-webkit-scrollbar{
+		width: 6px;
+		background-color: #52A345;
+}
 
-.scrollbar-cus::-webkit-scrollbar-thumb {
-border-radius: 3px;
--webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
-background-color: #52A345; }
+.scrollbar-cus::-webkit-scrollbar-thumb{
+		border-radius: 3px;
+		-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+		background-color: #52A345;
+}
+
+.login {
+		width: 400px;
+}

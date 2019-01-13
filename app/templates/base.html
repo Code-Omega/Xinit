@@ -17,19 +17,29 @@
 	  </button>
 	  <div class="collapse navbar-collapse" id="navbarText">
 	    <ul class="navbar-nav mr-auto">
+        {% if title == "News" %}
 	      <li class="nav-item active">
-	        <a class="nav-link" href="#">NEWS <span class="sr-only">(current)</span></a>
+        {% else %}
+        <li class="nav-item">
+        {% endif %}
+	        <a class="nav-link btn btn-dark" href="/index">NEWS,</a>
 	      </li>
 	      <li class="nav-item">
-	        <a class="nav-link" href="#">Coming Soon</a>
+	        <a class="nav-link btn btn-dark" href="#">Coming Soon,</a>
 	      </li>
-	      <li class="nav-item">
-	        <a class="nav-link" href="#">Coming Soon</a>
+        {% if 'username' in session %}
+	      <li class="nav-item active">
+          <a class="nav-link btn btn-dark" href="/profile">user = {{ session['username'] }}</a>
 	      </li>
+        {% else %}
+        <li class="nav-item active">
+          <a href="/sign_in" class="btn btn-dark">SIGN_IN</a>
+        </li>
+        {% endif %}
 	      <li class="nav-item">
-	        <span class="navbar-brand">
-	      		)
-	  		</span>
+          <span class="navbar-brand">
+        		)
+    		  </span>
 	      </li>
 	    </ul>
 	  </div>

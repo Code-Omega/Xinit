@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container login mt-3">
+    <div class="row">
+        <div class="col card mt-3 pt-3">
+            <h2 class="text-center">
+                Register
+            </h2>
+            <form method=POST>
+                <button type="submit" class="col btn btn-link" formaction="{{ url_for('logout') }}">
+                    Sign out
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

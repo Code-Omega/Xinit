@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container login mt-3">
+  <div class="row">
+      <div class="col card mt-3 pt-3">
+        <div class="card-block">
+          <h2 class="text-center">
+              Welcome back!
+          </h2>
+          <hr class='inv-clr'>
+          <form method=POST>
+              {% from "_formhelpers.html" import render_field %}
+              {{ form.csrf_token }}
+              {{ render_field(form.username) }}
+              {{ render_field(form.password) }}
+              <div class="container">
+                <div class="row">
+                  <a href="{{ url_for('register') }}" class="col btn btn-link" role="button">New? Register Here!</a>
+                  <button type="submit" class="col btn btn-primary" formaction="{{ url_for('sign_in') }}">
+                    SIGN IN
+                  </button>
+                </div>
+              </div>
+          </form>
+          <br>
+        </div>
+      </div>
+  </div>
+</div>
+{% endblock %}

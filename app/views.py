@@ -1,4 +1,11 @@
-from flask import render_template
+from flask import render_template, url_for, request, session, redirect
+from flask_pymongo import PyMongo
+import bcrypt
+from itsdangerous import URLSafeTimedSerializer
+
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, validators
+
 from app import app
 
 import numpy as np
@@ -15,8 +22,12 @@ import re
 #---------------------------------------------------------------------------------------------------
 #                   Settings                                    begins
 #---------------------------------------------------------------------------------------------------
+app.secret_key = "not much of a secret unless you let the cat run: ehwruigobrc2pn1   c0 y"
 articles_per_source = 10
 topNum = 3
+
+app.config['MONGO_URI'] = 'mongodb://xibot:jacqep-4fubJy-ruhcoq@ds255784.mlab.com:55784/xinit'
+mongo = PyMongo(app)
 #---------------------------------------------------------------------------------------------------
 #                   Settings                                    ends
 #---------------------------------------------------------------------------------------------------
@@ -425,28 +436,110 @@ t = threading.Thread(target=xibot)
 #t.start()
 
 #---------------------------------------------------------------------------------------------------
+#                   User related
+#---------------------------------------------------------------------------------------------------
+
+class LoginForm(FlaskForm):
+    #username = StringField('username', validators=[DataRequired()])
+    username = StringField('Username',
+        [validators.DataRequired()],
+        render_kw={"placeholder": "Username"})
+    password = PasswordField('Password',
+        [validators.DataRequired()],
+        render_kw={"placeholder": "Password"})
+
+class RgstrForm(FlaskForm):
+    username = StringField('Username',
+        [validators.DataRequired(), validators.Length(min=4, max=25)],
+        render_kw={"placeholder": "Username"})
+    email = StringField('Email', [
+        validators.DataRequired(), validators.Email(message='Invalid email format')],
+        render_kw={"placeholder": "Email"})
+    password = PasswordField('Password',
+        [validators.DataRequired(),
+         validators.Length(min=6),
+         validators.EqualTo('confirm', message='Passwords must match')],
+        render_kw={"placeholder": "Password"})
+    confirm = PasswordField('Confirm Password',
+        render_kw={"placeholder": "Confirm Password"})
+
+
+#---------------------------------------------------------------------------------------------------
 #                   Web
 #---------------------------------------------------------------------------------------------------
 
 @app.route('/')
 @app.route('/index')
 def index():
-	sources = {'name': 'news pieces', # 'CNBC, Bloomberg View, and Seeking Alpha',
-			  'length': len(corpus),
-			  'keywords': " || ".join([x[0] for x in t_keywords]),
-              'key_assets': " || ".join([x for x in key_assets])}
-	posts = [{'title': header[i][0],
-			  'content': "<br /><br />".join([x[0].replace('\n',' ') for x in summaries[i]]),
-			  'keywords': " || ".join([x[0] for x in keywords[i]]),
+    #if 'username' in session: # load user specific info
+
+    sources = {'name': 'news pieces', # 'CNBC, Bloomberg View, and Seeking Alpha',
+               'length': len(corpus),
+               'keywords': " || ".join([x[0] for x in t_keywords]),
+               'key_assets': " || ".join([x for x in key_assets])}
+    posts = [{'title': header[i][0],
+              'content': "<br /><br />".join([x[0].replace('\n',' ') for x in summaries[i]]),
+              'keywords': " || ".join([x[0] for x in keywords[i]]),
               'key_assets': " || ".join([x for x in post_key_assets[i]]),
-			  'condense_rate': "{:.3%}".format(sum([len(x[0]) for x in summaries[i]])/len(corpus[i])),
+              'condense_rate': "{:.3%}".format(sum([len(x[0]) for x in summaries[i]])/len(corpus[i])),
               'source': header[i][2],
               'score': "{:.3f}".format(doc_score[i]),
-			  'link': header[i][1]} for i in doc_rank]
-	iframe_src = {'tv' : "https://s.tradingview.com/marketoverviewwidgetembed/#"
+              'link': header[i][1]} for i in doc_rank]
+    iframe_src = {'tv' : "https://s.tradingview.com/marketoverviewwidgetembed/#"
                          +urllib.parse.quote(str(json.dumps(iframe_dict)))}
-	return render_template("index.html",
-    					   title='Home',
+
+    return render_template("index.html",
+                           title='News',
                            sources=sources,
                            posts=posts,
                            iframe_src=iframe_src)
+
+
+@app.route('/sign_in', methods=['POST', 'GET'])
+def sign_in():
+    form = LoginForm()
+    if request.method == 'POST' and form.validate_on_submit():
+        users = mongo.db.users
+        login_user = users.find_one({'name' : request.form['username']})
+
+        if login_user:
+            if bcrypt.hashpw(request.form['password'].encode('utf-8'), login_user['password']) == login_user['password']:
+                session['username'] = request.form['username']
+                return redirect(url_for('index'))
+
+        return 'Invalid username/password combination'
+
+    return render_template('sign_in.html', form=form)
+
+
+@app.route('/register', methods=['POST', 'GET'])
+def register():
+    form = RgstrForm()
+    if request.method == 'POST' and form.validate_on_submit():
+        users = mongo.db.users
+        existing_user = users.find_one({'name' : request.form['username']})
+
+        if existing_user is None:
+            hashpass = bcrypt.hashpw(request.form['password'].encode('utf-8'), bcrypt.gensalt())
+            users.insert({'name' : request.form['username'],
+                          'password' : hashpass,
+                          'email' : request.form['email']
+                          })
+            session['username'] = request.form['username']
+            return redirect(url_for('index'))
+
+        return 'User already exists'
+
+    return render_template('register.html', form=form)
+
+
+@app.route('/profile') # make this username related maybe
+def user_profile():
+    return render_template('profile.html')
+
+
+@app.route('/sign_out', methods=['POST'])
+def logout():
+    # also log out of any databases or services
+    session.clear()
+    return redirect(url_for('index'))
