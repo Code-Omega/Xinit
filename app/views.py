@@ -23,7 +23,7 @@ import re
 #                   Settings                                    begins
 #---------------------------------------------------------------------------------------------------
 app.secret_key = "not much of a secret unless you let the cat run: ehwruigobrc2pn1   c0 y"
-articles_per_source = 10
+articles_per_source = 6
 topNum = 3
 
 app.config['MONGO_URI'] = 'mongodb://xibot:jacqep-4fubJy-ruhcoq@ds255784.mlab.com:55784/xinit'
