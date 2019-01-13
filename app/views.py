@@ -239,7 +239,7 @@ for entry in orgs:
 
 simple_orgs = [x for x in simple_orgs if x is not '']
 
-print(simple_orgs)
+#print(simple_orgs)
 
 key_assets = []
 news_symbols = []
@@ -500,7 +500,7 @@ def sign_in():
     form = LoginForm()
     if request.method == 'POST' and form.validate_on_submit():
         users = mongo.db.users
-        login_user = users.find_one({'name' : request.form['username']})
+        login_user = users.find_one({'username' : request.form['username']})
 
         if login_user:
             if bcrypt.hashpw(request.form['password'].encode('utf-8'), login_user['password']) == login_user['password']:
@@ -517,11 +517,11 @@ def register():
     form = RgstrForm()
     if request.method == 'POST' and form.validate_on_submit():
         users = mongo.db.users
-        existing_user = users.find_one({'name' : request.form['username']})
+        existing_user = users.find_one({'username' : request.form['username']})
 
         if existing_user is None:
             hashpass = bcrypt.hashpw(request.form['password'].encode('utf-8'), bcrypt.gensalt())
-            users.insert({'name' : request.form['username'],
+            users.insert({'username' : request.form['username'],
                           'password' : hashpass,
                           'email' : request.form['email']
                           })
