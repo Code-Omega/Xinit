@@ -4,6 +4,7 @@ Flask-WTF
 pymongo
 bcrypt
 gunicorn
+apscheduler
 beautifulsoup4
 Flask-Cors
 numpy
