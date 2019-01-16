@@ -610,3 +610,9 @@ def logout():
     # also log out of any databases or services
     session.clear()
     return redirect(url_for('index'))
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    # note that we set the 404 status explicitly
+    return render_template('404.html'), 404
