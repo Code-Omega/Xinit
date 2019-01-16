@@ -24,3 +24,8 @@ Which makes more sense? Should both be displayed?
 
 ## 3. UI
 The navigation bar collapses too soon
+
+## 4. Fragmentation
+Currently, some settings are duplicated in views.py and clock.py
+
+Some work is need to make a generalized config object and a shared slug
