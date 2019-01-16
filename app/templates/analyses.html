@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="main col">
+      {% for post in posts %}
+        <div class="card mb-3">
+          <div class="card-header text-white bg-dark card-control">
+            <b>{{ post.title }}</b>
+          </div>
+          <div class="card-body">
+            <p class="card-text">
+              {{ post.content }}
+            </p>
+          </div>
+          <div class="card-footer text-white bg-dark text-center small p-1">
+            <div class="row">
+              <div class="col col-2">
+                By
+              </div>
+              <div class="col col-4">
+                At
+              </div>
+              <div class="col col-3">
+                Keywords
+              </div>
+              <div class="col col-3">
+                Related Assets
+              </div>
+            </div>
+            <hr class="m-1">
+            <div class="row">
+              <div class="col col-2">
+                {{ post.author }}
+              </div>
+              <div class="col col-4">
+                {{ post.time_added.strftime("%Y-%m-%d %H:%M:%S") }}
+              </div>
+              <div class="col col-3">
+                {{ post.keywords }}
+              </div>
+              <div class="col col-3">
+                {{ post.key_assets }}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+      <script>
+      $(document).on('click', '.card-control', function() {
+        $(this).parent().parent().find('.card-text').toggle('fast');
+        $(this).parent().parent().find('.post-assets').toggle('fast');
+      });
+      </script>
+    </div>
+    <div class="sidebar col-sm-auto">
+      <div class="sidebar_chart">
+        <iframe scrolling="no" allowtransparency="true" frameborder="0" width="125%" height="125%" src={{ iframe_src.tv }} class="frame">
+        </iframe>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

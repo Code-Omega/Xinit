@@ -25,8 +25,15 @@
         {% endif %}
 	        <a class="nav-link btn btn-dark" href="/index">NEWS,</a>
 	      </li>
-	      <li class="nav-item">
-	        <a class="nav-link btn btn-dark" href="#">Coming Soon,</a>
+        <li class="nav-item">
+          <a class="nav-link btn btn-dark" href="#">Coming_Soon,</a>
+        </li>
+        {% if title == "Analyses" %}
+	      <li class="nav-item active">
+        {% else %}
+        <li class="nav-item">
+        {% endif %}
+	        <a class="nav-link btn btn-dark" href="/analyses">Analyses,</a>
 	      </li>
         {% if 'username' in session %}
 	      <li class="nav-item active">

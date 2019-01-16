@@ -7,8 +7,9 @@
                 Hello {{ session['username'] }}!
             </h2>
             <p>
-              User related info and actions will show up here.
+              More user related info and actions will show up here.
             </p>
+            <a href="{{ url_for('new_post') }}" class="btn btn-primary" role="button">Write a post</a>
             <form method=POST>
                 <button type="submit" class="col btn btn-link" formaction="{{ url_for('logout') }}">
                     Sign out

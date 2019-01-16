@@ -4,10 +4,11 @@ import bcrypt
 from itsdangerous import URLSafeTimedSerializer
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, validators
+from wtforms import StringField, PasswordField, TextAreaField, validators
 
 from app import app
 
+import functools
 import numpy as np
 import nltk
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -18,6 +19,7 @@ import json
 import spacy
 import pickle
 import re
+import datetime
 
 #---------------------------------------------------------------------------------------------------
 #                   Settings                                    begins
@@ -44,6 +46,11 @@ dSA = feedparser.parse(SA_feed_url)
 
 BVML_feed_url = 'https://www.bloomberg.com/view/rss/contributors/matt-levine.rss'
 dBVML = feedparser.parse(BVML_feed_url)
+
+feed_time = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+
+def utc_to_local(utc_dt):
+    return utc_dt.replace(tzinfo=datetime.timezone.utc).astimezone(tz=None)
 
 #---------------------------------------------------------------------------------------------------
 #                   Source                                      ends
@@ -436,24 +443,32 @@ t = threading.Thread(target=xibot)
 #t.start()
 
 #---------------------------------------------------------------------------------------------------
-#                   User related
+#                   Forms
 #---------------------------------------------------------------------------------------------------
 
 class LoginForm(FlaskForm):
-    #username = StringField('username', validators=[DataRequired()])
     username = StringField('Username',
         [validators.DataRequired()],
         render_kw={"placeholder": "Username"})
     password = PasswordField('Password',
         [validators.DataRequired()],
         render_kw={"placeholder": "Password"})
+    def validate(self):
+        if not FlaskForm.validate(self):
+            return False
+        login_user = mongo.db.users.find_one({'username' : self.username.data})
+        if login_user:
+            if bcrypt.hashpw(self.password.data.encode('utf-8'), login_user['password']) == login_user['password']:
+                return True
+        self.password.errors.append('Invalid username/password combination')
+        return False
 
 class RgstrForm(FlaskForm):
     username = StringField('Username',
         [validators.DataRequired(), validators.Length(min=4, max=25)],
         render_kw={"placeholder": "Username"})
-    email = StringField('Email', [
-        validators.DataRequired(), validators.Email(message='Invalid email format')],
+    email = StringField('Email',
+        [validators.DataRequired(), validators.Email(message='Invalid email format')],
         render_kw={"placeholder": "Email"})
     password = PasswordField('Password',
         [validators.DataRequired(),
@@ -462,11 +477,45 @@ class RgstrForm(FlaskForm):
         render_kw={"placeholder": "Password"})
     confirm = PasswordField('Confirm Password',
         render_kw={"placeholder": "Confirm Password"})
+    def validate(self):
+        if not FlaskForm.validate(self):
+            return False
+        existing_user = mongo.db.users.find_one({'username' : self.username.data})
+        if existing_user is not None:
+            self.username.errors.append('Username is already taken')
+            return False
+        existing_email = mongo.db.users.find_one({'email' : self.email.data})
+        if existing_email is not None:
+            self.email.errors.append('Email is already used')
+            return False
+        return True
 
+class NewPostForm(FlaskForm):
+    title = StringField('Title',
+        [validators.DataRequired(), validators.Length(min=3)],
+        render_kw={"placeholder": "Title"})
+    content = TextAreaField('Content',
+        [validators.DataRequired()],
+        render_kw={"placeholder": "Content"})
+    keywords = StringField('Keywords',
+        render_kw={"placeholder": "keywords separated by commas"})
+    def validate(self):
+        if not FlaskForm.validate(self):
+            return False
+        return True
 
 #---------------------------------------------------------------------------------------------------
 #                   Web
 #---------------------------------------------------------------------------------------------------
+
+def login_required(fn):
+    @functools.wraps(fn)
+    def inner(*args, **kwargs):
+        if session.get('username'):
+            return fn(*args, **kwargs)
+        return redirect(url_for('sign_in'))
+    return inner
+
 
 @app.route('/')
 @app.route('/index')
@@ -494,46 +543,64 @@ def index():
                            posts=posts,
                            iframe_src=iframe_src)
 
+@app.route('/analyses')
+def analyses():
+    #if 'username' in session: # load user specific info
+
+    posts = mongo.db.posts.find().limit(5);
+    # posts = [{'title': "Clustering of S&P 500 stocks late 2018 - early 2019",
+    #           'content': "This analysis takes a look at how different stocks performed in the recent market that was under recent rate hikes and government shut down. [To be uploaded]",
+    #           'keywords': "Clustering",
+    #           'key_assets': "O"}]
+
+    # make this iframe respond to analyses' assets -> used a different iframe dict
+    iframe_src = {'tv' : "https://s.tradingview.com/marketoverviewwidgetembed/#"
+                         +urllib.parse.quote(str(json.dumps(iframe_dict)))}
+
+    return render_template("analyses.html",
+                           title='Analyses',
+                           posts=posts,
+                           iframe_src=iframe_src)
+
+
+@app.route('/new_post', methods=['POST', 'GET'])
+@login_required
+def new_post():
+    form = NewPostForm()
+    if form.validate_on_submit():
+        mongo.db.posts.insert({'title' : request.form['title'],
+                               'content' : request.form['content'],
+                               'keywords' : request.form['keywords'], # (semi)automate this
+                               'time_added' : datetime.datetime.utcnow(),
+                               'author' : session['username']})
+        return redirect(url_for('analyses'))
+    return render_template('new_post.html', form=form)
+
 
 @app.route('/sign_in', methods=['POST', 'GET'])
 def sign_in():
     form = LoginForm()
-    if request.method == 'POST' and form.validate_on_submit():
-        users = mongo.db.users
-        login_user = users.find_one({'username' : request.form['username']})
-
-        if login_user:
-            if bcrypt.hashpw(request.form['password'].encode('utf-8'), login_user['password']) == login_user['password']:
-                session['username'] = request.form['username']
-                return redirect(url_for('index'))
-
-        return 'Invalid username/password combination'
-
+    if form.validate_on_submit():
+        session['username'] = request.form['username']
+        return redirect(url_for('index'))
     return render_template('sign_in.html', form=form)
 
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
     form = RgstrForm()
-    if request.method == 'POST' and form.validate_on_submit():
-        users = mongo.db.users
-        existing_user = users.find_one({'username' : request.form['username']})
-
-        if existing_user is None:
-            hashpass = bcrypt.hashpw(request.form['password'].encode('utf-8'), bcrypt.gensalt())
-            users.insert({'username' : request.form['username'],
-                          'password' : hashpass,
-                          'email' : request.form['email']
-                          })
-            session['username'] = request.form['username']
-            return redirect(url_for('index'))
-
-        return 'User already exists'
-
+    if form.validate_on_submit():
+        hashpass = bcrypt.hashpw(request.form['password'].encode('utf-8'), bcrypt.gensalt())
+        mongo.db.users.insert({'username' : request.form['username'],
+                               'password' : hashpass,
+                               'email' : request.form['email']})
+        session['username'] = request.form['username']
+        return redirect(url_for('index'))
     return render_template('register.html', form=form)
 
 
 @app.route('/profile') # make this username related maybe
+@login_required
 def user_profile():
     return render_template('profile.html')
 
