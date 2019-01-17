@@ -181,7 +181,7 @@ iframe_dict = {
 # BOT_NAME = 'xibot'
 # BOT_ID = 'U7MC33TL1'
 # WEBSOCKET_DELAY = 10
-# slack_client = SlackClient("xoxb-259411129681-GdhoO4YDGsTolR9zSTVR8ndP")
+# slack_client = SlackClient("-----------------------------------------------")
 #
 # def xibot():
 #     if slack_client.rtm_connect():
@@ -253,7 +253,7 @@ class NewPostForm(FlaskForm):
         render_kw={"placeholder": "Title"})
     content = TextAreaField('Content',
         [validators.DataRequired()],
-        render_kw={"placeholder": "Content"})
+        render_kw={"placeholder": "Content", "id": "summernote"})
     keywords = StringField('Keywords',
         render_kw={"placeholder": "keywords separated by commas"})
     def validate(self):

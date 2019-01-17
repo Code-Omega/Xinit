@@ -8,10 +8,11 @@
           <div class="card-header text-white bg-dark card-control">
             <b>{{ post.title }}</b>
           </div>
-          <div class="card-body">
-            <p class="card-text">
-              {{ post.content }}
-            </p>
+          <div class="card-body card-abstract">
+            {{ post.content |safe }}
+          </div>
+          <div class="card-body card-text" style="display: none;">
+            {{ post.content |safe }}
           </div>
           <div class="card-footer text-white bg-dark text-center small p-1">
             <div class="row">
@@ -50,7 +51,7 @@
       <script>
       $(document).on('click', '.card-control', function() {
         $(this).parent().parent().find('.card-text').toggle('fast');
-        $(this).parent().parent().find('.post-assets').toggle('fast');
+        $(this).parent().parent().find('.card-abstract').toggle('fast');
       });
       </script>
     </div>

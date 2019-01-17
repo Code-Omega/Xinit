@@ -6,7 +6,7 @@ from slackclient import SlackClient
 BOT_NAME = 'xibot'
 BOT_ID = 'U7MC33TL1'
 WEBSOCKET_DELAY = 1
-slack_client = SlackClient("xoxb-259411129681-GdhoO4YDGsTolR9zSTVR8ndP")
+slack_client = SlackClient("xxxx-xxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxx")
 
 
 if slack_client.rtm_connect():
