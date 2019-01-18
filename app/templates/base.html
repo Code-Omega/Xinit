@@ -21,20 +21,22 @@
 	    <ul class="navbar-nav mr-auto">
         {% if title == "News" %}
 	      <li class="nav-item active">
+          <a class="nav-link btn btn-info" href="/index">NEWS,</a>
         {% else %}
         <li class="nav-item">
-        {% endif %}
 	        <a class="nav-link btn btn-dark" href="/index">NEWS,</a>
+        {% endif %}
 	      </li>
         <li class="nav-item">
           <a class="nav-link btn btn-dark" href="#">Coming_Soon,</a>
         </li>
         {% if title == "Analyses" %}
 	      <li class="nav-item active">
+          <a class="nav-link btn btn-info" href="/analyses">Analyses,</a>
         {% else %}
         <li class="nav-item">
-        {% endif %}
 	        <a class="nav-link btn btn-dark" href="/analyses">Analyses,</a>
+        {% endif %}
 	      </li>
         {% if 'username' in session %}
 	      <li class="nav-item active">
@@ -65,9 +67,11 @@
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <script>
     $(document).ready(function() {
-      $('#summernote').summernote({
+      $('[id^=summernote]').summernote({
         tabsize: 2,
-        height: 200,
+        minHeight: 100,
+        maxHeight: 800,
+        height: 'auto',
         popover: {
             image: [
                 ['custom', ['imageAttributes']],

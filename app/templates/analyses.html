@@ -5,11 +5,16 @@
     <div class="main col">
       {% for post in posts %}
         <div class="card mb-3">
-          <div class="card-header text-white bg-dark card-control">
-            <b>{{ post.title }}</b>
+          <div class="card-header text-white bg-dark">
+            <div class = "row">
+              <h3 class = "col">{{ post.title }}</h3>
+              <button type="button" class="col col-auto card-control btn btn-info mr-3" data-toggle="button" aria-pressed="false" autocomplete="off">
+                <b>Read more</b>
+              </button>
+            </div>
           </div>
           <div class="card-body card-abstract">
-            {{ post.content |safe }}
+            {{ post.abstract |safe }}
           </div>
           <div class="card-body card-text" style="display: none;">
             {{ post.content |safe }}
@@ -53,8 +58,8 @@
       <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
       <script>
       $(document).on('click', '.card-control', function() {
-        $(this).parent().parent().find('.card-text').toggle('fast');
-        $(this).parent().parent().find('.card-abstract').toggle('fast');
+        $(this).parent().parent().parent().find('.card-text').toggle(60);
+        $(this).parent().parent().parent().find('.card-abstract').toggle(60);
       });
       </script>
     </div>

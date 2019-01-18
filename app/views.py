@@ -252,11 +252,16 @@ class NewPostForm(FlaskForm):
     title = StringField('Title',
         [validators.DataRequired(), validators.Length(min=3)],
         render_kw={"placeholder": "Title"})
+    abstract = TextAreaField('Abstract',
+        [validators.DataRequired()],
+        render_kw={"placeholder": "Abstract", "id": "summernote_abs"})
     content = TextAreaField('Content',
         [validators.DataRequired()],
-        render_kw={"placeholder": "Content", "id": "summernote"})
+        render_kw={"placeholder": "Content", "id": "summernote_ctt"})
     keywords = StringField('Keywords',
-        render_kw={"placeholder": "keywords separated by commas"})
+        render_kw={"placeholder": "Keywords separated by commas"})
+    key_assets = StringField('Key Assets',
+        render_kw={"placeholder": "Key assets separated by commas"})
     def validate(self):
         if not FlaskForm.validate(self):
             return False
@@ -275,7 +280,6 @@ def login_required(fn):
     return inner
 
 
-@app.route('/')
 @app.route('/index')
 def index():
     #if 'username' in session: # load user specific info
@@ -315,15 +319,12 @@ def index():
                            posts=posts,
                            iframe_src=iframe_src)
 
+@app.route('/')
 @app.route('/analyses')
 def analyses():
     #if 'username' in session: # load user specific info
 
     posts = mongo.db.posts.find().limit(5);
-    # posts = [{'title': "Clustering of S&P 500 stocks late 2018 - early 2019",
-    #           'content': "This analysis takes a look at how different stocks performed in the recent market that was under recent rate hikes and government shut down. [To be uploaded]",
-    #           'keywords': "Clustering",
-    #           'key_assets': "O"}]
 
     # make this iframe respond to analyses' assets -> used a different iframe dict
     iframe_src = {'tv' : "https://s.tradingview.com/marketoverviewwidgetembed/#"
@@ -341,8 +342,10 @@ def new_post():
     form = NewPostForm()
     if form.validate_on_submit():
         mongo.db.posts.insert({'title' : request.form['title'],
+                               'abstract' : request.form['abstract'],
                                'content' : request.form['content'],
                                'keywords' : request.form['keywords'], # (semi)automate this
+                               'key_assets' : request.form['key_assets'], # (semi)automate this
                                'time_added' : datetime.datetime.utcnow(),
                                'author' : session['username']})
         return redirect(url_for('analyses'))
@@ -356,8 +359,10 @@ def update_post(id):
     if form.validate_on_submit():
         mongo.db.posts.update_one({'_id': ObjectId(id)},
             {'$set': {'title' : request.form['title'],
+                      'abstract' : request.form['abstract'],
                       'content' : request.form['content'],
-                      'keywords' : request.form['keywords']}
+                      'keywords' : request.form['keywords'],
+                      'key_assets' : request.form['key_assets']}
             })
         return redirect(url_for('analyses'))
     return render_template('new_post.html', form=form)

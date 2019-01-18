@@ -12,8 +12,10 @@
               {% from "_formhelpers.html" import render_field %}
               {{ form.csrf_token }}
               {{ render_field(form.title) }}
+              {{ render_field(form.abstract) }}
               {{ render_field(form.content) }}
               {{ render_field(form.keywords) }}
+              {{ render_field(form.key_assets) }}
               <div class="container">
                 <div class="row">
                   <button type="submit" class="col btn btn-primary" formaction="{{ request.path }}">
