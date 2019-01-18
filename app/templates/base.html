@@ -8,11 +8,11 @@
     {% endif %}
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-      <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.css" rel="stylesheet">
     <link rel="stylesheet" href="../static/style.css">
   </head>
   <body>
-	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+	<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
 	  <a class="navbar-brand" href="#">X.init(</a>
 	  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
 	    <span class="navbar-toggler-icon"></span>
@@ -61,12 +61,26 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.js"></script>
+  <script src="../static/summernote-image-attributes.js"></script>
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <script>
     $(document).ready(function() {
       $('#summernote').summernote({
         tabsize: 2,
-        height: 100
+        height: 200,
+        popover: {
+            image: [
+                ['custom', ['imageAttributes']],
+                ['imagesize', ['imageSize100', 'imageSize50', 'imageSize25']],
+                ['float', ['floatLeft', 'floatRight', 'floatNone']],
+                ['remove', ['removeMedia']]
+            ],
+        },
+        imageAttributes:{
+            icon:'<i class="note-icon-pencil"/>',
+            removeEmpty:false, // true = remove attributes | false = leave empty if present
+            disableUpload: false // true = don't display Upload Options | Display Upload Options
+        }
       });
     });
   </script>

@@ -44,6 +44,9 @@
                 {{ post.key_assets }}
               </div>
             </div>
+            {% if session.username == post.author %}
+              <a class="btn btn-dark btn-block bg-dark font-weight-bold" href="{{ url_for('update_post', id=post['_id']) }}">Edit</a>
+            {% endif %}
           </div>
         </div>
       {% endfor %}

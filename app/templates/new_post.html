@@ -16,7 +16,7 @@
               {{ render_field(form.keywords) }}
               <div class="container">
                 <div class="row">
-                  <button type="submit" class="col btn btn-primary" formaction="{{ url_for('new_post') }}">
+                  <button type="submit" class="col btn btn-primary" formaction="{{ request.path }}">
                     Publish
                   </button>
                 </div>

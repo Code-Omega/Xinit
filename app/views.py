@@ -1,5 +1,6 @@
 from flask import render_template, url_for, request, session, redirect
 from flask_pymongo import PyMongo
+from bson.objectid import ObjectId
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, TextAreaField, validators
 from itsdangerous import URLSafeTimedSerializer
@@ -344,6 +345,20 @@ def new_post():
                                'keywords' : request.form['keywords'], # (semi)automate this
                                'time_added' : datetime.datetime.utcnow(),
                                'author' : session['username']})
+        return redirect(url_for('analyses'))
+    return render_template('new_post.html', form=form)
+
+@app.route('/<string:id>/update_post', methods=['POST', 'GET'])
+@login_required
+def update_post(id):
+    post = mongo.db.posts.find_one({'_id': ObjectId(id)})
+    form = NewPostForm(data=post)
+    if form.validate_on_submit():
+        mongo.db.posts.update_one({'_id': ObjectId(id)},
+            {'$set': {'title' : request.form['title'],
+                      'content' : request.form['content'],
+                      'keywords' : request.form['keywords']}
+            })
         return redirect(url_for('analyses'))
     return render_template('new_post.html', form=form)
 
