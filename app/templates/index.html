@@ -15,15 +15,20 @@
                 <div class="row no-gutters">
                   <p style="padding: 0rem;">
                     Importance Score: {{ post.score }} </br>
-                    Keywords: {{ post.keywords }} </br>
+                    Keywords:
+                      {% for keyword in post.keywords %}
+                        <a href="#" class="badge badge-light">{{ keyword }}</a>
+                      {% endfor %} </br>
                     Condensed to {{ post.condense_rate }}
                   </p>
                 </div>
                 <hr>
                 <div class="row no-gutters">
-                  <p class="post-assets">
-                    {{ post.key_assets }}
-                  </p>
+                  <h5 class="post-assets">
+                    {% for asset in post.key_assets %}
+                      <a href="#" class="badge badge-info badge-asset">{{ asset }}</a>
+                    {% endfor %}
+                  </h5>
                 </div>
               </div>
               <div class="col-sm-6" style="padding: 1.5rem;">
@@ -32,9 +37,13 @@
                   {{ post.content }}
                   {% endautoescape %}
                 </p>
-                <p class="row no-gutters post-assets" style="display: none;">
-                  {{ post.key_assets }}
-                </p>
+                <div class="row no-gutters post-assets" style="display: none;">
+                  <h5>
+                    {% for asset in post.key_assets %}
+                      <a href="#" class="badge badge-info badge-asset">{{ asset }}</a>
+                    {% endfor %}
+                  </h5>
+                </div>
               </div>
             </div>
           </div>
@@ -56,9 +65,11 @@
             <b>Today's keywords</b>
           </div>
           <div class="card-body sidebar_card_body">
-            <p class="card-text">
-              {{sources.keywords}}
-            </p>
+            <h5 class="card-text">
+              {% for keyword in sources.keywords %}
+                <a href="#" class="badge badge-light ">{{ keyword }}</a>
+              {% endfor %}
+            </h5>
           </div>
         </div>
         <div class="card sidebar_card text-white bg-success mb-3">
@@ -66,9 +77,11 @@
             <b>Today's key assets</b>
           </div>
           <div class="card-body sidebar_card_body scrollbar-cus">
-            <p class="card-text">
-              {{sources.key_assets}}
-            </p>
+            <h5 class="card-text">
+              {% for asset in sources.key_assets %}
+                <a href="#" class="badge badge-light ">{{ asset }}</a>
+              {% endfor %}
+            </h5>
           </div>
         </div>
       </div>

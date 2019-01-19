@@ -300,12 +300,12 @@ def index():
 
     sources = {'name': 'news pieces', # 'CNBC, Bloomberg View, and Seeking Alpha',
                'length': len(corpus),
-               'keywords': " || ".join([x[0] for x in t_keywords]),
-               'key_assets': " || ".join([x for x in key_assets])}
+               'keywords': [x[0] for x in t_keywords],
+               'key_assets': [x for x in key_assets]}
     posts = [{'title': header[i][0],
               'content': "<br /><br />".join([x[0].replace('\n',' ') for x in summaries[i]]),
-              'keywords': " || ".join([x[0] for x in keywords[i]]),
-              'key_assets': " || ".join([x for x in post_key_assets[i]]),
+              'keywords': [x[0] for x in keywords[i]],
+              'key_assets': [x for x in post_key_assets[i]],
               'condense_rate': "{:.3%}".format(sum([len(x[0]) for x in summaries[i]])/len(corpus[i])),
               'source': header[i][2],
               'score': "{:.3f}".format(doc_score[i]),
@@ -373,6 +373,7 @@ def sign_in():
     form = LoginForm()
     if form.validate_on_submit():
         session['username'] = request.form['username']
+        session['privilege_level'] = mongo.db.users.find_one({'username' : session['username']})['privilege_level']
         return redirect(url_for('index'))
     return render_template('sign_in.html', form=form)
 
@@ -384,8 +385,10 @@ def register():
         hashpass = bcrypt.hashpw(request.form['password'].encode('utf-8'), bcrypt.gensalt())
         mongo.db.users.insert({'username' : request.form['username'],
                                'password' : hashpass,
-                               'email' : request.form['email']})
+                               'email' : request.form['email'],
+                               'privilege_level': 2}) # 0 for admin; 1 for trusted user; 2 for user;
         session['username'] = request.form['username']
+        session['privilege_level'] = 2
         return redirect(url_for('index'))
     return render_template('register.html', form=form)
 
@@ -407,3 +410,14 @@ def logout():
 def page_not_found(e):
     # note that we set the 404 status explicitly
     return render_template('404.html'), 404
+
+
+# @app.route('/temp', methods=['POST', 'GET'])
+# @login_required
+# def temp():
+#     if session['privilege_level'] == 2:
+#         mongo.db.users.update_many({},
+#             {'$set': {'': 0}})
+#         return 'okay'
+#     else:
+#         return 'admin error', 401

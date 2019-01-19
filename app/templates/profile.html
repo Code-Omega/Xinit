@@ -9,7 +9,9 @@
             <p>
               More user related info and actions will show up here.
             </p>
-            <a href="{{ url_for('new_post') }}" class="btn btn-primary" role="button">Write a post</a>
+            {% if session['privilege_level'] < 2 %}
+              <a href="{{ url_for('new_post') }}" class="btn btn-primary" role="button">Write a post</a>
+            {% endif %}
             <form method=POST>
                 <button type="submit" class="col btn btn-link" formaction="{{ url_for('logout') }}">
                     Sign out

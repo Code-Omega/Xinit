@@ -24,6 +24,11 @@ hr.inv-clr{
 		border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
+.badge-asset {
+	color: #5CBC99;
+  background-color: #333333;
+}
+
 .navbar{
 		position: -webkit-sticky;
 		position: sticky;
