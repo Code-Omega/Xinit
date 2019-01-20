@@ -1,11 +1,14 @@
 html {
 		font-size: 12px;
 		overflow-x: hidden;
+		overflow-y: hidden;
 }
 
 body{
 		background: #eee;
+		height: 100vh;
 		overflow-x: hidden;
+		/* overflow-y: hidden; */
 }
 
 p {
@@ -24,9 +27,20 @@ hr.inv-clr{
 		border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
+.bg-theme{
+		background-color: rgba(52, 58, 64, 1)
+		/* background-color: rgba(63, 101, 117, 1) */
+		/* background-color: rgba(225, 216, 202, 1) */
+}
+
+.bg-theme-secondary{
+		/* background-color: rgba(225, 216, 202, 1) */
+		/* background-color: rgba(52, 58, 64, 1) */
+}
+
 .badge-asset {
-	color: #5CBC99;
-  background-color: #333333;
+		color: #5CBC99;
+  	background-color: #333333;
 }
 
 .navbar{
@@ -42,8 +56,8 @@ hr.inv-clr{
 }
 
 .sidebar{
-		width = 400px;
-		height: 100hv;
+		width: 400px;
+		/* height: 100vh; */
 }
 
 .sidebar_content{
@@ -55,13 +69,13 @@ hr.inv-clr{
 .sidebar_chart{
 		position: -webkit-sticky;
 		position: sticky;
-		top: 42px;
-		width: 360px;
+		top: 46px;
+		/* width: 360px; */
 		height: 400px;
 }
 
 .sidebar_card{
-		width: 360px;
+		/* width: 360px; */
 }
 
 .sidebar_card_body{
@@ -87,20 +101,23 @@ hr.inv-clr{
 }
 
 .scrollbar-cus::-webkit-scrollbar-track{
-		-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
-		background-color: #75BA9B;
+		/* -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1); */
+		/* background-color: #75BA9B; */
+		background-color: rgba(52, 58, 64, 1);
 		border-radius: 3px;
 }
 
 .scrollbar-cus::-webkit-scrollbar{
 		width: 6px;
-		background-color: #52A345;
+		/* background-color: #52A345; */
+		background-color: rgba(52, 58, 64, 1);
 }
 
 .scrollbar-cus::-webkit-scrollbar-thumb{
-		border-radius: 3px;
-		-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
-		background-color: #52A345;
+		/* border-radius: 3px; */
+		/* -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1); */
+		/* background-color: #52A345; */
+		background-color: #5CBC99;
 }
 
 .login {
