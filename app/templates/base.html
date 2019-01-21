@@ -12,49 +12,41 @@
     <link href="https://fonts.googleapis.com/css?family=Oswald|Raleway" rel="stylesheet">
     <link rel="stylesheet" href="../static/style.css">
   </head>
-	<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-	  <a class="navbar-brand" href="#">X.init</a>
+	<nav class="navbar navbar-expand-sm navbar-dark bg-dark p-0">
+	  <a class="navbar-brand ml-3" href="#"><h2 class="m-0">X.init</h2></a>
 	  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
 	    <span class="navbar-toggler-icon"></span>
 	  </button>
 	  <div class="collapse navbar-collapse" id="navbarText">
 	    <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-          <span class="navbar-brand mr-0">
-        		(
+          <span class="navbar-brand m-0">
+        		<h3 class="m-0">(</h2>
     		  </span>
 	      </li>
-        {% if title == "News" %}
-	      <li class="nav-item active">
-          <a class="nav-link btn btn-info bg-theme-highlight" href="/index">NEWS,</a>
-        {% else %}
-        <li class="nav-item">
-	        <a class="nav-link btn btn-dark" href="/index">NEWS,</a>
-        {% endif %}
+	      <li class="nav-item {{ "active" if title == "News" else None }}">
+          <a class="nav-link btn p-2 {{ "btn-info bg-theme-highlight btn-rect" if title == "News" else "btn-dark" }} " href="/index">
+            <h4 class="m-0">News,</h4>
+          </a>
 	      </li>
         <li class="nav-item">
-          <a class="nav-link btn btn-dark" href="#">Coming_Soon,</a>
+          <a class="nav-link btn p-2 btn-dark" href="#">
+            <h4 class="m-0">Coming_Soon,</h4>
+          </a>
         </li>
-        {% if title == "Analyses" %}
-	      <li class="nav-item active">
-          <a class="nav-link btn btn-info bg-theme-highlight" href="/analyses">Analyses,</a>
-        {% else %}
-        <li class="nav-item">
-	        <a class="nav-link btn btn-dark" href="/analyses">Analyses,</a>
-        {% endif %}
+        <li class="nav-item {{ "active" if title == "Analyses" else None }}">
+          <a class="nav-link btn p-2 {{ "btn-info bg-theme-highlight btn-rect" if title == "Analyses" else "btn-dark" }} " href="/analyses">
+            <h4 class="m-0">Analyses,</h4>
+          </a>
 	      </li>
-        {% if 'username' in session %}
-	      <li class="nav-item active">
-          <a class="nav-link btn btn-dark" href="/profile">user = {{ session['username'] }}</a>
+	      <li class="nav-item {{ "active" if title == "Profile" else None }}">
+          <a class="nav-link btn p-2 {{ "btn-info bg-theme-highlight btn-rect" if title == "Profile" else "btn-dark" }}" href="/profile">
+            <h4 class="m-0">{{ "User = {}".format(session['username']) if session['username'] else "Sign_In" }}</h4>
+          </a>
 	      </li>
-        {% else %}
-        <li class="nav-item active">
-          <a href="/sign_in" class="btn btn-dark">SIGN_IN</a>
-        </li>
-        {% endif %}
 	      <li class="nav-item">
           <span class="navbar-brand mr-0">
-        		)
+        		<h3 class="m-0">)</h3>
     		  </span>
 	      </li>
 	    </ul>

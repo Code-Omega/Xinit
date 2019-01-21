@@ -306,7 +306,8 @@ def index():
               'content': "<br /><br />".join([x[0].replace('\n',' ') for x in summaries[i]]),
               'keywords': [x[0] for x in keywords[i]],
               'key_assets': [x for x in post_key_assets[i]],
-              'condense_rate': "{:.3%}".format(sum([len(x[0]) for x in summaries[i]])/len(corpus[i])),
+              #'condense_rate': "{:.3%}".format(sum([len(x[0]) for x in summaries[i]])/len(corpus[i])),
+              'condense_rate': "{:.3}".format(sum([len(x[0])*100 for x in summaries[i]])/len(corpus[i])),
               'source': header[i][2],
               'score': "{:.3f}".format(doc_score[i]),
               'link': header[i][1]} for i in doc_rank]
@@ -375,7 +376,7 @@ def sign_in():
         session['username'] = request.form['username']
         session['privilege_level'] = mongo.db.users.find_one({'username' : session['username']})['privilege_level']
         return redirect(url_for('index'))
-    return render_template('sign_in.html', form=form)
+    return render_template('sign_in.html', form=form, title='Profile')
 
 
 @app.route('/register', methods=['POST', 'GET'])
@@ -390,13 +391,13 @@ def register():
         session['username'] = request.form['username']
         session['privilege_level'] = 2
         return redirect(url_for('index'))
-    return render_template('register.html', form=form)
+    return render_template('register.html', form=form, title='Profile')
 
 
 @app.route('/profile') # make this username related maybe
 @login_required
 def user_profile():
-    return render_template('profile.html')
+    return render_template('profile.html', title='Profile')
 
 
 @app.route('/sign_out', methods=['POST'])
@@ -409,7 +410,7 @@ def logout():
 @app.errorhandler(404)
 def page_not_found(e):
     # note that we set the 404 status explicitly
-    return render_template('404.html'), 404
+    return render_template('404.html', title='404'), 404
 
 
 # @app.route('/temp', methods=['POST', 'GET'])

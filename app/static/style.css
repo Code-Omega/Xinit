@@ -2,6 +2,7 @@ html {
 	  font-size: 14px;
 		overflow-x: hidden;
 		overflow-y: hidden;
+		letter-spacing: 0rem;
 }
 
 body {
@@ -13,6 +14,7 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
 		font-family: 'Oswald', sans-serif;
+		letter-spacing: 0.05rem;
 }
 
 p {
@@ -32,6 +34,23 @@ hr.inv-clr{
 		border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
+progress {
+	height: 1em;
+	-webkit-appearance: none;
+	border: none;
+	vertical-align: text-bottom;
+}
+
+progress::-webkit-progress-bar {
+	background: rgba(0, 0, 0, 0.5);
+	border-radius: 0.2em;
+}
+
+progress::-webkit-progress-value {
+	border-radius: 0.2em 0 0 0.2em;
+	background: #5CBC99;
+}
+
 .card-title{
 		/* font-family: 'Rubik Mono One', sans-serif; */
 }
@@ -40,6 +59,16 @@ hr.inv-clr{
 		background-color: rgba(52, 58, 64, 1)
 		/* background-color: rgba(63, 101, 117, 1) */
 		/* background-color: rgba(225, 216, 202, 1) */
+}
+
+.navbar-brand{
+		color: #5CBC99 !important;
+}
+
+.btn-rect{
+		border-radius: 0 !important;
+		border: 0 !important;
+		height: 115% !important;
 }
 
 .bg-theme-highlight{
@@ -61,7 +90,7 @@ hr.inv-clr{
 		position: sticky;
 		top: 0;
 		z-index: 3;
-		font-size: 16px;
+		font-family: 'Oswald', sans-serif;
 }
 
 .main {
