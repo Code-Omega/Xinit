@@ -276,7 +276,7 @@ def login_required(fn):
     def inner(*args, **kwargs):
         if session.get('username'):
             return fn(*args, **kwargs)
-        return redirect(url_for('sign_in'))
+        return redirect(url_for('sign_in')), 401
     return inner
 
 
@@ -375,7 +375,7 @@ def update_asset_watchlist(asset):
     mongo.db.users.update_one({'username': session['username']},
             {'$set': {'asset_watchlist.{}'.format(asset) : ""}
             })
-    return jsonify("{} added to {}'s watchlist".format(asset,session['username']))
+    return jsonify("{} added to {}'s watchlist".format(asset,session['username'])), 200
 
 @app.route('/sign_in', methods=['POST', 'GET'])
 def sign_in():
