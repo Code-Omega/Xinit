@@ -27,7 +27,7 @@
                 <div class="row no-gutters">
                   <p class="post-assets">
                     {% for asset in post.key_assets %}
-                      <a href="#" class="badge badge-info badge-asset">{{ asset }}</a>
+                      <a href={{ url_for('update_asset_watchlist', asset=asset) }} class="badge badge-info badge-asset">{{ asset }}</a>
                     {% endfor %}
                   </p>
                 </div>
@@ -56,6 +56,16 @@
         $(document).on('click', '.card-control', function() {
           $(this).parent().parent().find('.card-text').toggle('fast');
           $(this).parent().parent().find('.post-assets').toggle('fast');
+        });
+        $(function(){
+          $('.badge-asset').click(function(){
+            $.post(this.href, function(response) {
+              alert(response);
+            }).fail(function() {
+              alert("Please Log in to keep track of keywords and assets.");
+            });
+            return false;
+          });
         });
       </script>
     </div>

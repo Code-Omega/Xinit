@@ -1,4 +1,4 @@
-from flask import render_template, url_for, request, session, redirect
+from flask import render_template, url_for, request, session, redirect, jsonify
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 from flask_wtf import FlaskForm
@@ -368,6 +368,14 @@ def update_post(id):
         return redirect(url_for('analyses'))
     return render_template('new_post.html', form=form)
 
+
+@app.route('/<string:asset>/update_asset_watchlist', methods=['POST', 'GET'])
+@login_required
+def update_asset_watchlist(asset):
+    mongo.db.users.update_one({'username': session['username']},
+            {'$set': {'asset_watchlist.{}'.format(asset) : ""}
+            })
+    return jsonify("{} added to {}'s watchlist".format(asset,session['username']))
 
 @app.route('/sign_in', methods=['POST', 'GET'])
 def sign_in():

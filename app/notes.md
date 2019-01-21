@@ -23,7 +23,8 @@ Things to consider:
 Which makes more sense? Should both be displayed?
 
 ## 3. UI
-The navigation bar collapses too soon
+~~The navigation bar collapses too soon~~
+Redirect visitor to a modal for login with messages instead of a site
 
 ## 4. Fragmentation
 Currently, some settings are duplicated in views.py and clock.py
