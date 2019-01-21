@@ -271,12 +271,21 @@ class NewPostForm(FlaskForm):
 #                   Web
 #---------------------------------------------------------------------------------------------------
 
-def login_required(fn):
+def login_required(fn): # redirect
     @functools.wraps(fn)
     def inner(*args, **kwargs):
         if session.get('username'):
             return fn(*args, **kwargs)
-        return redirect(url_for('sign_in')), 401
+        return redirect(url_for('sign_in'))
+    return inner
+
+
+def login_required_response(fn): # alert
+    @functools.wraps(fn)
+    def inner(*args, **kwargs):
+        if session.get('username'):
+            return fn(*args, **kwargs)
+        return jsonify("Please log in"), 401
     return inner
 
 
@@ -370,7 +379,7 @@ def update_post(id):
 
 
 @app.route('/<string:asset>/update_asset_watchlist', methods=['POST', 'GET'])
-@login_required
+@login_required_response
 def update_asset_watchlist(asset):
     mongo.db.users.update_one({'username': session['username']},
             {'$set': {'asset_watchlist.{}'.format(asset) : ""}

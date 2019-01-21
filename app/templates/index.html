@@ -61,8 +61,9 @@
           $('.badge-asset').click(function(){
             $.post(this.href, function(response) {
               alert(response);
-            }).fail(function() {
+            }).fail(function(response) {
               alert("Please Log in to keep track of keywords and assets.");
+              // alert(response.responseText)
             });
             return false;
           });
@@ -90,7 +91,7 @@
           <div class="card-body sidebar_card_body scrollbar-cus p-2">
             <p class="card-text">
               {% for asset in sources.key_assets %}
-                <a href="#" class="badge badge-info badge-asset ">{{ asset }}</a>
+                <a href="{{ url_for('update_asset_watchlist', asset=asset) }}" class="badge badge-info badge-asset ">{{ asset }}</a>
               {% endfor %}
             </p>
           </div>

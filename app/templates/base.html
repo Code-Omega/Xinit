@@ -40,7 +40,7 @@
           </a>
 	      </li>
 	      <li class="nav-item {{ "active" if title == "Profile" else None }}">
-          <a class="nav-link btn p-2 {{ "btn-info bg-theme-highlight btn-rect" if title == "Profile" else "btn-dark" }}" href="/profile">
+          <a class="nav-link btn p-2 {{ "btn-info bg-theme-highlight btn-rect" if title == "Profile" else "btn-dark" }}" href="{{ "/profile" if session['username'] else "/sign_in" }}">
             <h4 class="m-0">{{ "User = {}".format(session['username']) if session['username'] else "Sign_In" }}</h4>
           </a>
 	      </li>
