@@ -9,19 +9,24 @@
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Oswald|Raleway" rel="stylesheet">
     <link rel="stylesheet" href="../static/style.css">
   </head>
-  <body class="scrollbar-cus bg-theme-secondary">
 	<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-	  <a class="navbar-brand" href="#">X.init(</a>
+	  <a class="navbar-brand" href="#">X.init</a>
 	  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
 	    <span class="navbar-toggler-icon"></span>
 	  </button>
 	  <div class="collapse navbar-collapse" id="navbarText">
 	    <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <span class="navbar-brand mr-0">
+        		(
+    		  </span>
+	      </li>
         {% if title == "News" %}
 	      <li class="nav-item active">
-          <a class="nav-link btn btn-info" href="/index">NEWS,</a>
+          <a class="nav-link btn btn-info bg-theme-highlight" href="/index">NEWS,</a>
         {% else %}
         <li class="nav-item">
 	        <a class="nav-link btn btn-dark" href="/index">NEWS,</a>
@@ -32,7 +37,7 @@
         </li>
         {% if title == "Analyses" %}
 	      <li class="nav-item active">
-          <a class="nav-link btn btn-info" href="/analyses">Analyses,</a>
+          <a class="nav-link btn btn-info bg-theme-highlight" href="/analyses">Analyses,</a>
         {% else %}
         <li class="nav-item">
 	        <a class="nav-link btn btn-dark" href="/analyses">Analyses,</a>
@@ -48,13 +53,14 @@
         </li>
         {% endif %}
 	      <li class="nav-item">
-          <span class="navbar-brand">
+          <span class="navbar-brand mr-0">
         		)
     		  </span>
 	      </li>
 	    </ul>
 	  </div>
 	</nav>
+  <body class="scrollbar-cus bg-theme-secondary">
 	{% block content %}{% endblock %}
 
   <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
