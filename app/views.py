@@ -378,13 +378,20 @@ def update_post(id):
     return render_template('new_post.html', form=form)
 
 
-@app.route('/<string:asset>/update_asset_watchlist', methods=['POST', 'GET'])
+@app.route('/asset_watchlist', methods=['GET'])
+@app.route('/<string:action>/<string:asset>/asset_watchlist', methods=['POST','GET'])
 @login_required_response
-def update_asset_watchlist(asset):
-    mongo.db.users.update_one({'username': session['username']},
-            {'$set': {'asset_watchlist.{}'.format(asset) : ""}
-            })
-    return jsonify("{} added to {}'s watchlist".format(asset,session['username'])), 200
+def asset_watchlist(action = None, asset = None):
+    if request.method == 'POST':
+        mongo.db.users.update_one({'username': session['username']},
+                {action: {'asset_watchlist.{}'.format(asset) : ""}
+                })
+        if action == '$set':
+            return jsonify("{} added to {}'s watchlist".format(asset,session['username']))
+        return ""
+    # elif request.method == 'GET':
+    return mongo.db.users.find_one({'username': session['username']})['asset_watchlist']
+
 
 @app.route('/sign_in', methods=['POST', 'GET'])
 def sign_in():
@@ -414,7 +421,10 @@ def register():
 @app.route('/profile') # make this username related maybe
 @login_required
 def user_profile():
-    return render_template('profile.html', title='Profile')
+    user_info = mongo.db.users.find_one({'username': session['username']})
+    # user_info = {k: user_info[k] for k in ('email')}
+    return render_template('profile.html', title='Profile',
+                           asset_watchlist=asset_watchlist())
 
 
 @app.route('/sign_out', methods=['POST'])

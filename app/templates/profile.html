@@ -6,12 +6,6 @@
             <h2 class="text-center">
                 Hello {{ session['username'] }}!
             </h2>
-            <p>
-              More user related info and actions will show up here.
-            </p>
-            {% if session['privilege_level'] < 2 %}
-              <a href="{{ url_for('new_post') }}" class="btn btn-primary" role="button">Write a post</a>
-            {% endif %}
             <form method=POST>
                 <button type="submit" class="col btn btn-link" formaction="{{ url_for('logout') }}">
                     Sign out
@@ -20,4 +14,70 @@
         </div>
     </div>
 </div>
+
+<div class="card-columns m-3">
+  <div class="card p-3">
+    <blockquote class="blockquote mb-0">
+      <p>
+        More user related actions will show up here.
+      </p>
+      <footer class="blockquote-footer">
+        <small>
+          Xinit
+        </small>
+      </footer>
+    </blockquote>
+  </div>
+  <div class="card text-center">
+    <div class="card-body">
+      {% if session['privilege_level'] < 2 %}
+        <a href="{{ url_for('new_post') }}" class="btn btn-primary" role="button">Write a post</a>
+      {% endif %}
+    </div>
+  </div>
+  <div class="card bg-dark text-white">
+    <div class="card-body">
+        <h5 class="card-title col-auto">Watchlist Assets</h5>
+      <p>
+      {% if not asset_watchlist%}
+        <small class="col-fill text-muted float-right">
+          This list is empty! Click on assets in other views will add them to the list
+        </small>
+      {% endif %}
+      {% for asset in asset_watchlist %}
+        <a href={{ url_for('asset_watchlist', asset=asset, action='$unset') }} class="badge badge-info badge-asset">{{ asset }}</a>
+      {% endfor %}
+      </p>
+      <div class="row">
+        <small class="col col-center text-muted text-center">Click on assets to remove them from the list</small>
+      </div>
+    </div>
+  </div>
+  <div class="card bg-dark text-white p-3">
+    <blockquote class="blockquote mb-0 card-body">
+      <p>
+        More user related info will show up here.
+      </p>
+      <footer class="blockquote-footer">
+        <small>
+          Xinit
+        </small>
+      </footer>
+    </blockquote>
+  </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script>
+  $(function(){
+    $('.badge-asset').click(function(){
+      var asset_element = this
+      $.post(asset_element.href, function(response) {
+        asset_element.remove()
+      });
+      return false;
+    });
+  });
+</script>
 {% endblock %}

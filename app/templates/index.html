@@ -27,7 +27,7 @@
                 <div class="row no-gutters">
                   <p class="post-assets">
                     {% for asset in post.key_assets %}
-                      <a href={{ url_for('update_asset_watchlist', asset=asset) }} class="badge badge-info badge-asset">{{ asset }}</a>
+                      <a href={{ url_for('asset_watchlist', asset=asset, action='$set') }} class="badge badge-info badge-asset">{{ asset }}</a>
                     {% endfor %}
                   </p>
                 </div>
@@ -48,7 +48,7 @@
               </div>
             </div>
           </div>
-            <a href={{ post.link }} class="btn btn-dark card-footer bg-theme font-weight-bold"> <p>Read more on {{ post.source }}</p> </a>
+            <a href={{ post.link }} class="btn btn-dark card-footer bg-theme font-weight-bold">Read more on {{ post.source }}</a>
         </div>
       {% endfor %}
       <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
@@ -91,7 +91,7 @@
           <div class="card-body sidebar_card_body scrollbar-cus p-2">
             <p class="card-text">
               {% for asset in sources.key_assets %}
-                <a href="{{ url_for('update_asset_watchlist', asset=asset) }}" class="badge badge-info badge-asset ">{{ asset }}</a>
+                <a href={{ url_for('asset_watchlist', asset=asset, action='$set') }} class="badge badge-info badge-asset ">{{ asset }}</a>
               {% endfor %}
             </p>
           </div>
