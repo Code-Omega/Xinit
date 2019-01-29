@@ -10,6 +10,7 @@ import functools
 import urllib
 import json
 import datetime
+from copy import deepcopy
 
 import numpy as np
 import re
@@ -36,138 +37,163 @@ mongo = PyMongo(app)
 
 
 # iframe # this is a defaut iframe dict
-iframe_dict = {
-   "showChart":True,
-   "locale":"en",
-   "width":"100%",
-   "height":"50%",
-   "plotLineColorGrowing":"#3CBC98",
-   "plotLineColorFalling":"#FF4A68",
-   "gridLineColor":"#e9e9ea",
-   "scaleFontColor":"#DADDE0",
-   "belowLineFillColorGrowing":"rgba(60, 188, 152, 0.05)",
-   "belowLineFillColorFalling":"rgba(255, 74, 104, 0.05)",
-   "symbolActiveColor":"#F2FAFE",
-   "tabs":[
-      # {
-      #    "symbols":iframe_news_symbols,
-      #    "title":"News"
-      # },
-      {
-         "symbols":[
-            {
-               "s":"INDEX:SPX",
-               "d":"S&P 500"
-            },
-            {
-               "s":"INDEX:IUXX",
-               "d":"Nasdaq 100"
-            },
-            {
-               "s":"INDEX:DOWI",
-               "d":"Dow 30"
-            },
-            {
-               "s":"INDEX:NKY",
-               "d":"Nikkei 225"
-            },
-            {
-               "s":"NASDAQ:AAPL",
-               "d":"Apple"
-            },
-            {
-               "s":"NASDAQ:GOOG",
-               "d":"Google"
-            }
-         ],
-         "title":"Equities"
-      },
-      {
-         "symbols":[
-            {
-               "s":"CME_MINI:ES1!",
-               "d":"E-Mini S&P"
-            },
-            {
-               "s":"CME:E61!",
-               "d":"Euro"
-            },
-            {
-               "s":"COMEX:GC1!",
-               "d":"Gold"
-            },
-            {
-               "s":"NYMEX:CL1!",
-               "d":"Crude Oil"
-            },
-            {
-               "s":"NYMEX:NG1!",
-               "d":"Natural Gas"
-            },
-            {
-               "s":"CBOT:ZC1!",
-               "d":"Corn"
-            }
-         ],
-         "title":"Commodities"
-      },
-      {
-         "symbols":[
-            {
-               "s":"CME:GE1!",
-               "d":"Eurodollar"
-            },
-            {
-               "s":"CBOT:ZB1!",
-               "d":"T-Bond"
-            },
-            {
-               "s":"CBOT:UD1!",
-               "d":"Ultra T-Bond"
-            },
-            {
-               "s":"EUREX:GG1!",
-               "d":"Euro Bund"
-            },
-            {
-               "s":"EUREX:II1!",
-               "d":"Euro BTP"
-            },
-            {
-               "s":"EUREX:HR1!",
-               "d":"Euro BOBL"
-            }
-         ],
-         "title":"Bonds"
-      },
-      {
-         "symbols":[
-            {
-               "s":"FX:EURUSD"
-            },
-            {
-               "s":"FX:GBPUSD"
-            },
-            {
-               "s":"FX:USDJPY"
-            },
-            {
-               "s":"FX:USDCHF"
-            },
-            {
-               "s":"FX:AUDUSD"
-            },
-            {
-               "s":"FX:USDCAD"
-            }
-         ],
-         "title":"Forex"
-      }
-   ],
-   "utm_source":"www.tradingview.com",
-   "utm_medium":"widget",
-   "utm_campaign":"marketoverview"
+default_iframe_dict = {
+    "showChart": True,
+    "locale": "en",
+    "largeChartUrl": "",
+    "width": "463",
+    "height": "120%",
+    "plotLineColorGrowing": "rgba(60, 188, 152, 1)",
+    "plotLineColorFalling": "rgba(255, 74, 104, 1)",
+    "gridLineColor": "rgba(233, 233, 234, 1)",
+    "scaleFontColor": "rgba(214, 216, 224, 1)",
+    "belowLineFillColorGrowing": "rgba(60, 188, 152, 0.05)",
+    "belowLineFillColorFalling": "rgba(255, 74, 104, 0.05)",
+    "symbolActiveColor": "rgba(242, 250, 254, 1)",
+    "tabs": [
+        {
+            "title": "Indices",
+            "symbols": [
+                {"s": "INDEX:SPX"},
+                {"s": "TVC:​IXIC"},
+                {"s": "DJ:​DJI"},
+                {"s": "CBOE:​VIX"},
+                {"s": "TVC:​NI225"},
+                {"s": "TVC:​SHCOMP"},
+                {"s": "XETR:​DAX"},
+                {"s": "TVC:​UKX"}
+            ]
+        },
+        {
+            "title":"Commodities",
+            "symbols": [
+                {"s":"CME_MINI:ES1!"},
+                {"s":"CME:E61!"},
+                {"s":"COMEX:GC1!"},
+                {"s":"NYMEX:CL1!"},
+                {"s":"NYMEX:NG1!"},
+                {"s":"CBOT:ZC1!"}
+            ]
+        },
+    ]
 }
+
+# default_iframe_dict = {
+#    "showChart":True,
+#    "locale":"en",
+#    "width":"100%",
+#    "height":"50%",
+#    "plotLineColorGrowing":"#3CBC98",
+#    "plotLineColorFalling":"#FF4A68",
+#    "gridLineColor":"#e9e9ea",
+#    "scaleFontColor":"#DADDE0",
+#    "belowLineFillColorGrowing":"rgba(60, 188, 152, 0.05)",
+#    "belowLineFillColorFalling":"rgba(255, 74, 104, 0.05)",
+#    "symbolActiveColor":"#F2FAFE",
+#    "tabs":[
+#       # {
+#       #    "symbols": # dictionary
+#       #    "title": # string
+#       # },
+#       {
+#          "symbols":[
+#             {
+#                "s":"INDEX:SPX",
+#                "d":"S&P 500"
+#             },
+#             {
+#                "s":"INDEX:IUXX",
+#                "d":"Nasdaq 100"
+#             },
+#             {
+#                "s":"INDEX:DOWI",
+#                "d":"Dow 30"
+#             },
+#             {
+#                "s":"INDEX:NKY",
+#                "d":"Nikkei 225"
+#             }
+#          ],
+#          "title":"Equities"
+#       },
+#       {
+#          "symbols":[
+#             {
+#                "s":"CME_MINI:ES1!",
+#                "d":"E-Mini S&P"
+#             },
+#             {
+#                "s":"CME:E61!",
+#                "d":"Euro"
+#             },
+#             {
+#                "s":"COMEX:GC1!",
+#                "d":"Gold"
+#             },
+#             {
+#                "s":"NYMEX:CL1!",
+#                "d":"Crude Oil"
+#             },
+#             {
+#                "s":"NYMEX:NG1!",
+#                "d":"Natural Gas"
+#             },
+#             {
+#                "s":"CBOT:ZC1!",
+#                "d":"Corn"
+#             }
+#          ],
+#          "title":"Commodities"
+#       },
+#       {
+#          "symbols":[
+#             {
+#                "s":"CME:GE1!",
+#                "d":"Eurodollar"
+#             },
+#             {
+#                "s":"CBOT:ZB1!",
+#                "d":"T-Bond"
+#             },
+#             {
+#                "s":"CBOT:UD1!",
+#                "d":"Ultra T-Bond"
+#             },
+#             {
+#                "s":"EUREX:GG1!",
+#                "d":"Euro Bund"
+#             }
+#          ],
+#          "title":"Bonds"
+#       },
+#       {
+#          "symbols":[
+#             {
+#                "s":"FX:EURUSD"
+#             },
+#             {
+#                "s":"FX:GBPUSD"
+#             },
+#             {
+#                "s":"FX:USDJPY"
+#             },
+#             {
+#                "s":"FX:USDCHF"
+#             },
+#             {
+#                "s":"FX:AUDUSD"
+#             },
+#             {
+#                "s":"FX:USDCNY"
+#             }
+#          ],
+#          "title":"Forex"
+#       }
+#    ],
+#    "utm_source":"www.tradingview.com",
+#    "utm_medium":"widget",
+#    "utm_campaign":"marketoverview"
+# }
 
 #---------------------------------------------------------------------------------------------------
 #                   refreshing & threading
@@ -305,7 +331,9 @@ def index():
     post_key_assets = page_data['post_key_assets']
     doc_score = page_data['doc_score']
     doc_rank = page_data['doc_rank']
-    iframe_dict = page_data['iframe_dict']
+    iframe_tab = page_data['iframe_tab']
+    iframe_dict = deepcopy(default_iframe_dict)
+    iframe_dict['tabs'].insert(0,iframe_tab)
 
     sources = {'name': 'news pieces', # 'CNBC, Bloomberg View, and Seeking Alpha',
                'length': len(corpus),
@@ -320,14 +348,16 @@ def index():
               'source': header[i][2],
               'score': "{:.3f}".format(doc_score[i]),
               'link': header[i][1]} for i in doc_rank]
-    iframe_src = {'tv' : "https://s.tradingview.com/marketoverviewwidgetembed/#"
-                         +urllib.parse.quote(str(json.dumps(iframe_dict)))}
 
+    # iframe_src = {'tv' : "https://s.tradingview.com/marketoverviewwidgetembed/#"
+    #                      +urllib.parse.quote(str(json.dumps(iframe_dict)))}
+
+    print (str(json.dumps(iframe_dict)))
     return render_template("index.html",
                            title='News',
                            sources=sources,
                            posts=posts,
-                           iframe_src=iframe_src)
+                           iframe_src=str(json.dumps(iframe_dict)))
 
 @app.route('/')
 @app.route('/analyses')
@@ -337,13 +367,14 @@ def analyses():
     posts = mongo.db.posts.find().limit(5);
 
     # make this iframe respond to analyses' assets -> used a different iframe dict
-    iframe_src = {'tv' : "https://s.tradingview.com/marketoverviewwidgetembed/#"
-                         +urllib.parse.quote(str(json.dumps(iframe_dict)))}
+    iframe_dict = default_iframe_dict
+    # iframe_src = {'tv' : "https://s.tradingview.com/marketoverviewwidgetembed/#"
+    #                      +urllib.parse.quote(str(json.dumps(iframe_dict)))}
 
     return render_template("analyses.html",
                            title='Analyses',
                            posts=posts,
-                           iframe_src=iframe_src)
+                           iframe_src=str(json.dumps(iframe_dict)))
 
 
 @app.route('/new_post', methods=['POST', 'GET'])

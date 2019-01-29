@@ -24,7 +24,7 @@ import datetime
 # def scheduled_job():
 #     print('This job is run every weekday at 5pm.')
 
-@sched.scheduled_job('interval', minutes=30)
+@sched.scheduled_job('interval', minutes=1)
 def process_feeds(): # separate into another job for getting feed
     print('Process feeds run every 30 minutes.')
 
@@ -283,138 +283,7 @@ def process_feeds(): # separate into another job for getting feed
     #print(iframe_news_symbols)
 
     # setup iframe
-    iframe_dict = {
-       "showChart":True,
-       "locale":"en",
-       "width":"100%",
-       "height":"50%",
-       "plotLineColorGrowing":"#3CBC98",
-       "plotLineColorFalling":"#FF4A68",
-       "gridLineColor":"#e9e9ea",
-       "scaleFontColor":"#DADDE0",
-       "belowLineFillColorGrowing":"rgba(60, 188, 152, 0.05)",
-       "belowLineFillColorFalling":"rgba(255, 74, 104, 0.05)",
-       "symbolActiveColor":"#F2FAFE",
-       "tabs":[
-          {
-             "symbols":iframe_news_symbols,
-             "title":"News"
-          },
-          {
-             "symbols":[
-                {
-                   "s":"INDEX:SPX",
-                   "d":"S&P 500"
-                },
-                {
-                   "s":"INDEX:IUXX",
-                   "d":"Nasdaq 100"
-                },
-                {
-                   "s":"INDEX:DOWI",
-                   "d":"Dow 30"
-                },
-                {
-                   "s":"INDEX:NKY",
-                   "d":"Nikkei 225"
-                },
-                {
-                   "s":"NASDAQ:AAPL",
-                   "d":"Apple"
-                },
-                {
-                   "s":"NASDAQ:GOOG",
-                   "d":"Google"
-                }
-             ],
-             "title":"Equities"
-          },
-          {
-             "symbols":[
-                {
-                   "s":"CME_MINI:ES1!",
-                   "d":"E-Mini S&P"
-                },
-                {
-                   "s":"CME:E61!",
-                   "d":"Euro"
-                },
-                {
-                   "s":"COMEX:GC1!",
-                   "d":"Gold"
-                },
-                {
-                   "s":"NYMEX:CL1!",
-                   "d":"Crude Oil"
-                },
-                {
-                   "s":"NYMEX:NG1!",
-                   "d":"Natural Gas"
-                },
-                {
-                   "s":"CBOT:ZC1!",
-                   "d":"Corn"
-                }
-             ],
-             "title":"Commodities"
-          },
-          {
-             "symbols":[
-                {
-                   "s":"CME:GE1!",
-                   "d":"Eurodollar"
-                },
-                {
-                   "s":"CBOT:ZB1!",
-                   "d":"T-Bond"
-                },
-                {
-                   "s":"CBOT:UD1!",
-                   "d":"Ultra T-Bond"
-                },
-                {
-                   "s":"EUREX:GG1!",
-                   "d":"Euro Bund"
-                },
-                {
-                   "s":"EUREX:II1!",
-                   "d":"Euro BTP"
-                },
-                {
-                   "s":"EUREX:HR1!",
-                   "d":"Euro BOBL"
-                }
-             ],
-             "title":"Bonds"
-          },
-          {
-             "symbols":[
-                {
-                   "s":"FX:EURUSD"
-                },
-                {
-                   "s":"FX:GBPUSD"
-                },
-                {
-                   "s":"FX:USDJPY"
-                },
-                {
-                   "s":"FX:USDCHF"
-                },
-                {
-                   "s":"FX:AUDUSD"
-                },
-                {
-                   "s":"FX:USDCAD"
-                }
-             ],
-             "title":"Forex"
-          }
-       ],
-       "utm_source":"www.tradingview.com",
-       "utm_medium":"widget",
-       "utm_campaign":"marketoverview"
-    }
+    iframe_tab = {"symbols":iframe_news_symbols,"title":"News"}
 
     mongo.db.processed_feeds.drop()
     mongo.db.processed_feeds.insert(
@@ -427,7 +296,7 @@ def process_feeds(): # separate into another job for getting feed
          'post_key_assets' : post_key_assets,
          'doc_score' : doc_score,
          'doc_rank' : doc_rank,
-         'iframe_dict' : iframe_dict,
+         'iframe_tab' : iframe_tab,
          })
 
     # mongo.processed_feeds.insert({'title' : request.form['title'],

@@ -98,8 +98,11 @@
         </div>
       </div>
       <div class="sidebar_chart">
-        <iframe scrolling="no" allowtransparency="true" frameborder="0" width="125%" height="125%" src={{ iframe_src.tv }} class="frame">
-        </iframe>
+        <div class="tradingview-widget-container frame">
+          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+            {{iframe_src|safe}}
+          </script>
+        </div>
       </div>
     </div>
   </div>
