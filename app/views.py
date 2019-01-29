@@ -42,7 +42,7 @@ default_iframe_dict = {
     "locale": "en",
     "largeChartUrl": "",
     "width": "463",
-    "height": "120%",
+    "height": "580",
     "plotLineColorGrowing": "rgba(60, 188, 152, 1)",
     "plotLineColorFalling": "rgba(255, 74, 104, 1)",
     "gridLineColor": "rgba(233, 233, 234, 1)",
@@ -52,20 +52,19 @@ default_iframe_dict = {
     "symbolActiveColor": "rgba(242, 250, 254, 1)",
     "tabs": [
         {
-            "title": "Indices",
+            "title": "Equity",
             "symbols": [
                 {"s": "INDEX:SPX"},
-                {"s": "TVC:​IXIC"},
-                {"s": "DJ:​DJI"},
-                {"s": "CBOE:​VIX"},
-                {"s": "TVC:​NI225"},
-                {"s": "TVC:​SHCOMP"},
-                {"s": "XETR:​DAX"},
-                {"s": "TVC:​UKX"}
+                {"s": "INDEX:DJI"},
+                {"s": "CBOE:VIX"},
+                {"s": "INDEX:NKY"},
+                {"s": "INDEX:XLY0"},
+                {"s": "XETR:DAX"},
+                {"s": "OANDA:UK100GBP"}
             ]
         },
         {
-            "title":"Commodities",
+            "title": "Commodity",
             "symbols": [
                 {"s":"CME_MINI:ES1!"},
                 {"s":"CME:E61!"},
@@ -75,125 +74,39 @@ default_iframe_dict = {
                 {"s":"CBOT:ZC1!"}
             ]
         },
+        {
+            "title": "Crypto",
+            "symbols": [
+                {"s": "BITFINEX:BTCUSD"},
+                {"s": "BITFINEX:ETHUSD"},
+                {"s": "BITFINEX:XRPUSD"},
+                {"s": "COINBASE:BCHUSD"},
+                {"s": "COINBASE:LTCUSD"},
+                {"s": "BITFINEX:IOTUSD"}
+            ]
+        },
+        {
+            "title": "Bond",
+            "symbols": [
+                {"s":"CME:GE1!"},
+                {"s":"CBOT:ZB1!"},
+                {"s":"CBOT:UD1!"},
+                {"s":"EUREX:GG1!"}
+            ]
+        },
+        {
+            "title": "Forex",
+            "symbols": [
+                {"s":"FX:EURUSD"},
+                {"s":"FX:GBPUSD"},
+                {"s":"FX:USDJPY"},
+                {"s":"FX:USDCHF"},
+                {"s":"FX:AUDUSD"},
+                {"s":"FX_IDC:USDCNY"}
+            ]
+        }
     ]
 }
-
-# default_iframe_dict = {
-#    "showChart":True,
-#    "locale":"en",
-#    "width":"100%",
-#    "height":"50%",
-#    "plotLineColorGrowing":"#3CBC98",
-#    "plotLineColorFalling":"#FF4A68",
-#    "gridLineColor":"#e9e9ea",
-#    "scaleFontColor":"#DADDE0",
-#    "belowLineFillColorGrowing":"rgba(60, 188, 152, 0.05)",
-#    "belowLineFillColorFalling":"rgba(255, 74, 104, 0.05)",
-#    "symbolActiveColor":"#F2FAFE",
-#    "tabs":[
-#       # {
-#       #    "symbols": # dictionary
-#       #    "title": # string
-#       # },
-#       {
-#          "symbols":[
-#             {
-#                "s":"INDEX:SPX",
-#                "d":"S&P 500"
-#             },
-#             {
-#                "s":"INDEX:IUXX",
-#                "d":"Nasdaq 100"
-#             },
-#             {
-#                "s":"INDEX:DOWI",
-#                "d":"Dow 30"
-#             },
-#             {
-#                "s":"INDEX:NKY",
-#                "d":"Nikkei 225"
-#             }
-#          ],
-#          "title":"Equities"
-#       },
-#       {
-#          "symbols":[
-#             {
-#                "s":"CME_MINI:ES1!",
-#                "d":"E-Mini S&P"
-#             },
-#             {
-#                "s":"CME:E61!",
-#                "d":"Euro"
-#             },
-#             {
-#                "s":"COMEX:GC1!",
-#                "d":"Gold"
-#             },
-#             {
-#                "s":"NYMEX:CL1!",
-#                "d":"Crude Oil"
-#             },
-#             {
-#                "s":"NYMEX:NG1!",
-#                "d":"Natural Gas"
-#             },
-#             {
-#                "s":"CBOT:ZC1!",
-#                "d":"Corn"
-#             }
-#          ],
-#          "title":"Commodities"
-#       },
-#       {
-#          "symbols":[
-#             {
-#                "s":"CME:GE1!",
-#                "d":"Eurodollar"
-#             },
-#             {
-#                "s":"CBOT:ZB1!",
-#                "d":"T-Bond"
-#             },
-#             {
-#                "s":"CBOT:UD1!",
-#                "d":"Ultra T-Bond"
-#             },
-#             {
-#                "s":"EUREX:GG1!",
-#                "d":"Euro Bund"
-#             }
-#          ],
-#          "title":"Bonds"
-#       },
-#       {
-#          "symbols":[
-#             {
-#                "s":"FX:EURUSD"
-#             },
-#             {
-#                "s":"FX:GBPUSD"
-#             },
-#             {
-#                "s":"FX:USDJPY"
-#             },
-#             {
-#                "s":"FX:USDCHF"
-#             },
-#             {
-#                "s":"FX:AUDUSD"
-#             },
-#             {
-#                "s":"FX:USDCNY"
-#             }
-#          ],
-#          "title":"Forex"
-#       }
-#    ],
-#    "utm_source":"www.tradingview.com",
-#    "utm_medium":"widget",
-#    "utm_campaign":"marketoverview"
-# }
 
 #---------------------------------------------------------------------------------------------------
 #                   refreshing & threading
@@ -469,6 +382,11 @@ def logout():
 def page_not_found(e):
     # note that we set the 404 status explicitly
     return render_template('404.html', title='404'), 404
+
+@app.errorhandler(500)
+def server_error(e):
+    # note that we set the 500 status explicitly
+    return render_template('500.html', title='500'), 500
 
 
 # @app.route('/temp', methods=['POST', 'GET'])
