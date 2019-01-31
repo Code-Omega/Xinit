@@ -1,4 +1,4 @@
-from flask import render_template, url_for, request, session, redirect, jsonify
+from flask import render_template, url_for, request, session, redirect, jsonify, send_from_directory
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 from flask_wtf import FlaskForm
@@ -387,6 +387,10 @@ def page_not_found(e):
 def server_error(e):
     # note that we set the 500 status explicitly
     return render_template('500.html', title='500'), 500
+
+@app.route('/robots.txt')
+def static_from_root():
+    return send_from_directory(app.static_folder, request.path[1:])
 
 
 # @app.route('/temp', methods=['POST', 'GET'])
