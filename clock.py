@@ -24,9 +24,9 @@ import datetime
 # def scheduled_job():
 #     print('This job is run every weekday at 5pm.')
 
-@sched.scheduled_job('interval', minutes=1)
+@sched.scheduled_job('interval', minutes=30)
 def process_feeds(): # separate into another job for getting feed
-    print('Process feeds run every 30 minutes.')
+    print('Process feeds, runs every 30 minutes.')
 
     #---------------------------------------------------------------------------------------------------
     #                   Settings                                    begins
@@ -305,6 +305,10 @@ def process_feeds(): # separate into another job for getting feed
     #                     'time_added' : datetime.datetime.utcnow(),
     #                     'author' : session['username']})
 
+@sched.scheduled_job('interval', minutes=30)
+def daily_clustering_analysis():
+    print('Daily clustering analysis, runs every 30 minutes in testing phase.')
+    
 
 
 sched.start()
