@@ -11,28 +11,161 @@ import re
 import datetime
 from types import SimpleNamespace
 
+
+def utc_to_local(utc_dt):
+    return utc_dt.replace(tzinfo=datetime.timezone.utc).astimezone(tz=None)
+
+
+def get_CNBC_text(url):
+    """
+    return the title and the text of the article
+    at the specified url
+    """
+    page = urllib.request.urlopen(url).read()
+    soup = BeautifulSoup(page,"lxml")
+    # scrape for content
+    # for CNBC only
+    content = soup.find("div", {"id": "article_body"})
+    if not content:
+        content = soup.find("div", {"class": "story_listicle_body"})
+    if not content:
+        content = soup.find("div", {"id": "slideshow-text"})
+        if content:
+            text = [p.text for p in content.find_all('p')]
+            slideNum = int(soup.find("span", {"class": "slidecount"}).text.split("/")[1])
+            for slideIdx in range (2,slideNum) :
+                next_page = urllib.request.urlopen(url+'?slide='+str(slideIdx)).read()
+                next_soup = BeautifulSoup(next_page,"lxml")
+                content = next_soup.find("div", {"id": "slideshow-text"})
+                text.extend([p.text for p in content.find_all('p')])
+            return text
+    if not content:
+         return soup.title.string
+    # get text
+    text = [p.text for p in content.find_all('p')]
+    #return soup.title.text, text
+    return text
+
+
+def get_SA_text(url):
+    """
+    return the title and the text of the article
+    at the specified url
+    """
+    request = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+    page = urllib.request.urlopen(request)
+    page = page.read().decode('utf8')
+    soup = BeautifulSoup(page,"lxml")
+    # for seekingalpha only
+    header_content = soup.find('article').find("header")
+    body_content = soup.find("div", {"id": "a-body"})
+    text = [body_content.text]
+    #return soup.title.text, text
+    return text
+
+
+def get_BV_text(url):
+    """
+    return the title and the text of the article
+    at the specified url
+    """
+    request = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+    page = urllib.request.urlopen(request)
+    page = page.read().decode('utf8')
+    soup = BeautifulSoup(page,"lxml")
+    # for Bloomberg View only
+    body_content = soup.find("section", {"class": "main-column"})
+    text = body_content.findAll(text=True)
+    #return soup.title.text, text
+    return text
+
+
+def get_feeds(mongo):
+    # for each source
+    #     request the rss feed
+    #     for each post in the rss feed
+    #         check if post already exist in database # check until post already exist
+    #         get content
+    #         store {title, link, source, content}
+    #             into database
+
+    CNBC_feed_url = 'https://www.cnbc.com/id/10000664/device/rss/rss.html'
+    dCNBC = feedparser.parse(CNBC_feed_url)
+
+    # SA_feed_url = 'https://seekingalpha.com/market_currents.xml' #'https://seekingalpha.com/feed.xml'
+    # dSA = feedparser.parse(SA_feed_url)
+    #
+    # BVML_feed_url = 'https://www.bloomberg.com/view/rss/contributors/matt-levine.rss'
+    # dBVML = feedparser.parse(BVML_feed_url)
+
+    #feed_time = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+
+    new_posts = 0
+
+    for post in dCNBC.entries: # set a maximum if needed
+        duplicate_post = mongo.db.feeds.find_one({'link' : post.link})
+        if duplicate_post is None:
+            #print (post.title + ": " + post.link + "\n")
+            content = get_CNBC_text(post.link)
+            mongo.db.feeds.insert({
+                'title': post.title,
+                'link': post.link,
+                'source': "CNBC",
+                'content': content
+            })
+            new_posts += 1
+
+    # for post in dSA.entries[:articles_per_source]:
+    #     #print (post.title + ": " + post.link + "\n")
+    #     content = get_SA_text(post.link)
+    #     corpus.append(" ".join(content))
+    #     header.append([post.title,post.link,"Seeking Alpha"])
+
+    # for post in dBVML.entries[:articles_per_source]:
+    #     #print (post.title + ": " + post.link + "\n")
+    #     content = get_BV_text(post.link)
+    #     corpus.append(" ".join(content))
+    #     header.append([post.title,post.link,"Bloomberg View"])
+
+    return new_posts
+
+
+def update_doc_model():
+    pass
+    # update the doc model with current available posts
+
+def process_feeds(mongo, num_posts = 6, topNum = 3):
+    print('Process feeds, runs when there are new feeds')
+
+    # GET FEEDS TO PROCESS
+    posts = list(mongo.db.feeds.find().limit(num_posts))
+
+    # CALL FUNCTION
+    res = processed_feeds(posts, num_posts, topNum)
+
+    # STORE RESULTS
+    iframe_tab = {"symbols":res.iframe_news_symbols,"title":"News"}
+    mongo.db.processed_feeds.drop()
+    mongo.db.processed_feeds.insert(
+        {'corpus' : res.corpus,
+         't_keywords' : res.t_keywords,
+         'key_assets' : res.key_assets,
+         'header' : res.header,
+         'summaries' : res.summaries,
+         'keywords' : res.keywords,
+         'post_key_assets' : res.post_key_assets,
+         'doc_score' : res.doc_score,
+         'doc_rank' : res.doc_rank,
+         'iframe_tab' : iframe_tab,
+         })
+
 class processed_feeds():
-    def __init__(self, articles_per_source = 6, topNum = 3):
+    def __init__(self, posts, num_posts = 6, topNum = 3):
         # separate into another job for getting feed
 
         #---------------------------------------------------------------------------------------------------
         #                   Source                                      begins
         #---------------------------------------------------------------------------------------------------
-
-        CNBC_feed_url = 'https://www.cnbc.com/id/10000664/device/rss/rss.html'
-        dCNBC = feedparser.parse(CNBC_feed_url)
-
-        # SA_feed_url = 'https://seekingalpha.com/market_currents.xml' #'https://seekingalpha.com/feed.xml'
-        # dSA = feedparser.parse(SA_feed_url)
-        #
-        # BVML_feed_url = 'https://www.bloomberg.com/view/rss/contributors/matt-levine.rss'
-        # dBVML = feedparser.parse(BVML_feed_url)
-
-        feed_time = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
-
-        def utc_to_local(utc_dt):
-            return utc_dt.replace(tzinfo=datetime.timezone.utc).astimezone(tz=None)
-
         #---------------------------------------------------------------------------------------------------
         #                   Source                                      ends
         #---------------------------------------------------------------------------------------------------
@@ -40,86 +173,8 @@ class processed_feeds():
         #                   Scraping                                    begins
         #---------------------------------------------------------------------------------------------------
 
-        def get_CNBC_text(url):
-            """
-            return the title and the text of the article
-            at the specified url
-            """
-            page = urllib.request.urlopen(url).read()
-            soup = BeautifulSoup(page,"lxml")
-            # scrape for content
-            # for CNBC only
-            content = soup.find("div", {"id": "article_body"})
-            if not content:
-                content = soup.find("div", {"class": "story_listicle_body"})
-            if not content:
-                content = soup.find("div", {"id": "slideshow-text"})
-                if content:
-                    text = [p.text for p in content.find_all('p')]
-                    slideNum = int(soup.find("span", {"class": "slidecount"}).text.split("/")[1])
-                    for slideIdx in range (2,slideNum) :
-                        next_page = urllib.request.urlopen(url+'?slide='+str(slideIdx)).read()
-                        next_soup = BeautifulSoup(next_page,"lxml")
-                        content = next_soup.find("div", {"id": "slideshow-text"})
-                        text.extend([p.text for p in content.find_all('p')])
-                    return text
-            if not content:
-                 return soup.title.string
-            # get text
-            text = [p.text for p in content.find_all('p')]
-            #return soup.title.text, text
-            return text
-
-        def get_SA_text(url):
-            """
-            return the title and the text of the article
-            at the specified url
-            """
-            request = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-            page = urllib.request.urlopen(request)
-            page = page.read().decode('utf8')
-            soup = BeautifulSoup(page,"lxml")
-            # for seekingalpha only
-            header_content = soup.find('article').find("header")
-            body_content = soup.find("div", {"id": "a-body"})
-            text = [body_content.text]
-            #return soup.title.text, text
-            return text
-
-        def get_BV_text(url):
-            """
-            return the title and the text of the article
-            at the specified url
-            """
-            request = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-            page = urllib.request.urlopen(request)
-            page = page.read().decode('utf8')
-            soup = BeautifulSoup(page,"lxml")
-            # for Bloomberg View only
-            body_content = soup.find("section", {"class": "main-column"})
-            text = body_content.findAll(text=True)
-            #return soup.title.text, text
-            return text
-
-        corpus = [] # bodies for each article
-        header = [] # title + link + source
-        for post in dCNBC.entries[:articles_per_source]:
-            #print (post.title + ": " + post.link + "\n")
-            content = get_CNBC_text(post.link)
-            corpus.append(" ".join(content))
-            header.append([post.title,post.link,"CNBC"])
-
-        # for post in dSA.entries[:articles_per_source]:
-        #     #print (post.title + ": " + post.link + "\n")
-        #     content = get_SA_text(post.link)
-        #     corpus.append(" ".join(content))
-        #     header.append([post.title,post.link,"Seeking Alpha"])
-
-        # for post in dBVML.entries[:articles_per_source]:
-        #     #print (post.title + ": " + post.link + "\n")
-        #     content = get_BV_text(post.link)
-        #     corpus.append(" ".join(content))
-        #     header.append([post.title,post.link,"Bloomberg View"])
+        corpus = [" ".join(post['content']) for post in posts]
+        header = [[post['title'],post['link'],post['source']] for post in posts] # title + link + source
 
         #---------------------------------------------------------------------------------------------------
         #                   Scraping                                    ends

@@ -1,1 +1,1 @@
-from ana.feed_processor import processed_feeds
+from ana.feed_processor import process_feeds, get_feeds
