@@ -138,7 +138,7 @@ def process_feeds(mongo, num_posts = 6, topNum = 3):
     print('Process feeds, runs when there are new feeds')
 
     # GET FEEDS TO PROCESS
-    posts = list(mongo.db.feeds.find().limit(num_posts))
+    posts = list(mongo.db.feeds.find().sort('id',-1).limit(num_posts))
 
     # CALL FUNCTION
     res = processed_feeds(posts, num_posts, topNum)
