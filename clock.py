@@ -19,7 +19,7 @@ MONGO_URI = 'mongodb://xibot:jacqep-4fubJy-ruhcoq@ds255784.mlab.com:55784/xinit'
 ##########################################################################
 
 
-@sched.scheduled_job('interval', minutes=30)
+@sched.scheduled_job('interval', minutes=1)
 def process_feeds():
     print('Getting feed data, runs every 30 minutes.')
     app = Flask(__name__)
@@ -28,9 +28,9 @@ def process_feeds():
 
     num_new_posts = ana.get_feeds(mongo)
     print('# new posts:',num_new_posts)
-    if num_new_posts > 0:
+    if num_new_posts > -1:
         print('Process with new feeds.')
-        ana.process_feeds(mongo, num_posts = 6, topNum = 3)
+        ana.process_feeds(mongo, num_posts = 10, topNum = 3)
         print('Feeds processed')
 
 

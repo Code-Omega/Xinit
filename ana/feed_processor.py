@@ -10,6 +10,7 @@ import pickle
 import re
 import datetime
 from types import SimpleNamespace
+from bson.binary import Binary
 
 
 def utc_to_local(utc_dt):
@@ -130,18 +131,51 @@ def get_feeds(mongo):
     return new_posts
 
 
-def update_doc_model():
-    pass
+def update_doc_model(mongo, num_posts = 100):
     # update the doc model with current available posts
+    # TODO try gensim to ease RAM usage
+
+    posts = list(mongo.db.feeds.find().sort('id',-1).limit(num_posts))
+    corpus = [" ".join(post['content']) for post in posts]
+    vectorizer = TfidfVectorizer(input = 'content',
+                                 norm = 'l2',
+                                 min_df = 1,
+                                 max_df = 0.25,
+                                 stop_words = 'english',
+                                 ngram_range = (1, 3),
+                                 smooth_idf = False,
+                                 sublinear_tf = True)
+    doc_model = vectorizer.fit(corpus)
+
+    model_data = pickle.dumps(doc_model)
+
+    mongo.db.models.insert({'name': 'doc_model',
+                            'data': Binary(model_data)
+                            })
+
+    """     This takes too long... need to try a different stemmer.
+        class StemmedTfidfVectorizer(TfidfVectorizer):
+            def build_analyzer(self):
+                stemmer = nltk.stem.SnowballStemmer('english')
+                analyzer = super(TfidfVectorizer, self).build_analyzer()
+                return lambda doc: (stemmer.stem(w) for w in analyzer(doc))
+
+        vectorizer = StemmedTfidfVectorizer(input = 'content',
+                                            norm = 'l2',
+                                            min_df = 1,
+                                            max_df = 0.25,
+                                            stop_words = 'english',
+                                            ngram_range = (1, 3),
+                                            smooth_idf = False,
+                                            sublinear_tf = True)
+    """
 
 def process_feeds(mongo, num_posts = 6, topNum = 3):
-    print('Process feeds, runs when there are new feeds')
-
-    # GET FEEDS TO PROCESS
     posts = list(mongo.db.feeds.find().sort('id',-1).limit(num_posts))
+    saved_doc_model = mongo.db.models.find_one({'name': 'doc_model'})
+    doc_model = pickle.loads(saved_doc_model['data'])
 
-    # CALL FUNCTION
-    res = processed_feeds(posts, num_posts, topNum)
+    res = processed_feeds(posts, doc_model, num_posts, topNum)
 
     # STORE RESULTS
     iframe_tab = {"symbols":res.iframe_news_symbols,"title":"News"}
@@ -160,7 +194,7 @@ def process_feeds(mongo, num_posts = 6, topNum = 3):
          })
 
 class processed_feeds():
-    def __init__(self, posts, num_posts = 6, topNum = 3):
+    def __init__(self, posts, vectorizer, num_posts = 6, topNum = 3):
         # separate into another job for getting feed
 
         #---------------------------------------------------------------------------------------------------
@@ -183,34 +217,9 @@ class processed_feeds():
         #                   Summarizing                                 begins
         #---------------------------------------------------------------------------------------------------
 
-        vectorizer = TfidfVectorizer(input = 'content',
-                                     norm = 'l2',
-                                     min_df = 1,
-                                     max_df = 0.25,
-                                     stop_words = 'english',
-                                     ngram_range = (1, 3),
-                                     smooth_idf = False,
-                                     sublinear_tf = True)
-        doc_model = vectorizer.fit_transform(corpus)
+        tfidf_matrix = vectorizer.transform(corpus)
 
-        """     This takes too long... need to try a different stemmer.
-            class StemmedTfidfVectorizer(TfidfVectorizer):
-                def build_analyzer(self):
-                    stemmer = nltk.stem.SnowballStemmer('english')
-                    analyzer = super(TfidfVectorizer, self).build_analyzer()
-                    return lambda doc: (stemmer.stem(w) for w in analyzer(doc))
-
-            vectorizer = StemmedTfidfVectorizer(input = 'content',
-                                                norm = 'l2',
-                                                min_df = 1,
-                                                max_df = 0.25,
-                                                stop_words = 'english',
-                                                ngram_range = (1, 3),
-                                                smooth_idf = False,
-                                                sublinear_tf = True)
-        """
-
-        doc_score = doc_model.sum(axis=1).ravel().tolist()[0]
+        doc_score = tfidf_matrix.sum(axis=1).ravel().tolist()[0]
         doc_rank = sorted(range(len(doc_score)), key=lambda k: doc_score[k], reverse=True)
 
         summaries = []
@@ -244,7 +253,7 @@ class processed_feeds():
             keywords.append(keyword)
 
         # today's keywords
-        t_keywords = get_keywords(vectorizer,doc_model,10)
+        t_keywords = get_keywords(vectorizer,tfidf_matrix,10)
 
         #---------------------------------------------------------------------------------------------------
         #                   Summarizing                                 ends
