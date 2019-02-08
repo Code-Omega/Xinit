@@ -1,4 +1,8 @@
 from apscheduler.schedulers.blocking import BlockingScheduler
+from apscheduler.triggers.combining import AndTrigger
+from apscheduler.triggers.interval import IntervalTrigger
+from apscheduler.triggers.cron import CronTrigger
+
 sched = BlockingScheduler()
 
 from flask import Flask
@@ -8,6 +12,7 @@ import ana
 
 MONGO_URI = 'mongodb://xibot:jacqep-4fubJy-ruhcoq@ds255784.mlab.com:55784/xinit'
 
+
 ############################ SAMPLE SCHEDULES ############################
 # @sched.scheduled_job('interval', minutes=3)
 # def timed_job():
@@ -16,6 +21,11 @@ MONGO_URI = 'mongodb://xibot:jacqep-4fubJy-ruhcoq@ds255784.mlab.com:55784/xinit'
 # @sched.scheduled_job('cron', day_of_week='mon-fri', hour=17)
 # def scheduled_job():
 #     print('This job is run every weekday at 5pm.')
+#
+# @sched.scheduled_job(AndTrigger([IntervalTrigger(minutes=30),
+#                                  CronTrigger(day_of_week='sat,sun')]))
+# def combined_job():
+#     print('This job is run every half an hour during every weekend.')
 ##########################################################################
 
 
