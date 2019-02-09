@@ -167,6 +167,10 @@ progress::-webkit-progress-value {
 		width: 400px;
 }
 
+.landing {
+		width: 672px;
+}
+
 .editing_area {
 		width: 800px;
 }
