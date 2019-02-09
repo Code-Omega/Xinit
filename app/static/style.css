@@ -170,3 +170,155 @@ progress::-webkit-progress-value {
 .editing_area {
 		width: 800px;
 }
+
+
+/* animations */
+/* ----------------------------------------------
+ * Many are generated with help of Animista
+ * w: http://animista.net, t: @cssanimista
+ * ---------------------------------------------- */
+
+
+.slide-right {
+	-webkit-animation: slide-right 2s cubic-bezier(0.175, 0.885, 0.320, 1.275) infinite both;
+	        animation: slide-right 2s cubic-bezier(0.175, 0.885, 0.320, 1.275) infinite both;
+}
+@-webkit-keyframes slide-right {
+  0% {
+    -webkit-transform: translateX(-100px);
+  }
+  50% {
+    -webkit-transform: translateX(100px);
+  }
+	100% {
+		-webkit-transform: translateX(-100px);
+	}
+}
+@keyframes slide-right {
+  0% {
+            transform: translateX(-100px);
+  }
+  50% {
+            transform: translateX(100px);
+  }
+	100% {
+						transform: translateX(-100px);
+	}
+}
+
+.tracking-in-expand {
+	-webkit-animation: tracking-in-expand 2.35s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+	        animation: tracking-in-expand 2.35s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+@-webkit-keyframes tracking-in-expand {
+  0% {
+    letter-spacing: -0.5em;
+    opacity: 0;
+  }
+  40% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes tracking-in-expand {
+  0% {
+    letter-spacing: -0.5em;
+    opacity: 0;
+  }
+  40% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.scale-in-bottom {
+	-webkit-animation: scale-in-bottom 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+	        animation: scale-in-bottom 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+@-webkit-keyframes scale-in-bottom {
+  0% {
+    -webkit-transform: scale(0);
+    -webkit-transform-origin: 50% 100%;
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: scale(1);
+    -webkit-transform-origin: 50% 100%;
+    opacity: 1;
+  }
+}
+@keyframes scale-in-bottom {
+  0% {
+            transform: scale(0);
+            transform-origin: 50% 100%;
+    opacity: 1;
+  }
+  100% {
+            transform: scale(1);
+            transform-origin: 50% 100%;
+    opacity: 1;
+  }
+}
+
+.scale-in-ver-bottom {
+	-webkit-animation: scale-in-ver-bottom 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+	        animation: scale-in-ver-bottom 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+@-webkit-keyframes scale-in-ver-bottom {
+  0% {
+    -webkit-transform: translate(var(--x-position), var(--y-position))
+											 scale(0)
+											 translate(calc(var(--x-position)*-1), calc(var(--y-position)*-1));
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: translate(var(--x-position), var(--y-position))
+											 scale(1)
+											 translate(calc(var(--x-position)*-1), calc(var(--y-position)*-1));
+    opacity: 1;
+  }
+}
+@keyframes scale-in-ver-bottom {
+  0% {
+        transform: translate(var(--x-position), var(--y-position))
+									 scale(0)
+									 translate(calc(var(--x-position)*-1), calc(var(--y-position)*-1));
+    opacity: 1;
+  }
+  100% {
+				transform: translate(var(--x-position), var(--y-position))
+									 scale(1)
+									 translate(calc(var(--x-position)*-1), calc(var(--y-position)*-1));
+    opacity: 1;
+  }
+}
+
+
+.fade-in-fwd {
+	-webkit-animation: fade-in-fwd 5s cubic-bezier(0.390, 0.575, 0.565, 1.000) infinite both;
+	        animation: fade-in-fwd 5s cubic-bezier(0.390, 0.575, 0.565, 1.000) infinite both;
+}
+@-webkit-keyframes fade-in-fwd {
+  100%, 0%, 40% {
+    -webkit-transform: translateZ(-80px);
+    opacity: 0;
+  }
+  60%, 90% {
+    -webkit-transform: translateZ(0);
+    opacity: 1;
+  }
+}
+@keyframes fade-in-fwd {
+  100%, 0%, 40% {
+            transform: translateZ(-80px);
+    opacity: 0;
+  }
+  60%, 90% {
+            transform: translateZ(0);
+    opacity: 1;
+  }
+}
