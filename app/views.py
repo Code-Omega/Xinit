@@ -227,6 +227,11 @@ def login_required_response(fn): # alert
         return jsonify("Please log in"), 401
     return inner
 
+@app.route('/')
+@app.route('/landing')
+def landing():
+    return render_template('landing.html', title='Xinit')
+
 
 @app.route('/index')
 def index():
@@ -272,7 +277,7 @@ def index():
                            posts=posts,
                            iframe_src=str(json.dumps(iframe_dict)))
 
-@app.route('/')
+
 @app.route('/analyses')
 def analyses():
     #if 'username' in session: # load user specific info
@@ -377,10 +382,6 @@ def logout():
     session.clear()
     return redirect(url_for('index'))
 
-
-@app.route('/landing')
-def landing():
-    return render_template('landing.html', title='Xinit')
 
 
 @app.errorhandler(404)
