@@ -269,8 +269,8 @@ progress::-webkit-progress-value {
 }
 
 .scale-in-ver-bottom {
-	-webkit-animation: scale-in-ver-bottom 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-	        animation: scale-in-ver-bottom 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+	-webkit-animation: scale-in-ver-bottom 5s cubic-bezier(0.250, 0.460, 0.450, 0.940) infinite both;
+	        animation: scale-in-ver-bottom 5s cubic-bezier(0.250, 0.460, 0.450, 0.940) infinite both;
 }
 @-webkit-keyframes scale-in-ver-bottom {
   0% {
@@ -279,12 +279,15 @@ progress::-webkit-progress-value {
 											 translate(calc(var(--x-position)*-1), calc(var(--y-position)*-1));
     opacity: 1;
   }
-  100% {
+  10%, 80% {
     -webkit-transform: translate(var(--x-position), var(--y-position))
 											 scale(1)
 											 translate(calc(var(--x-position)*-1), calc(var(--y-position)*-1));
     opacity: 1;
   }
+	100% {
+		opacity: 0;
+	}
 }
 @keyframes scale-in-ver-bottom {
   0% {
@@ -293,11 +296,14 @@ progress::-webkit-progress-value {
 									 translate(calc(var(--x-position)*-1), calc(var(--y-position)*-1));
     opacity: 1;
   }
-  100% {
+  10%, 80% {
 				transform: translate(var(--x-position), var(--y-position))
 									 scale(1)
 									 translate(calc(var(--x-position)*-1), calc(var(--y-position)*-1));
     opacity: 1;
+  }
+	100% {
+    opacity: 0;
   }
 }
 
@@ -305,6 +311,8 @@ progress::-webkit-progress-value {
 .fade-in-fwd {
 	-webkit-animation: fade-in-fwd 5s cubic-bezier(0.390, 0.575, 0.565, 1.000) infinite both;
 	        animation: fade-in-fwd 5s cubic-bezier(0.390, 0.575, 0.565, 1.000) infinite both;
+	-webkit-animation-delay: calc(var(--delay,0)*100ms);
+				  animation-delay: calc(var(--delay,0)*100ms);
 }
 @-webkit-keyframes fade-in-fwd {
   100%, 0%, 40% {
@@ -325,4 +333,106 @@ progress::-webkit-progress-value {
             transform: translateZ(0);
     opacity: 1;
   }
+}
+
+.fade-in-fwd-x2 {
+	-webkit-animation: fade-in-fwd-x2 10s cubic-bezier(0.390, 0.575, 0.565, 1.000) infinite both;
+	        animation: fade-in-fwd-x2 10s cubic-bezier(0.390, 0.575, 0.565, 1.000) infinite both;
+	-webkit-animation-delay: calc(var(--delay,0)*100ms);
+				  animation-delay: calc(var(--delay,0)*100ms);
+}
+@-webkit-keyframes fade-in-fwd-x2 {
+  50%, 100%, 0%, 20% {
+    -webkit-transform: translateZ(-80px);
+    opacity: 0;
+  }
+  30%, 45% {
+    -webkit-transform: translateZ(0);
+    opacity: 1;
+  }
+}
+@keyframes fade-in-fwd-x2 {
+  50%, 100%, 0%, 20% {
+            transform: translateZ(-80px);
+    opacity: 0;
+  }
+  30%, 45% {
+            transform: translateZ(0);
+    opacity: 1;
+  }
+}
+
+.slide-out-blurred-top {
+	-webkit-animation: slide-out-blurred-top 5s cubic-bezier(0.755, 0.050, 0.855, 0.060) infinite both;
+	        animation: slide-out-blurred-top 5s cubic-bezier(0.755, 0.050, 0.855, 0.060) infinite both;
+	-webkit-animation-delay: calc(var(--delay)*100ms);
+	        animation-delay: calc(var(--delay)*100ms);
+}
+@-webkit-keyframes slide-out-blurred-top {
+	0% {
+    -webkit-transform: translateY(0);
+    -webkit-transform-origin: 50% 0%;
+    -webkit-filter: blur(0);
+    opacity: 0;
+  }
+  20% {
+    -webkit-transform: translateY(0);
+    -webkit-transform-origin: 50% 0%;
+    -webkit-filter: blur(0);
+    opacity: 1;
+  }
+  40%, 100% {
+    -webkit-transform: translateY(-1000px);
+    -webkit-transform-origin: 50% 0%;
+    -webkit-filter: blur(40px);
+    opacity: 0;
+  }
+}
+@keyframes slide-out-blurred-top {
+	0% {
+            transform: translateY(0);
+            transform-origin: 50% 0%;
+            filter: blur(0);
+    opacity: 0;
+  }
+  20% {
+            transform: translateY(0);
+            transform-origin: 50% 0%;
+            filter: blur(0);
+    opacity: 1;
+  }
+  40%, 100% {
+            transform: translateY(-1000px);
+            transform-origin: 50% 0%;
+            filter: blur(40px);
+    opacity: 0;
+  }
+}
+
+/* TODO: SCSS and -webkit- */
+.line1 {
+  stroke-dasharray: 340;
+  stroke-dashoffset: 360;
+  animation: dash 4s linear infinite;
+}
+
+.line2 {
+  stroke-dasharray: 340;
+  stroke-dashoffset: 360;
+  animation: dash 4s linear 0.1s infinite;
+}
+
+@keyframes dash {
+  0% {
+    stroke-dashoffset: 360;
+		opacity: 1;
+  }
+	25% {
+		stroke-dashoffset: 0;
+		opacity: 1;
+	}
+	50%, 100% {
+		stroke-dashoffset: 0;
+		opacity: 0;
+	}
 }
