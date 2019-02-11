@@ -184,10 +184,10 @@ progress::-webkit-progress-value {
 		position: absolute;
 		top: 60px;
 		z-index: 1;
-		left: calc(50% - 720px);
+		left: calc(50% - 880px);
 		/* opacity: 0.6; */
-		-webkit-mask-image: -webkit-gradient(linear, left 90%, left bottom, from(rgba(0,0,0,0.6)), to(rgba(0,0,0,1)));
-		        mask-image:         gradient(linear, left 90%, left bottom, from(rgba(0,0,0,0.6)), to(rgba(0,0,0,1)));
+		-webkit-mask-image: -webkit-gradient(linear, left 90%, left bottom, from(rgba(0,0,0,0.8)), to(rgba(0,0,0,1)));
+		        mask-image:         gradient(linear, left 90%, left bottom, from(rgba(0,0,0,0.8)), to(rgba(0,0,0,1)));
 }
 
 .landing-graphics{
@@ -588,6 +588,10 @@ progress::-webkit-progress-value {
   position: relative;
   -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.175);
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.175);
+
+	/* background-color: rgba(0, 0, 0, 0.475); */
+	/* background-color: rgba(255, 0, 0, 1); */
+	background-color: rgba(255, 255, 255, 0.175);
 }
 
 .timeline > li > .timeline-panel:before {
@@ -694,13 +698,24 @@ progress::-webkit-progress-value {
 }
 
 .timeline-title {
+	padding-left: 10px;
+	padding-right: 10px;
+	text-align: center;
   margin-top: 0;
 	margin-bottom: 15px;
-  color: inherit;
+  /* color: inherit; */
+	/* color: rgba(52, 58, 64, 1); */
+	color: rgba(255, 255, 255, 1);
+	/* color: #5CBC99 */
+}
+
+.timeline-body {
+	color: rgba(52, 58, 64, 1);
 }
 
 .timeline-body > p,
 .timeline-body > ul {
+	/* padding-left: 0px; */
   margin-bottom: 0;
 	font-size: 1.1em;
 	list-style-type: disc;
@@ -711,5 +726,5 @@ progress::-webkit-progress-value {
 }
 
 .timeline-body > p + p {
-  margin-top: 5px;
+  margin-top: 10px;
 }
