@@ -135,7 +135,7 @@ def update_doc_model(mongo, num_posts = 100):
     # update the doc model with current available posts
     # TODO try gensim to ease RAM usage
 
-    posts = list(mongo.db.feeds.find().sort('id',-1).limit(num_posts))
+    posts = list(mongo.db.feeds.find().sort('_id',-1).limit(num_posts))
     corpus = [" ".join(post['content']) for post in posts]
     vectorizer = TfidfVectorizer(input = 'content',
                                  norm = 'l2',
@@ -171,7 +171,7 @@ def update_doc_model(mongo, num_posts = 100):
     """
 
 def process_feeds(mongo, num_posts = 6, topNum = 3):
-    posts = list(mongo.db.feeds.find().sort('id',-1).limit(num_posts))
+    posts = list(mongo.db.feeds.find().sort('_id',-1).limit(num_posts))
     saved_doc_model = mongo.db.models.find_one({'name': 'doc_model'})
     doc_model = pickle.loads(saved_doc_model['data'])
 
