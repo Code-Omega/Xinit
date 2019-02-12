@@ -43,6 +43,10 @@ def process_feeds():
         ana.process_feeds(mongo, num_posts = 10, topNum = 3)
         print('Feeds processed')
 
+        print('Updating trends.')
+        ana.get_google_trends(mongo, num = 12)
+        print('trends updated')
+
 
 @sched.scheduled_job('cron', day_of_week='mon-sun', hour=20)
 def retrain_doc_model():

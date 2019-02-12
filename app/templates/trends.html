@@ -3,13 +3,21 @@
 {% block content %}
 <div class="container mt-3">
     <div class="row">
-        <div class="col card mt-3 pt-3">
+        <div class="col card m-3 pt-3">
             <h2 class="text-center">
               Trends <span class="badge badge-title">Beta</span>
             </h2>
-            <canvas id="line-chart" class = width="800" height="450"></canvas>
-            <!-- {{ trends_table|safe }} -->
+            <h5 class="text-center">
+              Interest in news related assets in the last 24 hours (UTC)
+            </h5>
         </div>
+    </div>
+    <div class="card-columns">
+      {% for s in series %}
+      <div class="card">
+        <canvas id="line-chart-{{loop.index}}" class = width="300" height="200"></canvas>
+      </div>
+      {% endfor %}
     </div>
 </div>
 
@@ -19,50 +27,53 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js"></script>
 
 <script>
-new Chart(document.getElementById("line-chart"), {
+{% for s in series %}
+new Chart(document.getElementById("line-chart-{{loop.index}}"), {
   type: 'line',
   data: {
     labels: ["{{x_axis|join('","')|safe}}"],
-    datasets: [{
-        data: [{{values[0]|join(',')}}],
-        label: "{{series_names[0]}}",
-        borderColor: "{{colors[0]}}",
-        backgroundColor: "{{colors[0]}}",
-        fill: false
-      }, {
-        data: [{{values[1]|join(',')}}],
-        label: "{{series_names[1]}}",
-        borderColor: "{{colors[1]}}",
-        backgroundColor: "{{colors[1]}}",
-        fill: false
-      }, {
-        data: [{{values[2]|join(',')}}],
-        label: "{{series_names[2]}}",
-        borderColor: "{{colors[2]}}",
-        backgroundColor: "{{colors[2]}}",
-        fill: false
-      }, {
-        data: [{{values[3]|join(',')}}],
-        label: "{{series_names[3]}}",
-        borderColor: "{{colors[3]}}",
-        backgroundColor: "{{colors[3]}}",
-        fill: false
-      }, {
-        data: [{{values[4]|join(',')}}],
-        label: "{{series_names[4]}}",
-        borderColor: "{{colors[4]}}",
-        backgroundColor: "{{colors[4]}}",
-        fill: false
+    datasets: [
+      {
+        data: [{{s.v|join(',')}}],
+        label: "{{s.series_name}}",
+        borderColor: "{{s.color}}",
+        backgroundColor: "{{s.color}}",
+        fill: false,
+        pointRadius: 0,
+        pointHoverRadius: 3
       }
     ]
   },
   options: {
     defaultFontFamily: Chart.defaults.global.defaultFontFamily = "'Raleway'",
     title: {
-      display: true,
-      text: 'Relative attention to news related assets in the last 10 hours'
+      display: false,
+      text: 'Interest in news related assets in the last 24 hours'
+    },
+    tooltips: {
+      mode: 'index',
+      intersect: false,
+    },
+    hover: {
+      mode: 'nearest',
+      intersect: false,
+    },
+    scales: {
+      xAxes: [{
+        scaleLabel: {
+          display: false,
+          labelString: 'UTC'
+        }
+      }],
+      yAxes: [{
+        scaleLabel: {
+          display: false,
+          labelString: ''
+        }
+      }]
     }
   }
 });
+{% endfor %}
 </script>
 {% endblock script %}
