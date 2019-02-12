@@ -15,6 +15,8 @@ from copy import deepcopy
 import numpy as np
 import re
 
+from pytrends.request import TrendReq
+
 from app import app
 
 #---------------------------------------------------------------------------------------------------
@@ -227,6 +229,7 @@ def login_required_response(fn): # alert
         return jsonify("Please log in"), 401
     return inner
 
+
 @app.route('/')
 @app.route('/landing')
 def landing():
@@ -270,12 +273,52 @@ def index():
     # iframe_src = {'tv' : "https://s.tradingview.com/marketoverviewwidgetembed/#"
     #                      +urllib.parse.quote(str(json.dumps(iframe_dict)))}
 
-    print (str(json.dumps(iframe_dict)))
+    #print (str(json.dumps(iframe_dict)))
     return render_template("index.html",
                            title='News',
                            sources=sources,
                            posts=posts,
                            iframe_src=str(json.dumps(iframe_dict)))
+
+
+@app.route('/trends')
+def trends():
+    #if 'username' in session: # load user specific info
+
+    page_data = mongo.db.processed_feeds.find_one()
+
+    corpus = page_data['corpus']
+    #t_keywords = page_data['t_keywords']
+    #keywords = [x[0] for x in t_keywords]
+    key_assets = page_data['key_assets']
+    keywords = [x for x in key_assets]
+
+    # XXX: testing
+    print(len(keywords))
+    keywords = keywords[:min(5,len(keywords))]
+
+    pytrends = TrendReq(hl='en-US', tz=360)
+    pytrends.build_payload(keywords, cat=0, timeframe='now 1-d', geo='', gprop='')
+    trends_df = pytrends.interest_over_time()
+    trends_df.drop('isPartial',1,inplace=True)
+    trends_table = trends_df.to_html()
+
+    # XXX: testing
+    trends_df = trends_df.iloc[-10:]
+
+    x_axis = trends_df.index.strftime("%Y/%m/%d %H:%M")
+    series_names = trends_df.columns
+    values = trends_df.values.transpose()
+    colors = ['#3e95cd','#8e5ea2','#3cba9f','#e8c3b9','#c45850']
+
+    return render_template("trends.html",
+                           title='Trends',
+                           keywords=keywords,
+                           trends_table=trends_table,
+                           x_axis = x_axis,
+                           series_names = series_names,
+                           values = values,
+                           colors = colors)
 
 
 @app.route('/analyses')

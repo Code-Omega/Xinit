@@ -85,6 +85,11 @@ progress::-webkit-progress-value {
   	background-color: #333333;
 }
 
+.badge-title {
+	color: #fff;
+	background-color: #5CBC99;
+}
+
 .navbar{
 		position: -webkit-sticky;
 		position: sticky;
@@ -192,6 +197,9 @@ progress::-webkit-progress-value {
 
 .landing-graphics{
 		z-index: 2;
+}
+
+.trends-graph{
 }
 
 .editing_area {

@@ -12,6 +12,9 @@
     <link href="https://fonts.googleapis.com/css?family=Oswald|Raleway" rel="stylesheet">
     <script defer src="https://use.fontawesome.com/releases/v5.7.1/js/all.js" integrity="sha384-eVEQC9zshBn0rFj4+TU78eNA19HMNigMviK/PU/FFjLXqa/GKPgX58rvt5Z8PLs7" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../static/style.css">
+    {% block header %}
+    {% endblock header %}
+    {# TODO: add style version control, add js file, add blocks#}
   </head>
 	<nav class="navbar navbar-expand-sm navbar-dark bg-dark p-0">
 	  <a class="navbar-brand ml-3" href="/"><h2 class="m-0">X.init</h2></a>
@@ -30,9 +33,9 @@
             <h4 class="m-0">News,</h4>
           </a>
 	      </li>
-        <li class="nav-item">
-          <a class="nav-link btn p-2 btn-dark" href="#">
-            <h4 class="m-0">Coming_Soon,</h4>
+        <li class="nav-item {{ "active" if title == "Trends" else None }}">
+          <a class="nav-link btn p-2 {{ "btn-info bg-theme-highlight btn-rect" if title == "Trends" else "btn-dark" }} " href="/trends">
+            <h4 class="m-0">Trends,</h4>
           </a>
         </li>
         <li class="nav-item {{ "active" if title == "Analyses" else None }}">
@@ -40,6 +43,11 @@
             <h4 class="m-0">Analyses,</h4>
           </a>
 	      </li>
+        <li class="nav-item">
+          <a class="nav-link btn p-2 btn-dark disabled" href="#">
+            <h4 class="m-0">Coming_Soon,</h4>
+          </a>
+        </li>
 	      <li class="nav-item {{ "active" if title == "Profile" else None }}">
           <a class="nav-link btn p-2 {{ "btn-info bg-theme-highlight btn-rect" if title == "Profile" else "btn-dark" }}" href="{{ "/profile" if session['username'] else "/sign_in" }}">
             <h4 class="m-0">{{ "User = {}".format(session['username']) if session['username'] else "Sign_In" }}</h4>
@@ -89,5 +97,7 @@
       });
     });
   </script>
+  {% block script %}
+  {% endblock script %}
   </body>
 </html>
