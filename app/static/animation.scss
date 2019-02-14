@@ -1,0 +1,197 @@
+/* animations */
+/* ----------------------------------------------
+ * Many are generated with help of Animista
+ * w: http://animista.net, t: @cssanimista
+ * ---------------------------------------------- */
+
+
+.slide-right {
+  @include prefix((animation: slide-right 2s cubic-bezier(0.175, 0.885, 0.320, 1.275) infinite both), webkit);
+}
+@include keyframes(slide-right, webkit) {
+  0% {
+    @include prefix((transform: translateX(-100px)), webkit);
+  }
+  50% {
+    @include prefix((transform: translateX(100px)), webkit);
+  }
+  100% {
+    @include prefix((transform: translateX(-100px)), webkit);
+  }
+}
+
+.tracking-in-expand {
+	@include prefix((animation: tracking-in-expand 2.35s cubic-bezier(0.250, 0.460, 0.450, 0.940) both), webkit);
+}
+@include keyframes(tracking-in-expand, webkit) {
+  0% {
+    letter-spacing: -0.5em;
+    opacity: 0;
+  }
+  40% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.scale-in-bottom {
+	@include prefix((animation: scale-in-bottom 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both), webkit);
+}
+@include keyframes(scale-in-bottom, webkit) {
+  0% {
+    @include prefix((transform: scale(0),
+                     transform-origin: 50% 100%
+                    ), webkit);
+    opacity: 1;
+  }
+  100% {
+    @include prefix((transform: scale(1),
+                     transform-origin: 50% 100%
+                    ), webkit);
+    opacity: 1;
+  }
+}
+
+.scale-in-ver-bottom {
+	@include prefix((animation: scale-in-ver-bottom 5s cubic-bezier(0.250, 0.460, 0.450, 0.940) infinite both), webkit);
+}
+@include keyframes(scale-in-ver-bottom, webkit) {
+  0% {
+    @include prefix((transform: translate(var(--x-position), var(--y-position))
+                                scale(0)
+                                translate(calc(var(--x-position)*-1), calc(var(--y-position)*-1))
+                    ), webkit);
+    opacity: 1;
+  }
+  10%, 80% {
+    @include prefix((transform: translate(var(--x-position), var(--y-position))
+                                scale(1)
+                                translate(calc(var(--x-position)*-1), calc(var(--y-position)*-1))
+                    ), webkit);
+    opacity: 1;
+  }
+	100% {
+    opacity: 0;
+  }
+}
+
+.fade-in-fwd {
+  @include prefix((animation: fade-in-fwd 5s cubic-bezier(0.390, 0.575, 0.565, 1.000) infinite both,
+                   animation-delay: calc(var(--delay,0)*100ms)
+                  ), webkit);
+}
+@include keyframes(fade-in-fwd, webkit) {
+  100%, 0%, 40% {
+    @include prefix((transform: translateZ(-80px)), webkit);
+    opacity: 0;
+  }
+  60%, 90% {
+    @include prefix((transform: translateZ(0)), webkit);
+    opacity: 1;
+  }
+}
+
+.fade-in-fwd-x2 {
+  @include prefix((animation: fade-in-fwd-x2 10s cubic-bezier(0.390, 0.575, 0.565, 1.000) infinite both,
+                   animation-delay: calc(var(--delay,0)*100ms)
+                  ), webkit);
+}
+@include keyframes(fade-in-fwd-x2, webkit) {
+  50%, 100%, 0%, 20% {
+    @include prefix((transform: translateZ(-80px)), webkit);
+    opacity: 0;
+  }
+  30%, 45% {
+    @include prefix((transform: translateZ(0)), webkit);
+    opacity: 1;
+  }
+}
+
+.slide-out-blurred-top {
+  @include prefix((animation: slide-out-blurred-top 5s cubic-bezier(0.755, 0.050, 0.855, 0.060) infinite both,
+                   animation-delay: calc(var(--delay,0)*100ms)
+                  ), webkit);
+}
+@include keyframes(slide-out-blurred-top, webkit) {
+  0% {
+    @include prefix((transform: translateY(0),
+                     transform-origin: 50% 0%,
+                     filter: blur(0)
+                    ), webkit);
+    opacity: 0;
+  }
+  20% {
+    @include prefix((transform: translateY(0),
+                     transform-origin: 50% 0%,
+                     filter: blur(0)
+                    ), webkit);
+    opacity: 1;
+  }
+  40%, 100% {
+    @include prefix((transform: translateY(-1000px),
+                     transform-origin: 50% 0%,
+                     filter: blur(40px)
+                    ), webkit);
+    opacity: 0;
+  }
+}
+
+.line1 {
+  stroke-dasharray: 340;
+  stroke-dashoffset: 360;
+  @include prefix((animation: dash 4s linear infinite), webkit);
+}
+.line2 {
+  stroke-dasharray: 340;
+  stroke-dashoffset: 360;
+  @include prefix((animation: dash 4s linear 0.1s infinite), webkit);
+}
+@include keyframes(dash, webkit) {
+  0% {
+    stroke-dashoffset: 360;
+		opacity: 1;
+  }
+	25% {
+		stroke-dashoffset: 0;
+		opacity: 1;
+	}
+	50%, 100% {
+		stroke-dashoffset: 0;
+		opacity: 0;
+	}
+}
+
+.ping {
+	@include prefix((animation: ping 1.2s ease-in-out infinite both), webkit);
+	opacity: .3;
+}
+@include keyframes(ping, webkit) {
+  100%, 0% {
+    @include prefix((transform: scale(1.3),
+                     transform-origin: center center,
+                     animation-timing-function: ease-out
+                    ), webkit);
+  }
+  10% {
+    @include prefix((transform: scale(1.1),
+                     animation-timing-function: ease-in
+                    ), webkit);
+  }
+  17% {
+    @include prefix((transform: scale(1.2),
+                     animation-timing-function: ease-out
+                    ), webkit);
+  }
+  33% {
+    @include prefix((transform: scale(1),
+                     animation-timing-function: ease-in
+                    ), webkit);
+  }
+  45% {
+    @include prefix((transform: scale(1.3),
+                     animation-timing-function: ease-out
+                    ), webkit);
+  }
+}

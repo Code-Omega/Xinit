@@ -1,0 +1,51 @@
+$font-title: 'Oswald', sans-serif;
+$font-content: 'Raleway', sans-serif;
+
+$color-bg-default: #eee;
+$color-dark: rgba(52, 58, 64, 1);
+$color-main: #5CBC99;
+$color-dark-black: #333333;
+$color-bg-landing-top: $color-dark;
+$color-bg-landing-bottom: rgba(0, 183, 248, 1);
+
+@mixin prefix($declarations, $prefixes: ()) {
+  @each $property, $value in $declarations {
+    @each $prefix in $prefixes {
+      #{'-' + $prefix + '-' + $property}: $value;
+    }
+    #{$property}: $value;
+  }
+}
+
+@mixin prefix-v($declarations, $prefixes: ()) {
+  @each $property, $value in $declarations {
+    @each $prefix in $prefixes {
+      #{$property}: #{'-' + $prefix + '-' + $value};
+    }
+    #{$property}: $value;
+  }
+}
+
+@mixin prefix-pv($declarations, $prefixes: ()) {
+  @each $property, $value in $declarations {
+    @each $prefix in $prefixes {
+      #{'-' + $prefix + '-' + $property}: #{'-' + $prefix + '-' + $value};
+    }
+    #{$property}: $value;
+  }
+}
+
+@mixin keyframes($name, $prefixes: ()) {
+  @each $prefix in $prefixes {
+    @#{'-' + $prefix + '-keyframes'} #{$name} {
+      @content;
+    }
+  }
+  @#{'keyframes'} #{$name} {
+    @content;
+  }
+}
+
+@mixin position($pos) {
+  @include prefix-v((position: $pos), webkit);
+}
