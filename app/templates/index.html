@@ -15,6 +15,7 @@
                 <div class="row no-gutters">
                   <p style="padding: 0rem;">
                     Importance Score: {{ post.score }} </br>
+                    Time Acquired: {{ momentjs(post.time_acquired).fromNow() }}, {{ momentjs(post.time_acquired).format('LLLL') }}</br>
                     Keywords:
                       {% for keyword in post.keywords %}
                         <a href="#" class="badge badge-light">{{ keyword }}</a>
@@ -74,7 +75,7 @@
       <div class="sidebar_content">
         <div class="card sidebar_card bg-light mb-3">
           <div class="card-header sidebar_card_header p-3">
-            <h5 class="m-0"><b>Today's keywords</b></h5>
+            <h5 class="m-0"><b>Current keywords</b></h5>
           </div>
           <div class="card-body sidebar_card_body scrollbar-cus p-2">
             <p class="card-text">
@@ -86,7 +87,7 @@
         </div>
         <div class="card sidebar_card bg-dark mb-3">
           <div class="card-header text-white sidebar_card_header bg-theme p-3">
-            <h5 class="m-0"><b>Today's key assets</b></h5>
+            <h5 class="m-0"><b>Current key assets</b></h5>
           </div>
           <div class="card-body sidebar_card_body scrollbar-cus p-2">
             <p class="card-text">

@@ -255,6 +255,8 @@ def index():
     iframe_dict = deepcopy(default_iframe_dict)
     iframe_dict['tabs'].insert(0,iframe_tab)
 
+    time_acquired = page_data['time_acquired']
+
     sources = {'name': 'news pieces', # 'CNBC, Bloomberg View, and Seeking Alpha',
                'length': len(corpus),
                'keywords': [x[0] for x in t_keywords],
@@ -267,7 +269,8 @@ def index():
               'condense_rate': "{:.3}".format(sum([len(x[0])*100 for x in summaries[i]])/len(corpus[i])),
               'source': header[i][2],
               'score': "{:.3f}".format(doc_score[i]),
-              'link': header[i][1]} for i in doc_rank]
+              'link': header[i][1],
+              'time_acquired' : time_acquired[i]} for i in doc_rank]
 
     # iframe_src = {'tv' : "https://s.tradingview.com/marketoverviewwidgetembed/#"
     #                      +urllib.parse.quote(str(json.dumps(iframe_dict)))}
@@ -289,6 +292,7 @@ def trends():
     return render_template("trends.html",
                            title='Trends',
                            keywords=res['keywords'],
+                           time_updated=ObjectId(res['_id']).generation_time,
                            x_axis=res['x_axis'],
                            series = [{'series_name': res['series_names'][i],
                                       'v': res['values'][i],

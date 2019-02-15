@@ -9,6 +9,7 @@ from flask import Flask
 from flask_pymongo import PyMongo
 
 import ana
+import urllib.request
 
 MONGO_URI = 'mongodb://xibot:jacqep-4fubJy-ruhcoq@ds255784.mlab.com:55784/xinit'
 
@@ -29,9 +30,9 @@ MONGO_URI = 'mongodb://xibot:jacqep-4fubJy-ruhcoq@ds255784.mlab.com:55784/xinit'
 ##########################################################################
 
 
-@sched.scheduled_job('interval', minutes=30)
+@sched.scheduled_job('interval', minutes=10, start_date='2019-1-1 00:00:00')
 def process_feeds():
-    print('Getting feed data; runs every 30 minutes.')
+    print('Getting feed data; runs every 10 minutes.')
     app = Flask(__name__)
     app.config['MONGO_URI'] = MONGO_URI
     mongo = PyMongo(app)
@@ -40,7 +41,7 @@ def process_feeds():
     print('# new posts:',num_new_posts)
     if num_new_posts > 0:
         print('Process with new feeds.')
-        ana.process_feeds(mongo, num_posts = 10, topNum = 3)
+        ana.process_feeds(mongo, num_posts = 6, topNum = 3)
         print('Feeds processed')
 
 
@@ -56,6 +57,12 @@ def retrain_doc_model():
     print('Retrain the tfidf model; runs every day at night.')
     ana.update_doc_model(mongo)
     print('Model retrained')
+
+
+@sched.scheduled_job('interval', minutes=20)
+def keep_awake():
+    contents = urllib.request.urlopen("https://xinit.herokuapp.com").read()
+    print('Keeps dyno awake.')
 
 
 # @sched.scheduled_job('interval', minutes=30)

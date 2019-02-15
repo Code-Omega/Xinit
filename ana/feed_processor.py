@@ -11,6 +11,7 @@ import re
 import datetime
 from types import SimpleNamespace
 from bson.binary import Binary
+from bson.objectid import ObjectId
 
 
 def utc_to_local(utc_dt):
@@ -176,6 +177,7 @@ def process_feeds(mongo, num_posts = 6, topNum = 3):
     doc_model = pickle.loads(saved_doc_model['data'])
 
     res = processed_feeds(posts, doc_model, num_posts, topNum)
+    post_times = [ObjectId(post['_id']).generation_time for post in posts]
 
     # STORE RESULTS
     iframe_tab = {"symbols":res.iframe_news_symbols,"title":"News"}
@@ -191,7 +193,7 @@ def process_feeds(mongo, num_posts = 6, topNum = 3):
          'doc_score' : res.doc_score,
          'doc_rank' : res.doc_rank,
          'iframe_tab' : iframe_tab,
-         })
+         'time_acquired' : post_times})
 
 class processed_feeds():
     def __init__(self, posts, vectorizer, num_posts = 6, topNum = 3):
