@@ -10,7 +10,7 @@
             <h5 class="text-center">
               Interest in news related assets in the last 24 hours (UTC)
             </h5>
-            <p class="small text-center">
+            <p class="small text-muted text-center">
               Last Update: {{ momentjs(time_updated).fromNow() }}
             </p>
         </div>
@@ -27,8 +27,6 @@
 {% endblock %}
 
 {% block script %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js"></script>
-
 <script>
 {% for s in series %}
 new Chart(document.getElementById("line-chart-{{loop.index}}"), {

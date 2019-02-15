@@ -41,6 +41,7 @@
               </div>
               <div class="col col-4">
                 {{ post.time_added.strftime("%Y-%m-%d %H:%M:%S") }}
+                {# TODO: Change to dynamic time #}
               </div>
               <div class="col col-3">
                 {{ post.keywords }}
@@ -55,14 +56,8 @@
           </div>
         </div>
       {% endfor %}
-      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-      <script>
-      $(document).on('click', '.card-control', function() {
-        $(this).parent().parent().parent().find('.card-text').toggle(60);
-        $(this).parent().parent().parent().find('.card-abstract').toggle(60);
-      });
-      </script>
     </div>
+
     <div class="sidebar col-sm-auto">
       <div class="sidebar_chart">
         <div class="tradingview-widget-container frame">
@@ -75,3 +70,12 @@
   </div>
 </div>
 {% endblock %}
+
+{% block script %}
+<script>
+$(document).on('click', '.card-control', function() {
+  $(this).parent().parent().parent().find('.card-text').toggle(600);
+  $(this).parent().parent().parent().find('.card-abstract').toggle(600);
+});
+</script>
+{% endblock script %}

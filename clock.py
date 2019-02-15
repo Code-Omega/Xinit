@@ -45,9 +45,13 @@ def process_feeds():
         print('Feeds processed')
 
 
-@sched.scheduled_job('interval', minutes=30, start_date='2019-1-1 00:00:00')
+@sched.scheduled_job('interval', minutes=10, start_date='2019-1-1 00:00:00')
 def update_trends():
     print('Updating trends.')
+    app = Flask(__name__)
+    app.config['MONGO_URI'] = MONGO_URI
+    mongo = PyMongo(app)
+
     ana.get_google_trends(mongo, num = 12)
     print('trends updated')
 
@@ -55,6 +59,10 @@ def update_trends():
 @sched.scheduled_job('cron', day_of_week='mon-sun', hour=20)
 def retrain_doc_model():
     print('Retrain the tfidf model; runs every day at night.')
+    app = Flask(__name__)
+    app.config['MONGO_URI'] = MONGO_URI
+    mongo = PyMongo(app)
+
     ana.update_doc_model(mongo)
     print('Model retrained')
 

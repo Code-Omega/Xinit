@@ -52,25 +52,8 @@
             <a href={{ post.link }} class="btn btn-dark card-footer bg-theme font-weight-bold">Read more on {{ post.source }}</a>
         </div>
       {% endfor %}
-      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-      <script>
-        $(document).on('click', '.card-control', function() {
-          $(this).parent().parent().find('.card-text').toggle('fast');
-          $(this).parent().parent().find('.post-assets').toggle('fast');
-        });
-        $(function(){
-          $('.badge-asset').click(function(){
-            $.post(this.href, function(response) {
-              alert(response);
-            }).fail(function(response) {
-              alert("Please Log in to keep track of keywords and assets.");
-              // alert(response.responseText)
-            });
-            return false;
-          });
-        });
-      </script>
     </div>
+
     <div class="sidebar col-sm-auto">
       <div class="sidebar_content">
         <div class="card sidebar_card bg-light mb-3">
@@ -109,3 +92,23 @@
   </div>
 </div>
 {% endblock %}
+
+{% block script %}
+<script>
+  $(document).on('click', '.card-control', function() {
+    $(this).parent().parent().find('.card-text').toggle('fast');
+    $(this).parent().parent().find('.post-assets').toggle('fast');
+  });
+  $(function(){
+    $('.badge-asset').click(function(){
+      $.post(this.href, function(response) {
+        alert(response);
+      }).fail(function(response) {
+        alert("Please Log in to keep track of keywords and assets.");
+        // alert(response.responseText)
+      });
+      return false;
+    });
+  });
+</script>
+{% endblock script %}
