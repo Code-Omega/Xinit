@@ -121,6 +121,15 @@ progress {
 .main {
   // padding-right: 15px;
   // padding-left: 15px;
+  &.sided{
+    margin-left: 0px;
+  }
+  @media (max-width: 768px) {
+    &.sided {
+      margin-left: -400px;
+    }
+  }
+  @include transition((margin-left 1s ease), webkit moz o);
 }
 
 .sidebar{

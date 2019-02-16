@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
 <button type="button" class="btn btn-dark btn-sm shadow-lg sidebar_toggle" data-toggle="toggle" data-target=".sidebar">
-  <a href="#" data-toggle="tooltip" title="Toggle Sidebar" data-placement="top" class="text-white">
+  <a href="#" data-toggle="tooltip" title="Toggle Sidebar" data-placement="left" class="text-white">
     <i class="fas fa-times shadow-lg"></i>
   </a>
 </button>
 
 <div class="container-fluid">
   <div class="row">
-    <div class="main col">
+    <div class="main col sided">
       {% for post in posts %}
         <div class="card mb-3">
           <div class="card-header text-white bg-dark">
@@ -79,6 +79,18 @@
 
 {% block script %}
 <script>
+  $(document).ready(function() {
+    checkSize();
+    // $(window).resize(checkSize);
+  });
+  function checkSize(){
+    if ($(".main.sided").css("margin-left") == "-400px" ){
+      $('.sidebar').toggleClass('in');
+      $('.main').toggleClass('sided');
+      $(this).children().children().toggleClass('out');
+    }
+  }
+
   $(document).on('click', '.card-control', function() {
     $(this).parent().parent().parent().find('.card-text').toggle(600);
     $(this).parent().parent().parent().find('.card-abstract').toggle(600);

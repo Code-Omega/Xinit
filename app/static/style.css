@@ -693,6 +693,21 @@ progress::-moz-progress-value {
   font-family: "Oswald", sans-serif;
 }
 
+.main {
+  -webkit-transition: margin-left 1s ease;
+  -moz-transition: margin-left 1s ease;
+  -o-transition: margin-left 1s ease;
+  transition: margin-left 1s ease;
+}
+.main.sided {
+  margin-left: 0px;
+}
+@media (max-width: 768px) {
+  .main.sided {
+    margin-left: -400px;
+  }
+}
+
 .sidebar {
   background-color: #343a40;
   min-height: calc(100vh - 42px);
