@@ -1,5 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
+<button type="button" class="btn btn-dark btn-sm shadow-lg sidebar_toggle" data-toggle="toggle" data-target=".sidebar">
+  <a href="#" data-toggle="tooltip" title="Toggle Sidebar" data-placement="top" class="text-white">
+    <i class="fas fa-times shadow-lg"></i>
+  </a>
+</button>
+
 <div class="container-fluid">
   <div class="row">
     <div class="main col">
@@ -58,8 +64,8 @@
       {% endfor %}
     </div>
 
-    <div class="sidebar col-sm-auto">
-      <div class="sidebar_chart">
+    <div class="sidebar in col-sm-auto inset">
+      <div class="sidebar_chart shadow">
         <div class="tradingview-widget-container frame">
           <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
             {{iframe_src|safe}}
@@ -73,9 +79,17 @@
 
 {% block script %}
 <script>
-$(document).on('click', '.card-control', function() {
-  $(this).parent().parent().parent().find('.card-text').toggle(600);
-  $(this).parent().parent().parent().find('.card-abstract').toggle(600);
-});
+  $(document).on('click', '.card-control', function() {
+    $(this).parent().parent().parent().find('.card-text').toggle(600);
+    $(this).parent().parent().parent().find('.card-abstract').toggle(600);
+  });
+  $("[data-toggle='toggle']").click(function() {
+    var selector = $(this).data("target");
+    $(selector).toggleClass('in');
+    $(this).children().children().toggleClass('out');
+  });
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
 </script>
 {% endblock script %}

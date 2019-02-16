@@ -49,3 +49,10 @@ $color-bg-landing-bottom: rgba(0, 183, 248, 1);
 @mixin position($pos) {
   @include prefix-v((position: $pos), webkit);
 }
+
+@mixin transition($value, $prefixes) {
+  @each $prefix in $prefixes {
+    #{'-' + $prefix + '-transition'}: #{$value}
+  }
+  #{'transition'}: #{$value}
+}
