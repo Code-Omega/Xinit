@@ -6,13 +6,17 @@
     {% else %}
     <title>XInit</title>
     {% endif %}
+
+    {% block meta %}
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    {% endblock meta %}
 
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Oswald|Raleway" rel="stylesheet">
-    <script defer src="https://use.fontawesome.com/releases/v5.7.1/js/all.js" integrity="sha384-eVEQC9zshBn0rFj4+TU78eNA19HMNigMviK/PU/FFjLXqa/GKPgX58rvt5Z8PLs7" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <!-- <script defer src="https://use.fontawesome.com/releases/v5.7.1/js/all.js" integrity="sha384-eVEQC9zshBn0rFj4+TU78eNA19HMNigMviK/PU/FFjLXqa/GKPgX58rvt5Z8PLs7" crossorigin="anonymous"></script> -->
     <script src="{{ url_for('static', filename='moment.min.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     {% block header %}
@@ -21,14 +25,14 @@
   </head>
 	<nav class="navbar navbar-expand-sm navbar-dark bg-dark p-0">
 	  <a class="navbar-brand ml-3" href="/"><h2 class="m-0">X.init</h2></a>
-	  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-	    <span class="navbar-toggler-icon"></span>
+	  <button class="navbar-toggler nav-center" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+      <i class="fas fa-bars fa-flip-vertical"></i>
 	  </button>
 	  <div class="collapse navbar-collapse" id="navbarText">
 	    <ul class="navbar-nav mr-auto">
         <li class="nav-item">
           <span class="navbar-brand m-0">
-        		<h3 class="m-0">(</h2>
+        		<h3 class="m-0">(</h3>
     		  </span>
 	      </li>
 	      <li class="nav-item {{ "active" if title == "News" else None }}">
@@ -64,6 +68,7 @@
 	    </ul>
 	  </div>
 	</nav>
+
   {% block body_style %}
   <body class="scrollbar-cus bg-theme-secondary">
   {% endblock %}

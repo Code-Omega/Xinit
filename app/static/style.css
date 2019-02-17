@@ -584,7 +584,8 @@ body {
   background: #eee;
   height: 100vh;
   overflow-x: hidden;
-  /* overflow-y: hidden; */
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -693,6 +694,15 @@ progress::-moz-progress-value {
   font-family: "Oswald", sans-serif;
 }
 
+.navbar-toggler.nav-center {
+  margin-left: 0;
+  margin-right: auto;
+  border-radius: 0;
+  text-align: center;
+  font-size: 2em;
+  color: #5CBC99;
+}
+
 .main.sided {
   margin-left: 0px;
 }
@@ -752,31 +762,34 @@ progress::-moz-progress-value {
 }
 
 .sidebar_toggle {
-  z-index: 2;
+  z-index: 3;
   position: -webkit-fixed;
   position: fixed;
-  top: 42px;
+  top: 0px;
   right: 6px;
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   line-height: 25px;
   font-size: 25px;
   text-align: center;
   border-width: 0;
   border-top-right-radius: 0;
   border-top-left-radius: 0;
-  border-bottom-right-radius: 16%;
-  border-bottom-left-radius: 16%;
+  border-bottom-right-radius: 0%;
+  border-bottom-left-radius: 0%;
   -webkit-mask-image: -webkit-gradient(linear, left 8%, left bottom, from(black), to(rgba(0, 0, 0, 0.8)));
   mask-image: gradient(linear, left 8%, left bottom, from(black), to(rgba(0, 0, 0, 0.8)));
 }
-.sidebar_toggle > a > svg {
+.sidebar_toggle > a {
+  color: #5CBC99;
+}
+.sidebar_toggle > a > i {
   -webkit-transition: transform 1s ease;
   -moz-transition: transform 1s ease;
   -o-transition: transform 1s ease;
   transition: transform 1s ease;
 }
-.sidebar_toggle > a > svg.out {
+.sidebar_toggle > a > i.out {
   -webkit-transform: rotate(45deg);
   transform: rotate(45deg);
   -webkit-transform-origin: 50% 50%;

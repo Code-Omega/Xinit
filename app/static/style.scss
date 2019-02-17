@@ -14,7 +14,9 @@ body {
   background: $color-bg-default;
   height: 100vh;
   overflow-x: hidden;
-  /* overflow-y: hidden; */
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  // overflow-y: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -118,6 +120,15 @@ progress {
   font-family: 'Oswald', sans-serif;
 }
 
+.navbar-toggler.nav-center {
+  margin-left: 0;
+  margin-right: auto;
+  border-radius: 0;
+  text-align: center;
+  font-size: 2em;
+  color: $color-main;
+}
+
 .main {
   // padding-right: 15px;
   // padding-left: 15px;
@@ -170,26 +181,29 @@ progress {
 }
 
 .sidebar_toggle{
-  z-index: 2;
+  z-index: 3;
   @include position(fixed);
-  top: 42px;
+  top: 0px;
   right: 6px;
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   line-height: 25px;
   font-size: 25px;
   text-align: center;
   border-width: 0;
   border-top-right-radius: 0;
   border-top-left-radius: 0;
-  border-bottom-right-radius: 16%;
-  border-bottom-left-radius: 16%;
+  border-bottom-right-radius: 0%;
+  border-bottom-left-radius: 0%;
   @include prefix-pv((mask-image: gradient(linear, left 8%, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0.8)))), webkit);
-  & > a > svg {
-    &.out {
-      @include prefix((transform: rotate(45deg), transform-origin: 50% 50%), webkit);
+  & > a {
+    color: $color-main;
+    & > i {
+      &.out {
+        @include prefix((transform: rotate(45deg), transform-origin: 50% 50%), webkit);
+      }
+      @include transition((transform 1s ease), webkit moz o);
     }
-    @include transition((transform 1s ease), webkit moz o);
   }
 }
 
