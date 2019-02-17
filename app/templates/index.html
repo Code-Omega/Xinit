@@ -1,8 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
-<button type="button" class="btn btn-dark btn-sm shadow-lg sidebar_toggle" data-toggle="toggle" data-target=".sidebar">
+<button type="button" class="btn btn-dark btn-sm shadow-lg sidebar_toggle" data-toggle="toggle-sidebar">
   <a href="#" data-toggle="tooltip" title="Toggle Sidebar" data-placement="left" class="text-white">
-    <i class="fas fa-times shadow-lg"></i>
+    <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" class="svg-inline--fa fa-times fa-w-11 shadow-lg" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512" data-fa-i2svg="">
+      <path fill="currentColor" d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z">
+      </path>
+    </svg>
   </a>
 </button>
 
@@ -103,15 +106,33 @@
 <script>
   $(document).ready(function() {
     checkSize();
+    // setTimeout(unprohibit_animation(),10000);
     // $(window).resize(checkSize);
   });
-  function checkSize(){
+  function checkSize() {
     if ($(".main.sided").css("margin-left") == "-400px" ){
       $('.sidebar').toggleClass('in');
       $('.main').toggleClass('sided');
-      $(this).children().children().toggleClass('out');
+      $('.sidebar_toggle').children().children().toggleClass('out');
+      $(window).on('load', function() {
+        unprohibit_animation();
+      });
+    } else {
+      unprohibit_animation();
     }
   }
+  function unprohibit_animation(){
+    $('.sidebar').toggleClass('loaded');
+    $('.main').toggleClass('loaded');
+  }
+  $("[data-toggle='toggle-sidebar']").click(function() {
+    $('.sidebar').toggleClass('in');
+    $('.main').toggleClass('sided');
+    $('.sidebar_toggle').children().children().toggleClass('out');
+  });
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
 
   $(document).on('click', '.card-control', function() {
     $(this).parent().parent().find('.card-text').toggle('fast');
@@ -128,14 +149,5 @@
       return false;
     });
   });
-  $("[data-toggle='toggle']").click(function() {
-    var selector = $(this).data("target");
-    $(selector).toggleClass('in');
-    $('.main').toggleClass('sided');
-    $(this).children().children().toggleClass('out');
-  });
-  $(function () {
-    $('[data-toggle="tooltip"]').tooltip()
-  })
 </script>
 {% endblock script %}

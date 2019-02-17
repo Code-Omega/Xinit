@@ -129,7 +129,9 @@ progress {
       margin-left: -400px;
     }
   }
-  @include transition((margin-left 1s ease), webkit moz o);
+  &.loaded {
+    @include transition((margin-left 1s ease), webkit moz o);
+  }
 }
 
 .sidebar{
@@ -145,7 +147,9 @@ progress {
     padding-right: 15px;
     padding-left: 15px;
   }
-  @include transition((width 1s ease, transform 1s ease, padding-left 1s ease, padding-right 1s ease), webkit moz o);
+  &.loaded {
+    @include transition((width 1s ease, transform 1s ease, padding-left 1s ease, padding-right 1s ease), webkit moz o);
+  }
 }
 
 .sidebar_content{
@@ -182,7 +186,6 @@ progress {
   border-bottom-left-radius: 16%;
   @include prefix-pv((mask-image: gradient(linear, left 8%, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0.8)))), webkit);
   & > a > svg {
-    @include prefix((transform: rotate(0deg), transform-origin: 50% 50%), webkit);
     &.out {
       @include prefix((transform: rotate(45deg), transform-origin: 50% 50%), webkit);
     }

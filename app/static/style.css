@@ -693,12 +693,6 @@ progress::-moz-progress-value {
   font-family: "Oswald", sans-serif;
 }
 
-.main {
-  -webkit-transition: margin-left 1s ease;
-  -moz-transition: margin-left 1s ease;
-  -o-transition: margin-left 1s ease;
-  transition: margin-left 1s ease;
-}
 .main.sided {
   margin-left: 0px;
 }
@@ -706,6 +700,12 @@ progress::-moz-progress-value {
   .main.sided {
     margin-left: -400px;
   }
+}
+.main.loaded {
+  -webkit-transition: margin-left 1s ease;
+  -moz-transition: margin-left 1s ease;
+  -o-transition: margin-left 1s ease;
+  transition: margin-left 1s ease;
 }
 
 .sidebar {
@@ -718,10 +718,6 @@ progress::-moz-progress-value {
   transform: scaleX(0);
   -webkit-transform-origin: 100% 0%;
   transform-origin: 100% 0%;
-  -webkit-transition: width 1s ease, transform 1s ease, padding-left 1s ease, padding-right 1s ease;
-  -moz-transition: width 1s ease, transform 1s ease, padding-left 1s ease, padding-right 1s ease;
-  -o-transition: width 1s ease, transform 1s ease, padding-left 1s ease, padding-right 1s ease;
-  transition: width 1s ease, transform 1s ease, padding-left 1s ease, padding-right 1s ease;
 }
 .sidebar.in {
   width: 400px;
@@ -731,6 +727,12 @@ progress::-moz-progress-value {
   transform-origin: 100% 0%;
   padding-right: 15px;
   padding-left: 15px;
+}
+.sidebar.loaded {
+  -webkit-transition: width 1s ease, transform 1s ease, padding-left 1s ease, padding-right 1s ease;
+  -moz-transition: width 1s ease, transform 1s ease, padding-left 1s ease, padding-right 1s ease;
+  -o-transition: width 1s ease, transform 1s ease, padding-left 1s ease, padding-right 1s ease;
+  transition: width 1s ease, transform 1s ease, padding-left 1s ease, padding-right 1s ease;
 }
 
 .sidebar_content {
@@ -769,10 +771,6 @@ progress::-moz-progress-value {
   mask-image: gradient(linear, left 8%, left bottom, from(black), to(rgba(0, 0, 0, 0.8)));
 }
 .sidebar_toggle > a > svg {
-  -webkit-transform: rotate(0deg);
-  transform: rotate(0deg);
-  -webkit-transform-origin: 50% 50%;
-  transform-origin: 50% 50%;
   -webkit-transition: transform 1s ease;
   -moz-transition: transform 1s ease;
   -o-transition: transform 1s ease;
