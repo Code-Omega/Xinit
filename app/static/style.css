@@ -584,8 +584,7 @@ body {
   background: #eee;
   height: 100vh;
   overflow-x: hidden;
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
+  overflow-y: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -703,6 +702,11 @@ progress::-moz-progress-value {
   color: #5CBC99;
 }
 
+.main {
+  height: calc(100vh - 42px);
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}
 .main.sided {
   margin-left: 0px;
 }
@@ -719,6 +723,9 @@ progress::-moz-progress-value {
 }
 
 .sidebar {
+  height: calc(100vh - 42px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   background-color: #343a40;
   min-height: calc(100vh - 42px);
   width: 0px;

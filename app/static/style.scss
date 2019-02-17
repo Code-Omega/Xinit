@@ -14,9 +14,7 @@ body {
   background: $color-bg-default;
   height: 100vh;
   overflow-x: hidden;
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
-  // overflow-y: hidden;
+  overflow-y: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -132,6 +130,9 @@ progress {
 .main {
   // padding-right: 15px;
   // padding-left: 15px;
+  height: calc(100vh - 42px);
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
   &.sided{
     margin-left: 0px;
   }
@@ -146,6 +147,9 @@ progress {
 }
 
 .sidebar{
+  height: calc(100vh - 42px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   background-color: $color-dark;
   min-height: calc(100vh - 42px);
   width: 0px;
