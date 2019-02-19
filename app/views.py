@@ -320,7 +320,7 @@ def analyses():
 
 
 @app.route('/ner_sample', methods=['POST'])
-@login_required
+# @login_required
 def ner_sample():
     print('ner_post received')
     print(request.form)
