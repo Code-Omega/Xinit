@@ -3,6 +3,31 @@
  * Many are generated with help of Animista
  * w: http://animista.net, t: @cssanimista
  * ---------------------------------------------- */
+.slide-to-right {
+  -webkit-animation: slide-to-right 0.7s ease infinite both;
+  animation: slide-to-right 0.7s ease infinite both;
+}
+
+@-webkit-keyframes slide-to-right {
+  0% {
+    -webkit-transform: translateX(0px);
+    transform: translateX(0px);
+  }
+  100% {
+    -webkit-transform: translateX(38px);
+    transform: translateX(38px);
+  }
+}
+@keyframes slide-to-right {
+  0% {
+    -webkit-transform: translateX(0px);
+    transform: translateX(0px);
+  }
+  100% {
+    -webkit-transform: translateX(38px);
+    transform: translateX(38px);
+  }
+}
 .slide-right {
   -webkit-animation: slide-right 2s cubic-bezier(0.175, 0.885, 0.32, 1.275) infinite both;
   animation: slide-right 2s cubic-bezier(0.175, 0.885, 0.32, 1.275) infinite both;
@@ -752,15 +777,15 @@ progress::-moz-progress-value {
   transition: width 1s ease, transform 1s ease, padding-left 1s ease, padding-right 1s ease;
 }
 
+.sidebar_function {
+  color: #343a40;
+}
+
 .sidebar_content {
   margin-top: 16px;
 }
 
 .sidebar_chart {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 58px;
-  /* width: 360px; */
   height: 400px;
 }
 

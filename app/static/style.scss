@@ -167,16 +167,23 @@ progress {
   }
 }
 
+.sidebar_function{
+  color: $color-dark;
+  // height: 2.8em;
+  // width: 2.8em;
+  // padding: 0;
+}
+
 .sidebar_content{
   // margin-top: 1px;
   margin-top: 1px + 15px;
 }
 
 .sidebar_chart{
-  @include position(sticky);
+  // @include position(sticky);
   // top: 43px;
-  top: 43px + 15px;
-  /* width: 360px; */
+  // top: 43px + 15px;
+  // width: 360px;
   height: 400px;
 }
 

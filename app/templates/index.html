@@ -1,136 +1,93 @@
-{% extends "base.html" %}
-{% block content %}
-<button type="button" class="btn btn-dark btn-sm inset sidebar_toggle" data-toggle="toggle-sidebar">
-  <a href="#" data-toggle="tooltip" title="Toggle Sidebar" data-placement="left">
-    <i class="fas fa-times"></i>
-  </a>
-</button>
+{% extends "base_side.html" %}
 
-<div class="container-fluid">
-  <div class="row">
-    <div class="main col scrollbar-cus sided">
-      {% for post in posts %}
-        <div class="card mb-3">
-          <div class="card-block">
-            <div class="row no-gutters">
-              <div class="col-sm-6 card-header card-control text-white bg-theme" style="padding: 1.5rem;">
-                <div class="row no-gutters">
-                  <h1 class="card-title">{{ post.title |safe }}</h1>
-                </div>
-                <hr>
-                <div class="row no-gutters">
-                  <p style="padding: 0rem;">
-                    Importance Score: {{ post.score }} </br>
-                    Time Acquired: {{ momentjs(post.time_acquired).fromNow() }}, {{ momentjs(post.time_acquired).format('LLLL') }}</br>
-                    Keywords:
-                      {% for keyword in post.keywords %}
-                        <a href="#" class="badge badge-light">{{ keyword }}</a>
-                      {% endfor %} </br>
-                    Condensed to {{ post.condense_rate }}%
-                      <progress max="100" value="{{ post.condense_rate }}"> {{ post.condense_rate }}% </progress>
-                  </p>
-                </div>
-                <hr>
-                <div class="row no-gutters">
-                  <p class="post-assets">
-                    {% for asset in post.key_assets %}
-                      <a href={{ url_for('asset_watchlist', asset=asset, action='$set') }} class="badge badge-info badge-asset">{{ asset }}</a>
-                    {% endfor %}
-                  </p>
-                </div>
-              </div>
-              <div class="col-sm-6" style="padding: 1.5rem;">
-                <p class="card-text">
-                  {% autoescape false %}
-                  {{ post.content }}
-                  {% endautoescape %}
-                </p>
-                <div class="row no-gutters post-assets" style="display: none;">
-                  <p>
-                    {% for asset in post.key_assets %}
-                      <a href="#" class="badge badge-info badge-asset">{{ asset }}</a>
-                    {% endfor %}
-                  </p>
-                </div>
-              </div>
-            </div>
+{% block main %}
+{% for post in posts %}
+  <div class="card mb-3">
+    <div class="card-block">
+      <div class="row no-gutters">
+        <div class="col-sm-6 card-header card-control text-white bg-theme" style="padding: 1.5rem;">
+          <div class="row no-gutters">
+            <h1 class="card-title nlp-text">{{ post.title |safe }}</h1>
           </div>
-            <a href={{ post.link }} class="btn btn-dark card-footer bg-theme font-weight-bold">Read more on {{ post.source }}</a>
+          <hr>
+          <div class="row no-gutters">
+            <p style="padding: 0rem;">
+              Importance Score: {{ post.score }} </br>
+              Time Acquired: {{ momentjs(post.time_acquired).fromNow() }}, {{ momentjs(post.time_acquired).format('LLLL') }}</br>
+              Keywords:
+                {% for keyword in post.keywords %}
+                  <a href="#" class="badge badge-light">{{ keyword }}</a>
+                {% endfor %} </br>
+              Condensed to {{ post.condense_rate }}%
+                <progress max="100" value="{{ post.condense_rate }}"> {{ post.condense_rate }}% </progress>
+            </p>
+          </div>
+          <hr>
+          <div class="row no-gutters">
+            <p class="post-assets">
+              {% for asset in post.key_assets %}
+                <a href={{ url_for('asset_watchlist', asset=asset, action='$set') }} class="badge badge-info badge-asset">{{ asset }}</a>
+              {% endfor %}
+            </p>
+          </div>
         </div>
-      {% endfor %}
+        <div class="col-sm-6" style="padding: 1.5rem;">
+          <p class="card-text nlp-text">
+            {% autoescape false %}
+            {{ post.content }}
+            {% endautoescape %}
+          </p>
+          <div class="row no-gutters post-assets" style="display: none;">
+            <p>
+              {% for asset in post.key_assets %}
+                <a href="#" class="badge badge-info badge-asset">{{ asset }}</a>
+              {% endfor %}
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
+      <a href={{ post.link }} class="btn btn-dark card-footer bg-theme font-weight-bold">Read more on {{ post.source }}</a>
+  </div>
+{% endfor %}
+{% endblock main %}
 
-    <div class="sidebar scrollbar-cus in col-sm-auto inset">
-      <div class="sidebar_content">
-        <div class="card shadow sidebar_card bg-light mb-3">
-          <div class="card-header sidebar_card_header p-3">
-            <h5 class="m-0"><b>Current keywords</b></h5>
-          </div>
-          <div class="card-body sidebar_card_body scrollbar-cus p-2 ">
-            <p class="card-text">
-              {% for keyword in sources.keywords %}
-                <a href="#" class="badge badge-light ">{{ keyword }}</a>
-              {% endfor %}
-            </p>
-          </div>
-        </div>
-        <div class="card shadow sidebar_card bg-dark mb-3">
-          <div class="card-header text-white sidebar_card_header bg-theme p-3">
-            <h5 class="m-0"><b>Current key assets</b></h5>
-          </div>
-          <div class="card-body sidebar_card_body scrollbar-cus p-2">
-            <p class="card-text">
-              {% for asset in sources.key_assets %}
-                <a href={{ url_for('asset_watchlist', asset=asset, action='$set') }} class="badge badge-info badge-asset ">{{ asset }}</a>
-              {% endfor %}
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="shadow sidebar_chart">
-        <div class="tradingview-widget-container frame">
-          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
-            {{iframe_src|safe}}
-          </script>
-        </div>
-      </div>
+{% block side %}
+  <div class="card shadow sidebar_card bg-light mb-3">
+    <div class="card-header sidebar_card_header p-3">
+      <h5 class="m-0"><b>Current keywords</b></h5>
+    </div>
+    <div class="card-body sidebar_card_body scrollbar-cus p-2 ">
+      <p class="card-text">
+        {% for keyword in sources.keywords %}
+          <a href="#" class="badge badge-light ">{{ keyword }}</a>
+        {% endfor %}
+      </p>
     </div>
   </div>
-</div>
-{% endblock %}
+  <div class="card shadow sidebar_card bg-dark mb-3">
+    <div class="card-header text-white sidebar_card_header bg-theme p-3">
+      <h5 class="m-0"><b>Current key assets</b></h5>
+    </div>
+    <div class="card-body sidebar_card_body scrollbar-cus p-2">
+      <p class="card-text">
+        {% for asset in sources.key_assets %}
+          <a href={{ url_for('asset_watchlist', asset=asset, action='$set') }} class="badge badge-info badge-asset ">{{ asset }}</a>
+        {% endfor %}
+      </p>
+    </div>
+  </div>
+  <div class="shadow sidebar_chart">
+    <div class="tradingview-widget-container frame">
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+        {{iframe_src|safe}}
+      </script>
+    </div>
+  </div>
+{% endblock side %}
 
-{% block script %}
+{% block main_script %}
 <script>
-  $(document).ready(function() {
-    checkSize();
-    // setTimeout(unprohibit_animation(),10000);
-    // $(window).resize(checkSize);
-  });
-  function checkSize() {
-    if ($(".main.sided").css("margin-left") == "-400px" ){
-      $('.sidebar').toggleClass('in');
-      $('.main').toggleClass('sided');
-      $('.sidebar_toggle').children().children().toggleClass('out');
-      $(window).on('load', function() {
-        unprohibit_animation();
-      });
-    } else {
-      unprohibit_animation();
-    }
-  }
-  function unprohibit_animation(){
-    $('.sidebar').toggleClass('loaded');
-    $('.main').toggleClass('loaded');
-  }
-  $("[data-toggle='toggle-sidebar']").click(function() {
-    $('.sidebar').toggleClass('in');
-    $('.main').toggleClass('sided');
-    $('.sidebar_toggle').children().children().toggleClass('out');
-  });
-  $(function () {
-    $('[data-toggle="tooltip"]').tooltip()
-  })
-
   $(document).on('click', '.card-control', function() {
     $(this).parent().parent().find('.card-text').toggle('fast');
     $(this).parent().parent().find('.post-assets').toggle('fast');
@@ -147,4 +104,4 @@
     });
   });
 </script>
-{% endblock script %}
+{% endblock main_script %}

@@ -1,31 +1,66 @@
 {% extends "base.html" %}
 
 {% block content %}
-  {% block side %}
-  <button type="button" class="btn btn-dark btn-sm shadow-lg sidebar_toggle" data-toggle="toggle-sidebar">
-    <a href="#" data-toggle="tooltip" title="Toggle Sidebar" data-placement="left" class="text-white">
-      <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" class="svg-inline--fa fa-times fa-w-11 shadow-lg" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512" data-fa-i2svg="">
-        <path fill="currentColor" d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z">
-        </path>
-      </svg>
-    </a>
-  </button>
+<button type="button" class="btn btn-dark btn-sm inset sidebar_toggle" data-toggle="toggle-sidebar">
+  <a href="#" data-toggle="tooltip" title="Toggle Sidebar" data-placement="left">
+    <i class="fas fa-times"></i>
+  </a>
+</button>
 
-  <div class="sidebar in col-sm-auto inset">
-    <div class="sidebar_content">
-      {% block sidebar %}
-      <div class="card shadow sidebar_card bg-light mb-3">
-        <div class="card-header sidebar_card_header p-3">
-          <h5 class="m-0"><b>Current keywords</b></h5>
+<div class="container-fluid">
+  <div class="row">
+    <div class="main col scrollbar-cus sided">
+      {% block main %}
+      {% endblock main %}
+    </div>
+
+    <div class="sidebar scrollbar-cus in col-sm-auto inset">
+      <div class="sidebar_content">
+        <div class="card shadow sidebar_card bg-light mb-3">
+          <div class="card-body sidebar_card_body scrollbar-cus p-2 ">
+            <form class="form-inline" role="form">
+              <button id="sampler" type="button" class="btn btn-dark px-1 sidebar_function">
+                <span class="fa-stack fa-xs">
+                  <i class="fas fa-server fa-stack-2x" style="color:MediumAquamarine"></i>
+                  <i class="fas fa-drafting-compass fa-stack-2x"></i>
+                </span>
+                <span id="sampler-btn-text" style="color:MediumAquamarine">
+                  Track missing assets
+                </span>
+              </button>
+              <button type="button" class="btn btn-info" data-toggle="modal" data-target="#noticeModal">
+                <i class="fas fa-question"></i>
+              </button>
+            </form>
+          </div>
         </div>
-        <div class="card-body sidebar_card_body scrollbar-cus p-2 ">
-        </div>
+      {% block side %}
+      {% endblock side %}
       </div>
-      {% endblock sidebar %}
     </div>
   </div>
-  {% endblock side %}
-{% endblock %}
+</div>
+
+<div class="modal fade" id="noticeModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content bg-info text-white">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Help improve our asset recognition!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Found An asset in the post that's not been caught? submit it here <i class="fas fa-arrow-right slide-to-right"></i>
+      </div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> -->
+    </div>
+  </div>
+</div>
+{% endblock content %}
 
 {% block script %}
 <script>
@@ -46,7 +81,7 @@
       unprohibit_animation();
     }
   }
-  function unprohibit_animation(){
+  function unprohibit_animation() {
     $('.sidebar').toggleClass('loaded');
     $('.main').toggleClass('loaded');
   }
@@ -58,5 +93,48 @@
   $(function () {
     $('[data-toggle="tooltip"]').tooltip()
   })
+
+  function word_selection() {
+    var selection = window.getSelection();
+    if (selection.anchorNode != null && !selection.isCollapsed) {
+      var range = selection.getRangeAt(0);
+      if (range.startContainer == range.endContainer) {
+        $("#selected-text").val(selection.toString());
+        $("#selected-context").val(selection.anchorNode.textContent);
+        $("#selected-text-start").val(range.startOffset);
+        $("#selected-text-end").val(range.endOffset);
+      }
+    }
+  }
+  function submit_sample() {
+    var data = {"token": $("#selected-text").val(),
+                "context": $("#selected-context").val(),
+                "start": $("#selected-text-start").val(),
+                "end": $("#selected-text-end").val()};
+    $.post("/ner_sample", data).done(function() {
+      $("#selected-text").val('');
+      // $("#sample_selection").remove();
+      alert( "Sample submitted!" );
+    }).fail(function(xhr, status, error) {
+      alert( xhr.responseText );
+    });
+  }
+  function handler1() {
+    $(".nlp-text").on( "mouseup", null, word_selection );
+    $(this).find('#sampler-btn-text').text('Cancel')
+    $(this).after( `{% include 'nlp_sample_form.html' %}` );
+    $(this).one("click", handler2);
+  }
+  function handler2() {
+    $(".nlp-text").off( "mouseup", null, word_selection );
+    $(this).find('#sampler-btn-text').text('Track missing assets')
+    $("#sample_selection").remove();
+    $(this).one("click", handler1);
+  }
+  $("#sampler").one("click", handler1);
+  <!-- https://stackoverflow.com/questions/4911577/jquery-click-toggle-between-two-functions -->
+  <!-- http://api.jquery.com/off/ -->
 </script>
+  {% block main_script %}
+  {% endblock main_script %}
 {% endblock script %}

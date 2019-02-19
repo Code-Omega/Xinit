@@ -319,6 +319,22 @@ def analyses():
                            iframe_src=str(json.dumps(iframe_dict)))
 
 
+@app.route('/ner_sample', methods=['POST'])
+@login_required
+def ner_sample():
+    print('ner_post received')
+    print(request.form)
+    if request.form['token'] == '':
+        return 'selection is invalid', 400
+
+    mongo.db.ner_samples.insert({'token' : request.form['token'],
+                                 'context' : request.form['context'],
+                                 'start' : request.form['start'],
+                                 'end' : request.form['end'],
+                                 'type': 'ORG'})
+    print('ner_post logged')
+    return '', 204
+
 @app.route('/new_post', methods=['POST', 'GET'])
 @login_required
 def new_post():
