@@ -185,6 +185,9 @@ progress {
   // top: 43px + 15px;
   // width: 360px;
   height: 400px;
+  width: 125%;
+  @include prefix((transform: scale(0.8), transform-origin: 0 0), webkit moz ms o);
+  border-width: 0;
 }
 
 .sidebar_card{
@@ -229,12 +232,6 @@ progress {
   font-weight: bold;
 }
 
-.frame {
-  transform-origin: 0 0;
-  box-sizing: border-box;
-  padding-bottom: 1rem;
-  @include prefix((transform: scale(0.8)), webkit moz ms o);
-}
 .scrollbar-cus {
   &::-webkit-scrollbar-track {
     background-color: $color-dark;

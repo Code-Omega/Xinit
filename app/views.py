@@ -42,7 +42,8 @@ default_iframe_dict = {
     "showChart": True,
     "locale": "en",
     "largeChartUrl": "",
-    "width": "463",
+    "theme": "Dark",
+    "width": "100%",
     "height": "580",
     "plotLineColorGrowing": "rgba(60, 188, 152, 1)",
     "plotLineColorFalling": "rgba(255, 74, 104, 1)",
@@ -289,6 +290,8 @@ def trends():
 
     res = mongo.db.current_trends.find_one()
 
+    iframe_dict = default_iframe_dict
+
     return render_template("trends.html",
                            title='Trends',
                            keywords=res['keywords'],
@@ -298,7 +301,8 @@ def trends():
                                       'v': res['values'][i],
                                       'color': res['colors'][i]
                                      }
-                                    for i in range(len(res['series_names']))]
+                                    for i in range(len(res['series_names']))],
+                           iframe_src=str(json.dumps(iframe_dict))
                            )
 
 

@@ -39,7 +39,7 @@ def get_google_trends(mongo, num = 6):
         #print(len(tdf))
         #time.sleep(1)
     trends_df = pd.concat(trends_dfs,axis=1)
-    trends_df.dropna(axis=0,inplace=False)
+    trends_df.dropna(axis=0,inplace=True)
     #trends_table = trends_df.to_html()
 
     x_axis = list(trends_df.index.strftime("%H:%M"))

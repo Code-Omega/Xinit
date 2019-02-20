@@ -787,6 +787,18 @@ progress::-moz-progress-value {
 
 .sidebar_chart {
   height: 400px;
+  width: 125%;
+  -webkit-transform: scale(0.8);
+  -moz-transform: scale(0.8);
+  -ms-transform: scale(0.8);
+  -o-transform: scale(0.8);
+  transform: scale(0.8);
+  -webkit-transform-origin: 0 0;
+  -moz-transform-origin: 0 0;
+  -ms-transform-origin: 0 0;
+  -o-transform-origin: 0 0;
+  transform-origin: 0 0;
+  border-width: 0;
 }
 
 .sidebar_card {
@@ -837,17 +849,6 @@ progress::-moz-progress-value {
 .key_entity {
   color: #5CBC99;
   font-weight: bold;
-}
-
-.frame {
-  transform-origin: 0 0;
-  box-sizing: border-box;
-  padding-bottom: 1rem;
-  -webkit-transform: scale(0.8);
-  -moz-transform: scale(0.8);
-  -ms-transform: scale(0.8);
-  -o-transform: scale(0.8);
-  transform: scale(0.8);
 }
 
 .scrollbar-cus::-webkit-scrollbar-track {

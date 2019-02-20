@@ -45,7 +45,7 @@
         </small>
       {% endif %}
       {% for asset in asset_watchlist %}
-        <a href={{ url_for('asset_watchlist', asset=asset, action='$unset') }} class="badge badge-info badge-asset">{{ asset }}</a>
+        <a href="{{ url_for('asset_watchlist', asset=asset, action='$unset') }}" class="badge badge-info badge-asset">{{ asset }}</a>
       {% endfor %}
       </p>
       <div class="row">
@@ -66,6 +66,7 @@
     </blockquote>
   </div>
 </div>
+
 {% endblock %}
 
 {% block script %}

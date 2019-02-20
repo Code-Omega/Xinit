@@ -45,6 +45,11 @@ Currently, debug mode is on.
 
 Double check form security
 
+Login requirement is off for sample collection;
+will need to double check it;
+will need to tag samples with user info;
+will need to check for duplicates;
+
 ## 6. Analysis Styling
 texts that are candidates for NLP samples now have html class "nlp-text"
 

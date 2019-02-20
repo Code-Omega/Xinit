@@ -12,12 +12,12 @@
           <hr>
           <div class="row no-gutters">
             <p style="padding: 0rem;">
-              Importance Score: {{ post.score }} </br>
-              Time Acquired: {{ momentjs(post.time_acquired).fromNow() }}, {{ momentjs(post.time_acquired).format('LLLL') }}</br>
+              Importance Score: {{ post.score }} <br>
+              Time Acquired: {{ momentjs(post.time_acquired).fromNow() }}, {{ momentjs(post.time_acquired).format('LLLL') }}<br>
               Keywords:
                 {% for keyword in post.keywords %}
                   <a href="#" class="badge badge-light">{{ keyword }}</a>
-                {% endfor %} </br>
+                {% endfor %} <br>
               Condensed to {{ post.condense_rate }}%
                 <progress max="100" value="{{ post.condense_rate }}"> {{ post.condense_rate }}% </progress>
             </p>
@@ -26,7 +26,9 @@
           <div class="row no-gutters">
             <p class="post-assets">
               {% for asset in post.key_assets %}
-                <a href={{ url_for('asset_watchlist', asset=asset, action='$set') }} class="badge badge-info badge-asset">{{ asset }}</a>
+                <a href="{{ url_for('asset_watchlist', asset=asset, action='$set') }}" class="badge badge-info badge-asset">
+                  {{ asset }}
+                </a>
               {% endfor %}
             </p>
           </div>
@@ -77,7 +79,7 @@
       </p>
     </div>
   </div>
-  <div class="shadow sidebar_chart">
+  <div class="shadow sidebar_chart bg-dark">
     <div class="tradingview-widget-container frame">
       <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
         {{iframe_src|safe}}

@@ -1,6 +1,6 @@
-{% extends "base.html" %}
+{% extends "base_side.html" %}
 
-{% block content %}
+{% block main %}
 <div class="container mt-3">
     <div class="row">
         <div class="col card m-3 pt-3">
@@ -18,15 +18,25 @@
     <div class="card-columns">
       {% for s in series %}
       <div class="card">
-        <canvas id="line-chart-{{loop.index}}" class = width="300" height="200"></canvas>
+        <canvas id="line-chart-{{loop.index}}" width="300" height="200"></canvas>
       </div>
       {% endfor %}
     </div>
 </div>
+{% endblock main %}
 
-{% endblock %}
+{% block side %}
+  <div class="sidebar_chart shadow">
+    <div class="tradingview-widget-container frame">
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+        {{iframe_src|safe}}
+      </script>
+    </div>
+  </div>
 
-{% block script %}
+{% endblock side %}
+
+{% block main_script %}
 <script>
 {% for s in series %}
 new Chart(document.getElementById("line-chart-{{loop.index}}"), {
@@ -77,4 +87,4 @@ new Chart(document.getElementById("line-chart-{{loop.index}}"), {
 });
 {% endfor %}
 </script>
-{% endblock script %}
+{% endblock main_script %}
