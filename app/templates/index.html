@@ -5,7 +5,7 @@
   <div class="card mb-3">
     <div class="card-block">
       <div class="row no-gutters">
-        <div class="col-sm-6 card-header card-control text-white bg-theme" style="padding: 1.5rem;">
+        <div class="col-sm card-header card-control text-white bg-theme" style="padding: 1.5rem;">
           <div class="row no-gutters">
             <h1 class="card-title nlp-text">{{ post.title |safe }}</h1>
           </div>
@@ -33,19 +33,12 @@
             </p>
           </div>
         </div>
-        <div class="col-sm-6" style="padding: 1.5rem;">
-          <p class="card-text nlp-text">
+        <div class="col-sm card-text news-card-text">
+          <p class="nlp-text">
             {% autoescape false %}
             {{ post.content }}
             {% endautoescape %}
           </p>
-          <div class="row no-gutters post-assets" style="display: none;">
-            <p>
-              {% for asset in post.key_assets %}
-                <a href="#" class="badge badge-info badge-asset">{{ asset }}</a>
-              {% endfor %}
-            </p>
-          </div>
         </div>
       </div>
     </div>
@@ -91,8 +84,8 @@
 {% block main_script %}
 <script>
   $(document).on('click', '.card-control', function() {
-    $(this).parent().parent().find('.card-text').toggle('fast');
-    $(this).parent().parent().find('.post-assets').toggle('fast');
+    $(this).parent().parent().find('.card-text').toggleClass('card-folded');
+    $(this).parent().parent().find('.card-text').children().toggle();
   });
   $(function(){
     $('.badge-asset').click(function(){

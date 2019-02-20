@@ -1,4 +1,5 @@
 @import 'base';
+@import "breakpoints";
 
 @import 'animation';
 @import 'timeline';
@@ -60,9 +61,26 @@ progress {
   &::-moz-progress-value {@include progress-value();}
 }
 
+.card-columns {
+  @include media-breakpoint-only(xl) {
+    column-count: 4;
+  }
+  @include media-breakpoint-only(lg) {
+    column-count: 3;
+  }
+  @include media-breakpoint-only(md) {
+    column-count: 2;
+  }
+  @include media-breakpoint-only(sm) {
+    column-count: 1;
+  }
+}
+
+.modal-backdrop {
+     background-color: rgba(0,0,0,.0001) !important;
+}
+
 .tooltip > .tooltip-inner {opacity: 0.8;}
-
-
 .bs-tooltip-auto[x-placement^=bottom] .arrow::before,
 .bs-tooltip-bottom .arrow::before {
   border-bottom-color: #f00; /* Red */
@@ -74,29 +92,29 @@ progress {
    box-shadow:         inset 0 0 10px #000000;
 }
 
-.card-title{
+.card-title {
   /* font-family: 'Rubik Mono One', sans-serif; */
 }
 
-.bg-theme{
+.bg-theme {
   background-color: $color-dark;
 }
 
-.navbar-brand{
+.navbar-brand {
   color: $color-main !important;
 }
 
-.btn-rect{
+.btn-rect {
   border-radius: 0 !important;
   border: 0 !important;
   height: 115% !important;
 }
 
-.bg-theme-highlight{
+.bg-theme-highlight {
   background-color: $color-main;
 }
 
-.bg-theme-secondary{
+.bg-theme-secondary {
   /* background-color: rgba(225, 216, 202, 1) */
   /* background-color: rgba(52, 58, 64, 1) */
 }
@@ -111,7 +129,7 @@ progress {
   background-color: $color-main;
 }
 
-.navbar{
+.navbar {
   @include position(sticky);
   top: 0;
   z-index: 3;
@@ -125,23 +143,6 @@ progress {
   text-align: center;
   font-size: 2em;
   color: $color-main;
-}
-
-@import "breakpoints";
-
-.card-columns {
-  @include media-breakpoint-only(xl) {
-    column-count: 4;
-  }
-  @include media-breakpoint-only(lg) {
-    column-count: 3;
-  }
-  @include media-breakpoint-only(md) {
-    column-count: 2;
-  }
-  @include media-breakpoint-only(sm) {
-    column-count: 1;
-  }
 }
 
 .main {
@@ -163,7 +164,24 @@ progress {
   }
 }
 
-.sidebar{
+.card-header {
+  &.card-folded{
+    width: 100%;
+  }
+  @include transition((width 200ms ease), webkit moz o);
+}
+
+.news-card-text {
+  &.card-folded {
+    max-width: 0;
+    padding: 0 !important;
+  }
+  max-height: 200px; // a bit weird but it makes the card expansion smooth
+  padding: 1.5rem !important;
+  @include transition((max-width 200ms ease, padding 200ms ease), webkit moz o);
+}
+
+.sidebar {
   height: calc(100vh - 42px);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
@@ -184,19 +202,19 @@ progress {
   }
 }
 
-.sidebar_function{
+.sidebar_function {
   color: $color-dark;
   // height: 2.8em;
   // width: 2.8em;
   // padding: 0;
 }
 
-.sidebar_content{
+.sidebar_content {
   // margin-top: 1px;
   margin-top: 1px + 15px;
 }
 
-.sidebar_chart{
+.sidebar_chart {
   // @include position(sticky);
   // top: 43px;
   // top: 43px + 15px;
@@ -207,11 +225,11 @@ progress {
   border-width: 0;
 }
 
-.sidebar_card{
+.sidebar_card {
   /* width: 360px; */
 }
 
-.sidebar_toggle{
+.sidebar_toggle {
   z-index: 3;
   @include position(fixed);
   top: 0px;
@@ -238,7 +256,7 @@ progress {
   }
 }
 
-.sidebar_card_body{
+.sidebar_card_body {
   max-height: 120px;
   overflow-y: auto;
 }
@@ -290,11 +308,11 @@ progress {
   @include prefix-pv((mask-image: gradient(linear, left 90%, left bottom, from(rgba(0,0,0,0.8)), to(rgba(0,0,0,1)))), webkit);
 }
 
-.landing-graphics{
+.landing-graphics {
   z-index: 2;
 }
 
-.trends-graph{
+.trends-graph {
 }
 
 .editing_area {

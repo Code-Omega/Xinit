@@ -55,18 +55,19 @@
           Found An asset in the post that's not been caught? Submit it here <i class="fas fa-arrow-right slide-to-right"></i>
         </p>
         <ol>
-          <li>Click the button
+          <li>Click
             <span class="fa-stack">
               <i class="fas fa-square fa-stack-2x text-dark"></i>
               <i class="fas fa-server fa-stack-1x" style="color:MediumAquamarine"></i>
               <i class="fas fa-drafting-compass fa-stack-1x text-dark"></i>
-            </span>
+            </span>, candidate terms will blink;
           </li>
-          <li>Select a term that represents a publicly traded security (in posts on the NEWS page)</li>
+          <li>Select a term that represents a publicly traded security;</li>
           <li>Click Submit!</li>
         </ol>
         <p>
-          The terms submitted will be reviewed weekly to improve our Named Entity Recognization model.
+          The term will be submitted along with the context it appears in. <br>
+          The submitted samples will be reviewed weekly to improve our Named Entity Recognization model.
           <strong>Thank you!</strong>
         </p>
       </div>
@@ -137,12 +138,14 @@
     });
   }
   function handler1() {
+    $('.nlp-text').toggleClass('blink-long');
     $(".nlp-text").on( "mouseup", null, word_selection );
     $(this).find('#sampler-btn-text').text('Cancel')
     $(this).after( `{% include 'nlp_sample_form.html' %}` );
     $(this).one("click", handler2);
   }
   function handler2() {
+    $('.nlp-text').toggleClass('blink-long');
     $(".nlp-text").off( "mouseup", null, word_selection );
     $(this).find('#sampler-btn-text').text('Track missing assets')
     $("#sample_selection").remove();

@@ -4,17 +4,32 @@
  * w: http://animista.net, t: @cssanimista
  * ---------------------------------------------- */
 
- .slide-to-right {
-   @include prefix((animation: slide-to-right 0.7s ease infinite both), webkit);
- }
- @include keyframes(slide-to-right, webkit) {
-   0% {
-     @include prefix((transform: translateX(0px)), webkit);
-   }
-   100% {
-     @include prefix((transform: translateX(38px)), webkit);
-   }
- }
+.blink-long {
+  @include prefix((animation: blink-long 0.9s both), webkit);
+}
+@include keyframes (blink-long, webkit) {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.slide-to-right {
+  @include prefix((animation: slide-to-right 0.7s ease infinite both), webkit);
+}
+@include keyframes(slide-to-right, webkit) {
+  0% {
+    @include prefix((transform: translateX(0px)), webkit);
+  }
+  100% {
+    @include prefix((transform: translateX(38px)), webkit);
+  }
+}
 
 .slide-right {
   @include prefix((animation: slide-right 2s cubic-bezier(0.175, 0.885, 0.320, 1.275) infinite both), webkit);
