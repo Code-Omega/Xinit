@@ -727,6 +727,27 @@ progress::-moz-progress-value {
   color: #5CBC99;
 }
 
+@media (min-width: 1200px) {
+  .card-columns {
+    column-count: 4;
+  }
+}
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  .card-columns {
+    column-count: 3;
+  }
+}
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .card-columns {
+    column-count: 2;
+  }
+}
+@media (min-width: 576px) and (max-width: 767.98px) {
+  .card-columns {
+    column-count: 1;
+  }
+}
+
 .main {
   height: calc(100vh - 42px);
   overflow-y: scroll;
@@ -735,7 +756,7 @@ progress::-moz-progress-value {
 .main.sided {
   margin-left: 0px;
 }
-@media (max-width: 768px) {
+@media (max-width: 991.98px) {
   .main.sided {
     margin-left: -400px;
   }

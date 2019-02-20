@@ -127,6 +127,23 @@ progress {
   color: $color-main;
 }
 
+@import "breakpoints";
+
+.card-columns {
+  @include media-breakpoint-only(xl) {
+    column-count: 4;
+  }
+  @include media-breakpoint-only(lg) {
+    column-count: 3;
+  }
+  @include media-breakpoint-only(md) {
+    column-count: 2;
+  }
+  @include media-breakpoint-only(sm) {
+    column-count: 1;
+  }
+}
+
 .main {
   // padding-right: 15px;
   // padding-left: 15px;
@@ -136,7 +153,7 @@ progress {
   &.sided{
     margin-left: 0px;
   }
-  @media (max-width: 768px) {
+  @include media-breakpoint-down(md) {
     &.sided {
       margin-left: -400px;
     }

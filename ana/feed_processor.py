@@ -173,7 +173,7 @@ def update_doc_model(mongo, num_posts = 100):
 
 def process_feeds(mongo, num_posts = 6, topNum = 3):
     posts = list(mongo.db.feeds.find().sort('_id',-1).limit(num_posts))
-    saved_doc_model = mongo.db.models.find_one({'name': 'doc_model'})
+    saved_doc_model = mongo.db.models.find({'name': 'doc_model'}).sort([('_id', -1)]).limit(1)[0]
     doc_model = pickle.loads(saved_doc_model['data'])
 
     res = processed_feeds(posts, doc_model, num_posts, topNum)
