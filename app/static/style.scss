@@ -97,6 +97,10 @@ progress {
    box-shadow:         inset 0 0 10px #000000;
 }
 
+.card {
+  @include transition((background-color 200ms ease), webkit moz o);
+}
+
 .card-title {
   /* font-family: 'Rubik Mono One', sans-serif; */
 }
@@ -170,20 +174,10 @@ progress {
 }
 
 .card-header {
-  &.card-folded{
-    width: 100%;
-  }
-  @include transition((width 200ms ease), webkit moz o);
 }
 
 .news-card-text {
-  &.card-folded {
-    max-width: 0;
-    padding: 0 !important;
-  }
-  max-height: 200px; // a bit weird but it makes the card expansion smooth
   padding: 1.5rem !important;
-  @include transition((max-width 200ms ease, padding 200ms ease), webkit moz o);
 }
 
 .sidebar {

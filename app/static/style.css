@@ -721,6 +721,13 @@ progress::-moz-progress-value {
   box-shadow: inset 0 0 10px #000000;
 }
 
+.card {
+  -webkit-transition: background-color 200ms ease;
+  -moz-transition: background-color 200ms ease;
+  -o-transition: background-color 200ms ease;
+  transition: background-color 200ms ease;
+}
+
 .card-title {
   /* font-family: 'Rubik Mono One', sans-serif; */
 }
@@ -795,27 +802,8 @@ progress::-moz-progress-value {
   transition: margin-left 1s ease;
 }
 
-.card-header {
-  -webkit-transition: width 200ms ease;
-  -moz-transition: width 200ms ease;
-  -o-transition: width 200ms ease;
-  transition: width 200ms ease;
-}
-.card-header.card-folded {
-  width: 100%;
-}
-
 .news-card-text {
-  max-height: 200px;
   padding: 1.5rem !important;
-  -webkit-transition: max-width 200ms ease, padding 200ms ease;
-  -moz-transition: max-width 200ms ease, padding 200ms ease;
-  -o-transition: max-width 200ms ease, padding 200ms ease;
-  transition: max-width 200ms ease, padding 200ms ease;
-}
-.news-card-text.card-folded {
-  max-width: 0;
-  padding: 0 !important;
 }
 
 .sidebar {

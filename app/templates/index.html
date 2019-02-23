@@ -2,39 +2,65 @@
 
 {% block main %}
 {% for post in posts %}
-  <div class="card mb-3">
+  <div class="card mt-3">
     <div class="card-block">
       <div class="row no-gutters">
         <div class="col-sm card-header card-control text-white bg-theme" style="padding: 1.5rem;">
-          <div class="row no-gutters">
-            <h1 class="card-title nlp-text">{{ post.title |safe }}</h1>
+          <div>
+            <h1 class="card-title nlp-text mb-0">{{ post.title |safe }}</h1>
           </div>
-          <hr>
-          <div class="row no-gutters">
-            <p style="padding: 0rem;">
-              Importance Score: {{ post.score }} <br>
-              Time Acquired: {{ momentjs(post.time_acquired).fromNow() }}, {{ momentjs(post.time_acquired).format('LLLL') }}<br>
-              Keywords:
-                {% for keyword in post.keywords %}
-                  <a href="#" class="badge badge-light">{{ keyword }}</a>
-                {% endfor %} <br>
-              Condensed to {{ post.condense_rate }}%
-                <progress max="100" value="{{ post.condense_rate }}"> {{ post.condense_rate }}% </progress>
-            </p>
-          </div>
-          <hr>
-          <div class="row no-gutters">
-            <p class="post-assets">
-              {% for asset in post.key_assets %}
-                <a href="{{ url_for('asset_watchlist', asset=asset, action='$set') }}" class="badge badge-info badge-asset">
-                  {{ asset }}
-                </a>
-              {% endfor %}
-            </p>
-          </div>
+          <span class="card-summary">
+            <hr>
+            <div>
+              <p style="padding: 0rem;">
+                Importance Score: {{ post.score }} <br>
+                Time Acquired: {{ momentjs(post.time_acquired).fromNow() }}, {{ momentjs(post.time_acquired).format('LLLL') }}<br>
+                Keywords:
+                  {% for keyword in post.keywords %}
+                    <a href="#" class="badge badge-light">{{ keyword }}</a>
+                  {% endfor %} <br>
+                Condensed to {{ post.condense_rate }}%
+                  <progress max="100" value="{{ post.condense_rate }}"> {{ post.condense_rate }}% </progress>
+              </p>
+            </div>
+            <hr>
+            <div>
+              <p class="post-assets">
+                {% for asset in post.key_assets %}
+                  <a href="{{ url_for('asset_watchlist', asset=asset, action='$set') }}" class="badge badge-info badge-asset">
+                    {{ asset }}
+                  </a>
+                {% endfor %}
+              </p>
+            </div>
+          </span>
         </div>
-        <div class="col-sm card-text news-card-text">
-          <p class="nlp-text">
+        <div class="col-sm card-text">
+          <div class="card-summary news-card-text text-white" style="display:none;">
+            <div>
+              <p style="padding: 0rem;">
+                Importance Score: {{ post.score }} <br>
+                Time Acquired: {{ momentjs(post.time_acquired).fromNow() }}, {{ momentjs(post.time_acquired).format('LLLL') }}<br>
+                Keywords:
+                  {% for keyword in post.keywords %}
+                    <a href="#" class="badge badge-light">{{ keyword }}</a>
+                  {% endfor %} <br>
+                Condensed to {{ post.condense_rate }}%
+                  <progress max="100" value="{{ post.condense_rate }}"> {{ post.condense_rate }}% </progress>
+              </p>
+            </div>
+            <hr>
+            <div>
+              <p class="post-assets">
+                {% for asset in post.key_assets %}
+                  <a href="{{ url_for('asset_watchlist', asset=asset, action='$set') }}" class="badge badge-info badge-asset">
+                    {{ asset }}
+                  </a>
+                {% endfor %}
+              </p>
+            </div>
+          </div>
+          <p class="nlp-text news-card-text">
             {% autoescape false %}
             {{ post.content }}
             {% endautoescape %}
@@ -84,8 +110,9 @@
 {% block main_script %}
 <script>
   $(document).on('click', '.card-control', function() {
-    $(this).parent().parent().find('.card-text').toggleClass('card-folded');
-    $(this).parent().parent().find('.card-text').children().toggle();
+    $(this).find('.card-summary').toggle('fast');
+    $(this).parent().parent().parent().toggleClass('bg-theme');
+    $(this).parent().parent().find('.card-text').children().toggle('fast');
   });
   $(function(){
     $('.badge-asset').click(function(){
