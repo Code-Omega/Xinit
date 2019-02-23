@@ -628,15 +628,11 @@
 html {
   font-size: 14px;
   overflow-x: hidden;
-  overflow-y: hidden;
   letter-spacing: 0rem;
 }
 
 body {
   background: #eee;
-  height: 100vh;
-  overflow-x: hidden;
-  overflow-y: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {

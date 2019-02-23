@@ -7,15 +7,20 @@
 html {
   font-size: 14px;
   overflow-x: hidden;
-  overflow-y: hidden;
+  // overflow-y: hidden;
   letter-spacing: 0rem;
 }
 
 body {
   background: $color-bg-default;
-  height: 100vh;
-  overflow-x: hidden;
-  overflow-y: hidden;
+  // height: 100vh;
+  // overflow-x: hidden;
+  // overflow-y: hidden;
+  // & .body-landing {
+  //   height: auto;
+  //   overflow-y: scroll;
+  //   overflow-x: scroll;
+  // }
 }
 
 h1, h2, h3, h4, h5, h6 {
