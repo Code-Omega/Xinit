@@ -310,7 +310,7 @@ def trends():
 def analyses():
     #if 'username' in session: # load user specific info
 
-    posts = mongo.db.posts.find().limit(5);
+    posts = mongo.db.posts.find().sort('_id',-1).limit(5);
 
     # make this iframe respond to analyses' assets -> used a different iframe dict
     iframe_dict = default_iframe_dict
