@@ -1,0 +1,180 @@
+{% extends "base_side.html" %}
+
+{% block main %}
+<div class="container mt-3">
+    <div class="row">
+        <div class="col card m-3 pt-3">
+            <h2 class="text-center">
+              Lab <span class="badge badge-title">Beta</span>
+            </h2>
+            <h5 class="text-center">
+              Inspect assets with functions in development
+            </h5>
+            <p class="small text-muted text-center">
+            </p>
+
+            <form method=POST>
+                {% from "_formhelpers.html" import render_field %}
+                {{ form.csrf_token }}
+                {{ render_field(form.ticker) }}
+                <div class="text-center mb-3">
+                  <button type="submit" class="btn btn-primary" formaction="{{ request.path }}">
+                    Query
+                  </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+    <!-- <div class="card-columns">
+    </div> -->
+    <div class="card p-3">
+      {% include '_labcontent.html' %}
+    </div>
+</div>
+{% endblock main %}
+
+{% block side %}
+  <div class="sidebar_chart shadow">
+    <div class="tradingview-widget-container frame">
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+        {{iframe_src|safe}}
+      </script>
+    </div>
+  </div>
+{% endblock side %}
+
+{% block main_script %}
+<script>
+{# for s in series #}
+{# 'new Chart(document.getElementById("line-chart-{{loop.index}}"), {' #}
+{% if data.actual_EPS %}
+new Chart(document.getElementById("line-chart"), {
+  type: 'line',
+  data: {
+    labels: {{ data.earning_date|tojson }},
+    datasets: [
+      {
+        data: {{ data.actual_EPS|tojson }},
+        label: "Actual EPS",
+        borderColor: "rgba(120, 227, 253, 1)",
+        backgroundColor: "rgba(120, 227, 253, 0.2)",
+        fill: 'origin',
+        lineTension: 0.1,
+        pointRadius: 2,
+        pointHoverRadius: 4
+      },
+      {
+        data: {{ data.estimated_EPS|tojson }},
+        label: "Estimated EPS",
+        borderColor: "rgba(252, 215, 173, 1)",
+        backgroundColor: "rgba(252, 215, 173, 0.2)",
+        fill: 'origin',
+        lineTension: 0.1,
+        pointRadius: 2,
+        pointHoverRadius: 4
+      }
+    ]
+  },
+  options: {
+    defaultFontFamily: Chart.defaults.global.defaultFontFamily = "'Raleway'",
+    title: {
+      display: false,
+      text: ''
+    },
+    tooltips: {
+      mode: 'index',
+      intersect: false,
+    },
+    hover: {
+      mode: 'nearest',
+      intersect: false,
+    },
+    scales: {
+      xAxes: [{
+        type: 'time',
+        display: true,
+        time: {
+          unit: 'month',
+          stepSize: 3
+        },
+      }],
+      yAxes: [{
+        scaleLabel: {
+          display: false,
+          labelString: ''
+        }
+      }]
+    },
+    layout: {
+      padding: {
+          left: 5,
+          right: 5,
+          top: 5,
+          bottom: 5
+      }
+    }
+  }
+});
+{% endif %}
+{% if data.ts %}
+new Chart(document.getElementById("line-chart-ts"), {
+  type: 'line',
+  data: {
+    labels: {{ data.ts.index }},
+    datasets: [
+      {
+        data: {{ data.ts.data }},
+        label: "Price",
+        borderColor: "rgba(255, 212, 71, 1)",
+        backgroundColor: "rgba(255, 212, 71, 0.2)",
+        fill: 'origin',
+        lineTension: 0.1,
+        pointRadius: 2,
+        pointHoverRadius: 4
+      }
+    ]
+  },
+  options: {
+    defaultFontFamily: Chart.defaults.global.defaultFontFamily = "'Raleway'",
+    title: {
+      display: false,
+      text: ''
+    },
+    tooltips: {
+      mode: 'index',
+      intersect: false,
+    },
+    hover: {
+      mode: 'nearest',
+      intersect: false,
+    },
+    scales: {
+      xAxes: [{
+        type: 'time',
+        display: true,
+        time: {
+          unit: 'day',
+        },
+      }],
+      yAxes: [{
+        scaleLabel: {
+          display: false,
+          labelString: ''
+        }
+      }]
+    },
+    layout: {
+      padding: {
+          left: 5,
+          right: 5,
+          top: 5,
+          bottom: 5
+      }
+    }
+  }
+});
+{% endif %}
+{# endfor #}
+</script>
+{% endblock main_script %}

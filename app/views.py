@@ -18,6 +18,8 @@ import re
 
 from app import app
 
+import ana
+
 #---------------------------------------------------------------------------------------------------
 #                   Settings                                    begins
 #---------------------------------------------------------------------------------------------------
@@ -208,6 +210,11 @@ class NewPostForm(FlaskForm):
             return False
         return True
 
+class LabForm(FlaskForm):
+    ticker = StringField('ticker',
+        [validators.DataRequired()],
+        render_kw={"placeholder": "ticker"})
+
 #---------------------------------------------------------------------------------------------------
 #                   Web
 #---------------------------------------------------------------------------------------------------
@@ -321,6 +328,28 @@ def analyses():
                            title='Analyses',
                            posts=posts,
                            iframe_src=str(json.dumps(iframe_dict)))
+
+
+@app.route('/lab', methods=['POST', 'GET'])
+def lab():
+    #if 'username' in session: # load user specific info
+
+    iframe_dict = default_iframe_dict
+    content = ''
+    data = {}
+
+    form = LabForm()
+    if form.validate_on_submit():
+        #content = "{% include '_labcontent.html' %}"
+        data = ana.get_ticker_info(request.form['ticker'])
+
+    return render_template("lab.html",
+                           title='Lab',
+                           form=form,
+                           content=content,
+                           data=data,
+                           iframe_src=str(json.dumps(iframe_dict))
+                           )
 
 
 @app.route('/ner_sample', methods=['POST'])

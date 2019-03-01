@@ -1,18 +1,54 @@
-# from iexfinance.stocks import get_historical_data, Stock, get_historical_intraday
-# from iexfinance import get_available_symbols
-# from iexfinance.utils.exceptions import IEXSymbolError
+from iexfinance.stocks import get_historical_data, Stock, get_historical_intraday, get_earnings_today
+from iexfinance import get_available_symbols
+from iexfinance.utils.exceptions import IEXSymbolError
 
 import pandas as pd
 import numpy as np
 
-# import matplotlib.pyplot as plt
-# from datetime import datetime
-# from collections import defaultdict, OrderedDict
-# import pickle
-
 from pytrends.request import TrendReq
 from itertools import cycle
 import time
+from datetime import datetime
+from pandas.tseries.offsets import BDay
+
+import json
+
+def get_ticker_info(ticker):
+    stock_ep = Stock(ticker)
+
+    data = {}
+
+    try:
+        comp_key_stats = stock_ep.get_key_stats()
+        company_info = stock_ep.get_company()
+        company_info['marketcap'] = comp_key_stats['marketcap']
+        company_info['consensusEPS'] = comp_key_stats['consensusEPS']
+        data['company_info'] = company_info
+
+        earns = stock_ep.get_earnings()
+        earning_dates = [datetime.strptime(x['EPSReportDate'],"%Y-%m-%d") for x in earns]
+        actualEPSs = [x['actualEPS'] for x in earns]
+        estimatedEPSs = [x['estimatedEPS'] for x in earns]
+        data['earning_date'] = earning_dates[::-1]
+        data['actual_EPS'] = actualEPSs[::-1]
+        data['estimated_EPS'] = estimatedEPSs[::-1]
+
+        date0 = datetime.today()
+        wos = 14
+
+        ts = get_historical_data(ticker, date0-BDay(wos), date0, output_format='pandas')
+        ts_open = ts.open
+        ts_open.index += pd.DateOffset(hours=9.5)
+        ts_close = ts.close
+        ts_close.index += pd.DateOffset(hours=16)
+        ts = pd.concat([ts_open,ts_close])
+        ts.sort_index(inplace = True)
+        ts = ts.tz_localize('EST')
+        data['ts'] = json.loads(ts.to_json(orient='split'))
+    except:
+        return ''
+
+    return data
 
 def get_google_trends(mongo, num = 6):
     page_data = mongo.db.processed_feeds.find_one()

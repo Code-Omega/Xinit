@@ -1,0 +1,31 @@
+{% if data.company_info %}
+  <h2 class='text-center'>
+  {{ data.company_info.companyName }}
+  <!-- <a href="{{ url_for('asset_watchlist', asset=asset, action='$set') }}" class="badge badge-info badge-asset"> -->
+  <span class="badge badge-asset">
+    {{ data.company_info.symbol }}
+  </span>
+  </h2>
+{% else %}
+  <p class='text-info text-center'>Query with a valid ticker symbol</p>
+{% endif %}
+
+{% if data.actual_EPS %}
+<canvas id="line-chart" width="300" height="100"></canvas>
+{% endif %}
+{% if data.ts %}
+<canvas id="line-chart-ts" width="300" height="100"></canvas>
+{% endif %}
+{% if data.company_info %}
+  <!-- <ul> -->
+    {% for key, value in data.company_info.items() %}
+      {% if value is number %}
+      <dt>{{ key }}</dt>
+      <dd>{{ "{:,}".format(value) }}</dd>
+      {% elif value not in ['',[]] %}
+      <dt>{{ key }}</dt>
+      <dd>{{ value }}</dd>
+      {% endif %}
+    {% endfor %}
+  <!-- </ul> -->
+{% endif %}

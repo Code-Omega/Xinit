@@ -51,6 +51,11 @@
             <h4 class="m-0">Analyses,</h4>
           </a>
 	      </li>
+        <li class="nav-item {{ "active" if title == "Lab" else None }}">
+          <a class="nav-link btn p-2 {{ "btn-info bg-theme-highlight btn-rect" if title == "Lab" else "btn-dark" }} " href="/lab">
+            <h4 class="m-0">Lab,</h4>
+          </a>
+        </li>
         <li class="nav-item">
           <a class="nav-link btn p-2 btn-dark disabled" href="#">
             <h4 class="m-0">Coming_Soon,</h4>
