@@ -5,7 +5,6 @@ class momentjs(object):
         self.timestamp = timestamp
 
     def render(self, format):
-        print(self.timestamp.strftime("%Y-%m-%dT%H:%M:%S Z"))
         return Markup("<script>\ndocument.write(moment(\"%s\").%s);\n</script>" % (self.timestamp.strftime("%Y-%m-%dT%H:%M:%S Z"), format))
 
     def format(self, fmt):

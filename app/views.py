@@ -39,78 +39,53 @@ mongo = PyMongo(app)
 #---------------------------------------------------------------------------------------------------
 
 
-# iframe # this is a defaut iframe dict
-default_iframe_dict = {
-    "showChart": True,
-    "locale": "en",
-    "largeChartUrl": "",
-    "theme": "Dark",
-    "width": "100%",
-    "height": "580",
-    "plotLineColorGrowing": "rgba(60, 188, 152, 1)",
-    "plotLineColorFalling": "rgba(255, 74, 104, 1)",
-    "gridLineColor": "rgba(233, 233, 234, 1)",
-    "scaleFontColor": "rgba(214, 216, 224, 1)",
-    "belowLineFillColorGrowing": "rgba(60, 188, 152, 0.05)",
-    "belowLineFillColorFalling": "rgba(255, 74, 104, 0.05)",
-    "symbolActiveColor": "rgba(242, 250, 254, 1)",
-    "tabs": [
-        {
-            "title": "Equity",
-            "symbols": [
-                {"s": "INDEX:SPX"},
-                {"s": "INDEX:DJI"},
-                {"s": "CBOE:VIX"},
-                {"s": "INDEX:NKY"},
-                {"s": "INDEX:XLY0"},
-                {"s": "XETR:DAX"},
-                {"s": "OANDA:UK100GBP"}
-            ]
-        },
-        {
-            "title": "Commodity",
-            "symbols": [
-                {"s":"CME_MINI:ES1!"},
-                {"s":"CME:E61!"},
-                {"s":"COMEX:GC1!"},
-                {"s":"NYMEX:CL1!"},
-                {"s":"NYMEX:NG1!"},
-                {"s":"CBOT:ZC1!"}
-            ]
-        },
-        {
-            "title": "Crypto",
-            "symbols": [
-                {"s": "BITFINEX:BTCUSD"},
-                {"s": "BITFINEX:ETHUSD"},
-                {"s": "BITFINEX:XRPUSD"},
-                {"s": "COINBASE:BCHUSD"},
-                {"s": "COINBASE:LTCUSD"},
-                {"s": "BITFINEX:IOTUSD"}
-            ]
-        },
-        {
-            "title": "Bond",
-            "symbols": [
-                {"s":"CME:GE1!"},
-                {"s":"CBOT:ZB1!"},
-                {"s":"CBOT:UD1!"},
-                {"s":"EUREX:GG1!"}
-            ]
-        },
-        {
-            "title": "Forex",
-            "symbols": [
-                {"s":"FX:EURUSD"},
-                {"s":"FX:GBPUSD"},
-                {"s":"FX:USDJPY"},
-                {"s":"FX:USDCHF"},
-                {"s":"FX:AUDUSD"},
-                {"s":"FX_IDC:USDCNY"}
-            ]
-        }
-    ]
-}
+# tradingview widget settings
+def compose_tradingview_widget():
+    default_iframe_dict = {
+        "showChart": True,
+        "locale": "en",
+        "largeChartUrl": "",
+        "theme": "Dark",
+        "width": "100%",
+        "height": "580",
+        "plotLineColorGrowing": "rgba(60, 188, 152, 1)",
+        "plotLineColorFalling": "rgba(255, 74, 104, 1)",
+        "gridLineColor": "rgba(233, 233, 234, 1)",
+        "scaleFontColor": "rgba(214, 216, 224, 1)",
+        "belowLineFillColorGrowing": "rgba(60, 188, 152, 0.05)",
+        "belowLineFillColorFalling": "rgba(255, 74, 104, 0.05)",
+        "symbolActiveColor": "rgba(242, 250, 254, 1)",
+        "tabs": [
+            {
+                "title": "Popular",
+                "symbols": [
+                    {"s": "INDEX:SPX"},
+                    {"s": "INDEX:DJI"},
+                    {"s": "CBOE:VIX"},
+                    {"s":"CME_MINI:ES1!"},
+                    {"s":"COMEX:GC1!"},
+                    {"s":"NYMEX:CL1!"},
+                    {"s":"NYMEX:NG1!"},
+                    {"s": "BITFINEX:BTCUSD"},
+                    {"s": "BITFINEX:ETHUSD"},
+                    {"s": "BITFINEX:XRPUSD"},
+                    {"s":"CME:GE1!"},
+                    {"s":"CBOT:ZB1!"},
+                    {"s":"FX:EURUSD"},
+                    {"s":"FX:GBPUSD"},
+                    {"s":"FX:USDJPY"},
+                    {"s":"FX:USDCHF"},
+                    {"s":"FX:AUDUSD"},
+                    {"s":"FX_IDC:USDCNY"}
+                ]
+            }
+        ]
+    }
+    page_data = mongo.db.processed_feeds.find_one()
+    iframe_dict = default_iframe_dict
+    iframe_dict['tabs'].insert(0, page_data['iframe_tab'])
+    return str(json.dumps(iframe_dict))
+
 
 #---------------------------------------------------------------------------------------------------
 #                   refreshing & threading
@@ -259,9 +234,6 @@ def index():
     post_key_assets = page_data['post_key_assets']
     doc_score = page_data['doc_score']
     doc_rank = page_data['doc_rank']
-    iframe_tab = page_data['iframe_tab']
-    iframe_dict = deepcopy(default_iframe_dict)
-    iframe_dict['tabs'].insert(0,iframe_tab)
 
     time_acquired = page_data['time_acquired']
 
@@ -280,15 +252,11 @@ def index():
               'link': header[i][1],
               'time_acquired' : time_acquired[i]} for i in doc_rank]
 
-    # iframe_src = {'tv' : "https://s.tradingview.com/marketoverviewwidgetembed/#"
-    #                      +urllib.parse.quote(str(json.dumps(iframe_dict)))}
-
-    #print (str(json.dumps(iframe_dict)))
     return render_template("index.html",
                            title='News',
                            sources=sources,
                            posts=posts,
-                           iframe_src=str(json.dumps(iframe_dict)))
+                           iframe_src=compose_tradingview_widget())
 
 
 @app.route('/trends')
@@ -296,8 +264,6 @@ def trends():
     #if 'username' in session: # load user specific info
 
     res = mongo.db.current_trends.find_one()
-
-    iframe_dict = default_iframe_dict
 
     return render_template("trends.html",
                            title='Trends',
@@ -309,8 +275,7 @@ def trends():
                                       'color': res['colors'][i]
                                      }
                                     for i in range(len(res['series_names']))],
-                           iframe_src=str(json.dumps(iframe_dict))
-                           )
+                           iframe_src=compose_tradingview_widget())
 
 
 @app.route('/analyses')
@@ -320,21 +285,17 @@ def analyses():
     posts = mongo.db.posts.find().sort('_id',-1).limit(5);
 
     # make this iframe respond to analyses' assets -> used a different iframe dict
-    iframe_dict = default_iframe_dict
-    # iframe_src = {'tv' : "https://s.tradingview.com/marketoverviewwidgetembed/#"
-    #                      +urllib.parse.quote(str(json.dumps(iframe_dict)))}
 
     return render_template("analyses.html",
                            title='Analyses',
                            posts=posts,
-                           iframe_src=str(json.dumps(iframe_dict)))
+                           iframe_src=compose_tradingview_widget())
 
 
 @app.route('/lab', methods=['POST', 'GET'])
 def lab():
     #if 'username' in session: # load user specific info
 
-    iframe_dict = default_iframe_dict
     content = ''
     data = {}
 
@@ -348,8 +309,7 @@ def lab():
                            form=form,
                            content=content,
                            data=data,
-                           iframe_src=str(json.dumps(iframe_dict))
-                           )
+                           iframe_src=compose_tradingview_widget())
 
 
 @app.route('/ner_sample', methods=['POST'])
