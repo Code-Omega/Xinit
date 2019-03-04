@@ -84,6 +84,9 @@ def compose_tradingview_widget():
     page_data = mongo.db.processed_feeds.find_one()
     iframe_dict = default_iframe_dict
     iframe_dict['tabs'].insert(0, page_data['iframe_tab'])
+    if 'username' in session:
+        watchlist = mongo.db.users.find_one({'username':session['username']})['asset_watchlist']
+        print([*watchlist])
     return str(json.dumps(iframe_dict))
 
 

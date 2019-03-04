@@ -12,6 +12,7 @@ import datetime
 from types import SimpleNamespace
 from bson.binary import Binary
 from bson.objectid import ObjectId
+from collections import namedtuple
 
 
 def utc_to_local(utc_dt):
@@ -175,8 +176,9 @@ def process_feeds(mongo, num_posts = 6, topNum = 3):
     posts = list(mongo.db.feeds.find().sort('_id',-1).limit(num_posts))
     saved_doc_model = mongo.db.models.find({'name': 'doc_model'}).sort([('_id', -1)]).limit(1)[0]
     doc_model = pickle.loads(saved_doc_model['data'])
+    asset_list = list(mongo.db.asset_info.find({},{'_id':0}))
 
-    res = processed_feeds(posts, doc_model, num_posts, topNum)
+    res = processed_feeds(posts, doc_model, asset_list, num_posts, topNum)
     post_times = [ObjectId(post['_id']).generation_time for post in posts]
 
     # STORE RESULTS
@@ -196,7 +198,7 @@ def process_feeds(mongo, num_posts = 6, topNum = 3):
          'time_acquired' : post_times})
 
 class processed_feeds():
-    def __init__(self, posts, vectorizer, num_posts = 6, topNum = 3):
+    def __init__(self, posts, vectorizer, asset_list, num_posts = 6, topNum = 3):
         # separate into another job for getting feed
 
         #---------------------------------------------------------------------------------------------------
@@ -262,20 +264,15 @@ class processed_feeds():
         #---------------------------------------------------------------------------------------------------
 
         def find_ticker(r, entry):
-            # entry is ['exchange:ticker','name']
-            return r.match(entry[1].lower())
+            # entry is {'symbol','names','exchanges'}
+            q_str = ' '.join(entry['names'])+' '+entry['symbol']
+            return r.match(q_str.lower())
 
-        company_list = pickle.load(open('app/data/company_list.pkl','rb'))
+        company_list = asset_list
 
         org_stopwords = ['the', 'a', 'an', 'at', "'s", ',', '.']
 
         nlp = spacy.load('en_core_web_sm')
-        #print([x[0][0] for x in summaries])
-        #doc = nlp(' '.join([x[0][0] for x in summaries])) # doc = nlp(' '.join(corpus))
-        #shown_content
-
-        #all_title = ' '.join([h[0] for h in header])
-        #all_corpus = ' '.join([' '.join([x[0].replace('\n',' ') for x in thread]) for thread in summaries])
 
         posts_content = [' '.join([header[i][0],
                          ' '.join([x[0].replace('\n',' ') for x in summaries[i]])]) for i in range(len(header))]
@@ -284,7 +281,7 @@ class processed_feeds():
         #print(shown_content)
 
         doc = nlp(shown_content)
-        orgs = set([x.text.lower() for x in list(filter(lambda x: x.label_ in {'ORG','PERSON'}, doc.ents))])
+        orgs = set([x.text.lower() for x in list(filter(lambda x: x.label_ in {'ORG'}, doc.ents))])
 
         simple_orgs = []
 
@@ -297,15 +294,19 @@ class processed_feeds():
 
         key_assets = []
         news_symbols = []
+        matched_assets = []
         for org in simple_orgs:
             pattern = ".*" + org + ".*"
             r = re.compile(pattern)
-            matched_tickers = [x[0] for x in list(filter(lambda x: find_ticker(r,x), company_list))]
+            matched_tickers = [x for x in list(filter(lambda x: find_ticker(r,x), company_list))]
             if matched_tickers != []:
-                news_symbols.append(matched_tickers[0])
-                key_assets.append(org)
+                matched_assets.append(np.append(matched_tickers[0],[org]))
 
-        #print(news_symbols)
+        for x in matched_assets:
+            print(x)
+            news_symbols.append(x[0]['exchanges'][0]+':'+x[0]['symbol'])
+            key_assets.append(x[0])
+        print(news_symbols)
         #print(key_assets)
 
         #---------------------------------------------------------------------------------------------------
@@ -314,7 +315,8 @@ class processed_feeds():
 
         for post in posts_content:
             doc = nlp(post)
-            curr_post_assets = list(set([x.text for x in list(filter(lambda x: x.text.lower() in key_assets, doc.ents))]))
+            doc_ents = [x.text.lower() for x in doc.ents]
+            curr_post_assets = [dict(x[0], ent=x[1]) for x in list(filter(lambda x: x[1] in doc_ents, matched_assets))]
             post_key_assets.append(curr_post_assets)
 
         num_asset_to_plot = 20

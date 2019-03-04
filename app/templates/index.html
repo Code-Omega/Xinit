@@ -27,9 +27,11 @@
             <div>
               <p class="post-assets">
                 {% for asset in post.key_assets %}
-                  <a href="{{ url_for('asset_watchlist', asset=asset, action='$set') }}" class="badge badge-info badge-asset">
-                    {{ asset }}
-                  </a>
+                  <span data-toggle="tooltip" title="{{ asset['names'][0] }} ({{ asset['ent'] }})" data-placement="top">
+                    <a href="{{ url_for('asset_watchlist', asset=asset['symbol'], action='$set') }}" class="badge badge-info badge-asset">
+                      {{ asset['symbol'] }}
+                    </a>
+                  </span>
                 {% endfor %}
               </p>
             </div>
@@ -53,9 +55,11 @@
             <div>
               <p class="post-assets">
                 {% for asset in post.key_assets %}
-                  <a href="{{ url_for('asset_watchlist', asset=asset, action='$set') }}" class="badge badge-info badge-asset">
-                    {{ asset }}
-                  </a>
+                  <span data-toggle="tooltip" title="{{ asset['names'][0] }} ({{ asset['ent'] }})" data-placement="top">
+                    <a href="{{ url_for('asset_watchlist', asset=asset['symbol'], action='$set') }}" class="badge badge-info badge-asset">
+                      {{ asset['symbol'] }}
+                    </a>
+                  </span>
                 {% endfor %}
               </p>
             </div>
@@ -93,7 +97,11 @@
     <div class="card-body sidebar_card_body scrollbar-cus p-2">
       <p class="card-text">
         {% for asset in sources.key_assets %}
-          <a href={{ url_for('asset_watchlist', asset=asset, action='$set') }} class="badge badge-info badge-asset ">{{ asset }}</a>
+          <span data-toggle="tooltip" title="{{ asset['names'][0] }}" data-placement="left">
+            <a href="{{ url_for('asset_watchlist', asset=asset['symbol'], action='$set') }}" class="badge badge-info badge-asset ">
+              {{ asset['symbol'] }}
+            </a>
+          </span>
         {% endfor %}
       </p>
     </div>
