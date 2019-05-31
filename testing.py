@@ -10,8 +10,14 @@ app.config['MONGO_URI'] = MONGO_URI
 mongo = PyMongo(app)
 
 print('Process with new feeds.')
-ana.process_feeds(mongo, num_posts = 6, topNum = 3)
-print('Feeds processed.')
+num_new_posts = ana.get_feeds(mongo)
+print('# new posts:',num_new_posts)
+if num_new_posts > 0:
+    print('Process with new feeds.')
+    ana.process_feeds(mongo, num_posts = 6, topNum = 3)
+    print('Feeds processed')
+# ana.process_feeds(mongo, num_posts = 6, topNum = 3)
+# print('Feeds processed.')
 
 # print('Updating trends.')
 # ana.get_google_trends(mongo, 12)

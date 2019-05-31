@@ -12,7 +12,7 @@ import datetime
 from types import SimpleNamespace
 from bson.binary import Binary
 from bson.objectid import ObjectId
-from collections import namedtuple
+from collections import namedtuple, defaultdict
 
 
 def utc_to_local(utc_dt):
@@ -28,8 +28,7 @@ def get_CNBC_text(url):
     soup = BeautifulSoup(page,"lxml")
     # scrape for content
     # for CNBC only
-    # content = soup.find("div", {"id": "article_body"}) 2019 update
-    content = soup.find("div", {"data-module": "ArticleBody"})
+    content = soup.find("div", {"id": "article_body"})
     if not content:
         content = soup.find("div", {"class": "story_listicle_body"})
     if not content:
@@ -317,7 +316,11 @@ class processed_feeds():
         for post in posts_content:
             doc = nlp(post)
             doc_ents = [x.text.lower() for x in doc.ents]
+            curr_post_assets = defaultdict(list)
+            for x in list(filter(lambda x: x[1] in doc_ents, matched_assets)):
+                curr_post_assets[x[0]].append(v)
             curr_post_assets = [dict(x[0], ent=x[1]) for x in list(filter(lambda x: x[1] in doc_ents, matched_assets))]
+
             post_key_assets.append(curr_post_assets)
 
         num_asset_to_plot = 20
